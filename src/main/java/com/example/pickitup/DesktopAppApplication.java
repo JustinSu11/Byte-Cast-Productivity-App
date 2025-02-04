@@ -10,6 +10,9 @@ import javax.swing.SwingUtilities;
 public class DesktopAppApplication {
 
     public static void main(String[] args){
+        //Disable headless mode to allow Swing to create windows (Remove once a GUI is implemented)
+        System.setProperty("java.awt.headless", "false");
+
         //Start the Spring Boot application, which initializes the application context.
         ConfigurableApplicationContext context = SpringApplication.run(DesktopAppApplication.class, args);
 

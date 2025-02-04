@@ -24,6 +24,6 @@
     </dependencies>
 
     <properties>
-        <java.version>23</java.version> <!-- or your preferred version -->
+        <java.version>17</java.version> <!-- or your preferred version -->
     </properties>
 </project>
