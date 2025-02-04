@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 @Service //Marks this class as a service component for business logic
 public class BusinessService {
     //Returns a welcome message that can be used in the UI
-    public String getWelcomeMessage() {
-        return "Welcome to Pick-It-Up!";
+    public String getTitle() {
+        return "Pick It Up";
     }
 }
