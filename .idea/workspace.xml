@@ -4,10 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8577b355-fb05-4b74-a941-e74169f507f2" name="Changes" comment="Set up folder structure for Maven">
+    <list default="true" id="8577b355-fb05-4b74-a941-e74169f507f2" name="Changes" comment="hi">
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/pickitup/DesktopAppApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/pickitup/Launch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/pickitup/ui/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/pickitup/ui/MainFrame.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/pickitup/ui/TextEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/pickitup/ui/Notepad.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/pickitup/DesktopAppApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/pickitup/ui/MainFrame.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +61,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.Launch.executor": "Run",
     "Application.Main.executor": "Run",
     "Application.MainMenu.executor": "Run",
     "RequestMappingsPanelOrder0": "0",
@@ -66,7 +72,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.DesktopAppApplication.executor": "Run",
-    "git-widget-placeholder": "develop",
+    "git-widget-placeholder": "feature/CJQuintero",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/justi/OneDrive/Desktop/Survey Of Programming Languages/C#",
@@ -81,7 +87,20 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Spring Boot.DesktopAppApplication">
+  <component name="RunManager" selected="Application.Launch">
+    <configuration name="Launch" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.pickitup.Launch" />
+      <module name="pickitup" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.pickitup.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="Byte-Cast-Productivity-App" />
@@ -95,6 +114,17 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="pickitup" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="pickitup" />
+      <option name="filePath" />
+      <method v="2" />
     </configuration>
     <configuration name="DesktopAppApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="pickitup" />
@@ -111,6 +141,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Launch" />
         <item itemvalue="Spring Boot.DesktopAppApplication" />
         <item itemvalue="Application.Main" />
         <item itemvalue="Application.MainMenu" />
@@ -212,6 +243,7 @@
     <MESSAGE value="Added Frontend and Backend directories" />
     <MESSAGE value="testing directories since they arent showing in intelliJ" />
     <MESSAGE value="Set up folder structure for Maven" />
-    <option name="LAST_COMMIT_MESSAGE" value="Set up folder structure for Maven" />
+    <MESSAGE value="hi" />
+    <option name="LAST_COMMIT_MESSAGE" value="hi" />
   </component>
 </project>

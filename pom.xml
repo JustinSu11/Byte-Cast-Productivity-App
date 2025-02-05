@@ -8,20 +8,6 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.0</version> <!-- Use the current stable version -->
-    </parent>
-
-    <dependencies>
-        <!-- Spring Boot starter (core features) -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        <!-- Add additional dependencies as needed -->
-    </dependencies>
 
     <properties>
         <java.version>17</java.version> <!-- or your preferred version -->

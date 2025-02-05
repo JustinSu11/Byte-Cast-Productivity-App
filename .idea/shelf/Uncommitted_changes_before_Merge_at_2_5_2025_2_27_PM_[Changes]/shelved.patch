@@ -1,0 +1,13 @@
+Index: README.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># Byte-Cast-Productivity-App
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/README.md b/README.md
+--- a/README.md	(revision 60ce27127b3f16ec2067435f7b8bc9b7d9b36ce7)
++++ b/README.md	(date 1738787252113)
+@@ -1,1 +1,0 @@
+-# Byte-Cast-Productivity-App
+\ No newline at end of file
