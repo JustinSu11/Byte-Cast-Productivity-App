@@ -1,8 +1,8 @@
 # Byte-Cast-Productivity-App
 
 To run:
-  1. Navigate to DesktopAppApplication.java
-  2. Right-Click and select "run DesktopAppAppl...main()"
+  1. Navigate to Launch found in pickitup/src/main/java/com/example/pickitup
+  2. Right-Click and select "run Launch.main()"
 
 If there is an error make sure your SDK and environment is set to Java 17:
   1. Open a new command prompt
