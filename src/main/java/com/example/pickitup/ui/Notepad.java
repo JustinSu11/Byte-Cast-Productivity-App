@@ -1,5 +1,5 @@
 // ************************************************************
-// NotePad Class Version 2.0 updated 02/10/25
+// NotePad Class version 1.0:
 // This class is for making the notepad popup window
 //
 // Please remember to update the version number if any changes
@@ -9,8 +9,10 @@
 package com.example.pickitup.ui;
 
 // imports
-import javax.swing.*;                   // to make the text area and GUI
-import java.awt.*;                      // for border layout
+import javax.swing.*;  // to make the text area and GUI
+import com.example.pickitup.services.models.NotesDataModel; // to create Notes object
+import com.example.pickitup.services.dao.NotesDAO; // to use CRUD methods for notes
+import java.awt.*; // for border layout
 
 
 // makes the popup window
