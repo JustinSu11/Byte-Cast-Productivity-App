@@ -10,6 +10,8 @@ package com.example.pickitup.ui;
 
 // imports
 import javax.swing.*;   // to make the text area and GUI
+import com.example.pickitup.services.models.NotesDataModel; // to create Notes object
+import com.example.pickitup.services.dao.NotesDAO; // to use CRUD methods for notes
 
 
 // makes the popup window
