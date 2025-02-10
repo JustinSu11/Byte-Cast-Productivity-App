@@ -5,14 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8577b355-fb05-4b74-a941-e74169f507f2" name="Changes" comment="hi">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/pickitup/DesktopAppApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/pickitup/Launch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/pickitup/ui/Main.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/pickitup/ui/MainFrame.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/pickitup/ui/TextEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/pickitup/ui/Notepad.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/pickitup/DesktopAppApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/pickitup/ui/MainFrame.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/pickitup/Launch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/pickitup/Launch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/pickitup/ui/Notepad.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/pickitup/ui/Notepad.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/pickitup/Launch.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/pickitup/Launch.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/pickitup/ui/Notepad.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/pickitup/ui/Notepad.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +41,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/JustinSu11/Byte-Cast-Productivity-App.git&quot;,
-    &quot;accountId&quot;: &quot;f30e7442-cb3d-4a8e-838d-e2d494967205&quot;
+    &quot;accountId&quot;: &quot;e6714dfa-e3b6-4f63-9113-bffaf73812a0&quot;
   }
 }</component>
   <component name="ProblemsViewState">
@@ -59,34 +56,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Launch.executor": "Run",
-    "Application.Main.executor": "Run",
-    "Application.MainMenu.executor": "Run",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Spring Boot.DesktopAppApplication.executor": "Run",
-    "git-widget-placeholder": "feature/CJQuintero",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/justi/OneDrive/Desktop/Survey Of Programming Languages/C#",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.0",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Launch.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.MainMenu.executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Spring Boot.DesktopAppApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/CJQuintero&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/justi/OneDrive/Desktop/Survey Of Programming Languages/C#&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Application.Launch">
     <configuration name="Launch" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.example.pickitup.Launch" />
@@ -114,17 +111,6 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
-    </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="pickitup" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="pickitup" />
-      <option name="filePath" />
-      <method v="2" />
     </configuration>
     <configuration name="DesktopAppApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="pickitup" />
@@ -169,6 +155,8 @@
       <workItem from="1738694334889" duration="152000" />
       <workItem from="1738694572896" duration="359000" />
       <workItem from="1738701795970" duration="413000" />
+      <workItem from="1738944850799" duration="12010000" />
+      <workItem from="1739199950936" duration="3709000" />
     </task>
     <task id="LOCAL-00001" summary="Add initial project setup and main menu functionality&#10;&#10;Set up IntelliJ configuration files and basic project structure, including `.gitignore` for IDE-specific files and module definitions. Implement a basic Java `MainMenu` class with a sub-menu for creating notes and journals.">
       <option name="closed" value="true" />
@@ -224,7 +212,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/feature/JustinNguyen" />
+                        <option value="origin/develop" />
                       </list>
                     </value>
                   </entry>
@@ -244,6 +232,7 @@
     <MESSAGE value="testing directories since they arent showing in intelliJ" />
     <MESSAGE value="Set up folder structure for Maven" />
     <MESSAGE value="hi" />
-    <option name="LAST_COMMIT_MESSAGE" value="hi" />
+    <MESSAGE value="made comment changes; changed file names and class names; structure changes; packaged files" />
+    <option name="LAST_COMMIT_MESSAGE" value="made comment changes; changed file names and class names; structure changes; packaged files" />
   </component>
 </project>
