@@ -4,15 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8577b355-fb05-4b74-a941-e74169f507f2" name="Changes" comment="hi">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="8577b355-fb05-4b74-a941-e74169f507f2" name="Changes" comment="Set up folder structure for Maven">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/pickitup/DesktopAppApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/pickitup/Launch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/pickitup/ui/Main.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/pickitup/ui/MainFrame.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/pickitup/ui/TextEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/pickitup/ui/Notepad.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/pickitup/DesktopAppApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/pickitup/ui/MainFrame.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,7 +65,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.DesktopAppApplication.executor": "Run",
-    "git-widget-placeholder": "feature/CJQuintero",
+    "git-widget-placeholder": "develop",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/justi/OneDrive/Desktop/Survey Of Programming Languages/C#",
@@ -114,17 +107,6 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
-    </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="pickitup" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="pickitup" />
-      <option name="filePath" />
-      <method v="2" />
     </configuration>
     <configuration name="DesktopAppApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="pickitup" />
@@ -242,8 +224,8 @@
     <MESSAGE value="Refactor Main to delegate to MainMenu and add file creation.&#10;&#10;Updated `Main` to delegate execution to `MainMenu`. Enhanced `MainMenu` to support creating text files with user-provided names and saving input content, improving functionality for note and journal management. Added error handling for file operations." />
     <MESSAGE value="Added Frontend and Backend directories" />
     <MESSAGE value="testing directories since they arent showing in intelliJ" />
-    <MESSAGE value="Set up folder structure for Maven" />
     <MESSAGE value="hi" />
-    <option name="LAST_COMMIT_MESSAGE" value="hi" />
+    <MESSAGE value="Set up folder structure for Maven" />
+    <option name="LAST_COMMIT_MESSAGE" value="Set up folder structure for Maven" />
   </component>
 </project>
