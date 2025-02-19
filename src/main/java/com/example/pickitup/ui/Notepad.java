@@ -25,14 +25,11 @@ public class Notepad
     private JTextArea textArea = null;
     private JScrollPane scrollPane = null;
 
-    // ********************************************************
-    // THESE VALUES WILL PROBABLY BE CHANGED AND MOVED LATER
-    // These are constant values
-    // ********************************************************
-    public static final int DEFAULT_WIDTH = 800;
-    public static final int DEFAULT_HEIGHT = 600;
-    public static final int MAX_WIDTH = 1920;
-    public static final int MAX_HEIGHT = 832;
+    // constant values
+    public static final int MINIMIZED_FRAME_WIDTH = 800;
+    public static final int MINIMIZED_FRAME_HEIGHT = 600;
+    public static final int TEXT_AREA_WIDTH = 800;
+    public static final int TEXT_AREA_HEIGHT = 800;
     public static final String TITLE = "Notepad";
 
     // constructor
@@ -60,7 +57,7 @@ public class Notepad
     {
         // set some attributes of the frame
         frame.setTitle(TITLE);
-        frame.setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        frame.setSize(MINIMIZED_FRAME_WIDTH, MINIMIZED_FRAME_HEIGHT);
 
         // closes the program when the X is clicked
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,7 +80,7 @@ public class Notepad
     private void addScrollPane()
     {
         // Set the scroll pane's location, and size
-        scrollPane.setBounds(300, 0, DEFAULT_WIDTH, MAX_HEIGHT);
+        scrollPane.setBounds(300, 32, TEXT_AREA_WIDTH, TEXT_AREA_HEIGHT);
 
         // allows the scroll bar to always be on screen
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
