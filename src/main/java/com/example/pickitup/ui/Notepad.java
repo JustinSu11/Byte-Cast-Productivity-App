@@ -10,9 +10,9 @@ package com.example.pickitup.ui;
 
 // imports
 import javax.swing.*;  // to make the text area and GUI
-import com.example.pickitup.services.models.NotesDataModel; // to create Notes object
-import com.example.pickitup.services.dao.NotesDAO; // to use CRUD methods for notes
 import java.awt.*; // for border layout
+import java.awt.event.*;
+import com.example.pickitup.models.Note;
 
 
 // makes the popup window
@@ -25,6 +25,8 @@ public class Notepad extends JFrame
     JToolBar toolbar = null;
     JLabel toolbarLabel = null;
     String title = "Notepad";
+    MenuBar menuBar = new MenuBar();
+    Note note;
 
     // this method is the "main" method of the Notepad class that
     // calls the other methods to make the notepad program
@@ -42,8 +44,15 @@ public class Notepad extends JFrame
         // add scroll pane
         addScrollPane();
 
+        // add menu bar
+        frame.setJMenuBar(menuBar);
+        menuBar.saveAsItem.addActionListener(new MenuActionListener());
+        menuBar.saveItem.addActionListener(new MenuActionListener());
+
         // show the frame
         frame.setVisible(true);
+
+        note = new Note();
     }
 
     // make the frame of the window and set its size
@@ -81,6 +90,8 @@ public class Notepad extends JFrame
 
         // set the "cursor line" to appear after the example text
         textArea.setCaretPosition(20);
+
+        // take input from text area as content for note
     }
 
     // adds the toolbar to the top of the frame
@@ -104,4 +115,19 @@ public class Notepad extends JFrame
         frame.add(scrollPane);
     }
 
+    public class MenuActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e){
+            if(e.getSource() == menuBar.saveAsItem){
+                note.setContent(textArea.getText());
+                note.saveNoteWithFileChooser();
+            }
+//            if(e.getSource() == menuBar.saveItem){
+//                note.saveNote(untitled.json, this);
+//            }
+            if(e.getSource() == menuBar.loadNoteItem){
+                loadNoteFromFile();
+            }
+        }
+    }
 }
