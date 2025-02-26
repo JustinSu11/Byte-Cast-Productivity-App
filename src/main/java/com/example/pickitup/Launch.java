@@ -1,32 +1,32 @@
 /*
     *******************************************************************************
     Pick It Up
-    Byte Cast
-    Launch Version 2.0 updated 02/10/25
+    Developed by Byte Cast
 
-    This program is a basic text editor to give members of the team a base
-    that everyone can work with to implement their portions of the project.
+    Launch Class
+    Last Updated 02/19/2025
 
-    This code creates a basic text editor frame with a few simple features
+    This class contains the main method
+    Running this code creates a window with a text area
 
-    Please remember to update the version number if any changes
+    Please remember to update the version date if any changes
     are made to this file.
     *******************************************************************************
  */
-
 
 package com.example.pickitup;
 
 // imports
 import com.example.pickitup.ui.Notepad;
 
+
 public class Launch
 {
     public static void main(String[] args)
     {
-        // create the notepad and open the window
         Notepad notepad = new Notepad();
-        notepad.newWindow();
-    }
+        notepad.newNotepadWindow();
 
-}
+    } // end main
+
+} // end Launch class
