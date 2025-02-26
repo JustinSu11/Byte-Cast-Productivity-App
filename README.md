@@ -1,8 +1,18 @@
 # Byte-Cast-Productivity-App
 
+Last Updated 02/19/2025 
+- Major changes made
+- moved text area down to save a space for toolbar
+- changed constant values and variable names
+
 To run:
   1. Navigate to Launch found in pickitup/src/main/java/com/example/pickitup
   2. Right-Click and select "run Launch.main()"
+
+The main method is located in Launch.java in src/main/java/com/example/pickitup
+
+To view the class files, go to src/main/java/com/example/pickitup/ui
+
 
 If there is an error make sure your SDK and environment is set to Java 17:
   1. Open a new command prompt
@@ -20,3 +30,5 @@ If there is an error make sure your SDK and environment is set to Java 17:
   13. Click "Ok" to save and apply all changes and close out of the windows.
   14. Open a new command prompt and type "java -version" and "javac -version"
   15. Make sure both show Java 17
+
+
