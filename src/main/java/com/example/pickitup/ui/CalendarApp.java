@@ -1,8 +1,9 @@
+package com.example.pickitup.ui;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Calendar;
 import java.util.Locale;
-
 /**
  * CalendarApp is a simple Swing-based calendar application.
  * It allows users to navigate through months and view a calendar layout.
@@ -14,7 +15,6 @@ public class CalendarApp {
     private JLabel monthLabel;       // Label to display current month and year
     private Calendar calendar;       // Calendar instance to manage date operations
     private Calendar today;          // Tracks the current date
-
     /**
      * Constructor initializes the calendar UI components and sets up the frame.
      */
@@ -35,28 +35,24 @@ public class CalendarApp {
         JButton nextButton = new JButton(">");
         preButton.addActionListener(e -> updateMonth(-1));
         nextButton.addActionListener(e -> updateMonth(1));
-
         // Create header panel containing navigation buttons and month label
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.add(preButton, BorderLayout.WEST);
         headerPanel.add(monthLabel, BorderLayout.CENTER);
         headerPanel.add(nextButton, BorderLayout.EAST);
 
-        // Panel for the calendar grid
-        calendarPanel = new JPanel(new GridLayout(0, 7, 2, 2)); // Auto-adjust row count
+        // Panel for the calendar grid (7x7 layout for days and dates)
+        calendarPanel = new JPanel(new GridLayout(7, 7, 2, 2));
 
         // Add components to the frame
         frame.setLayout(new BorderLayout());
         frame.add(headerPanel, BorderLayout.NORTH);
         frame.add(calendarPanel, BorderLayout.CENTER);
-
-        // Populate calendar with the current month's data
+        // Populate calendar with the current months data
         updateCalendar();
-
         // Make the frame visible
         frame.setVisible(true);
     }
-
     /**
      * Updates the calendar by changing the month based on user navigation.
      *
@@ -66,12 +62,12 @@ public class CalendarApp {
         calendar.add(Calendar.MONTH, change);
         updateCalendar();
     }
-
     /**
      * Updates the calendar display for the current month.
      * Clears the panel and repopulates it with the correct day labels and date buttons.
      */
-    private void updateCalendar() {
+    private void updateCalendar()
+    {
         // Clear previous calendar content
         calendarPanel.removeAll();
 
@@ -102,7 +98,7 @@ public class CalendarApp {
         for (int day = 1; day <= maxDays; day++) {
             JButton dayButton = new JButton(String.valueOf(day));
             dayButton.setFont(new Font("Arial", Font.PLAIN, 10));
-            dayButton.setPreferredSize(new Dimension(30, 30)); // Make buttons more square
+            dayButton.setPreferredSize(new Dimension(30, 30));
 
             // Highlight today's date
             if (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
@@ -112,6 +108,10 @@ public class CalendarApp {
                 dayButton.setForeground(Color.BLACK);
             }
 
+            // Add click event to open event entry dialog
+            int selectedDay = day;
+            dayButton.addActionListener(e -> openEventDialog(selectedDay));
+
             calendarPanel.add(dayButton);
         }
 
@@ -119,12 +119,28 @@ public class CalendarApp {
         frame.revalidate();
         frame.repaint();
     }
-
     /**
      * Main method to start the Swing application.
      *
      * @param args Command-line arguments (not used).
      */
+    /**
+     * Opens a dialog to enter an event for the selected date.
+     *
+     * @param day The selected day of the month.
+     */
+    private void openEventDialog(int day)
+    {
+        String event = JOptionPane.showInputDialog(frame, "Enter event for " +
+                monthLabel.getText() + " " + day + ":", "New Event", JOptionPane.PLAIN_MESSAGE);
+
+        if (event != null && !event.trim().isEmpty())
+        {
+            JOptionPane.showMessageDialog(frame, "Event saved: " + event,
+                    "Event Confirmation", JOptionPane.INFORMATION_MESSAGE);
+            // You can modify this to actually store the event.
+        }
+    }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(CalendarApp::new);
     }
