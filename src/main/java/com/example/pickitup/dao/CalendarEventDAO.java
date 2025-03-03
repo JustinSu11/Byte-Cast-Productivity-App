@@ -1,4 +1,6 @@
-package com.example.pickitup.database;
+package com.example.pickitup.dao;
+
+import com.example.pickitup.database.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

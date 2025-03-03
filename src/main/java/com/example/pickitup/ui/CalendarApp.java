@@ -1,6 +1,6 @@
 package com.example.pickitup.ui;
 
-import com.example.pickitup.database.CalendarEventDAO;
+import com.example.pickitup.dao.CalendarEventDAO;
 import com.example.pickitup.database.DatabaseSetup;
 
 import javax.swing.*;
