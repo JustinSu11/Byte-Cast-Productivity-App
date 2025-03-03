@@ -9,7 +9,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CalendarEventDAO {
+public class CalendarEventDAO
+{
 
     // Method to save an event to the database
     public void saveEventToDatabase(String title, String description, String startTime, String endTime) {
@@ -31,7 +32,9 @@ public class CalendarEventDAO {
     }
 
     // Method to fetch events based on the start_time
-    public List<String> getEvents(String startTime) {
+    public List<String> getEvents(String startTime)
+
+    {
         List<String> events = new ArrayList<>();
         String sql = "SELECT title, event_description FROM calendar_events WHERE start_time = ?";
 
