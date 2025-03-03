@@ -1,6 +1,13 @@
+package com.example.pickitup.ui;
+
+import com.example.pickitup.database.CalendarEventDAO;
+import com.example.pickitup.database.DatabaseSetup;
+
 import javax.swing.*;
 import java.awt.*;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -14,6 +21,7 @@ public class CalendarApp {
     private JLabel monthLabel;       // Label to display current month and year
     private Calendar calendar;       // Calendar instance to manage date operations
     private Calendar today;          // Tracks the current date
+    private CalendarEventDAO eventDAO = new CalendarEventDAO(); // DAO for events
 
     /**
      * Constructor initializes the calendar UI components and sets up the frame.
@@ -42,8 +50,8 @@ public class CalendarApp {
         headerPanel.add(monthLabel, BorderLayout.CENTER);
         headerPanel.add(nextButton, BorderLayout.EAST);
 
-        // Panel for the calendar grid
-        calendarPanel = new JPanel(new GridLayout(0, 7, 2, 2)); // Auto-adjust row count
+        // Panel for the calendar grid (7x7 layout for days and dates)
+        calendarPanel = new JPanel(new GridLayout(7, 7, 2, 2));
 
         // Add components to the frame
         frame.setLayout(new BorderLayout());
@@ -98,34 +106,111 @@ public class CalendarApp {
             calendarPanel.add(new JLabel(""));
         }
 
-        // Add buttons for each day of the month
         for (int day = 1; day <= maxDays; day++) {
             JButton dayButton = new JButton(String.valueOf(day));
             dayButton.setFont(new Font("Arial", Font.PLAIN, 10));
-            dayButton.setPreferredSize(new Dimension(30, 30)); // Make buttons more square
+            dayButton.setPreferredSize(new Dimension(30, 30));
+
+            // Format date for querying
+            String formattedDate = String.format("%d-%02d-%02d 00:00:00",
+                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, day);
+
+            // Fetch events from the database
+            List<String> events = eventDAO.getEvents(formattedDate);
 
             // Highlight today's date
             if (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
                     calendar.get(Calendar.MONTH) == today.get(Calendar.MONTH) &&
                     day == today.get(Calendar.DAY_OF_MONTH)) {
-                dayButton.setBackground(Color.WHITE);
+                dayButton.setBackground(Color.WHITE); // Highlight today's date with a different color
                 dayButton.setForeground(Color.BLACK);
             }
+
+            // Highlight days with events
+            if (!events.isEmpty()) {
+                dayButton.setBackground(Color.CYAN); // Change color for event days
+                dayButton.setToolTipText("<html>" + String.join("<br>", events) + "</html>"); // Show events on hover
+            }
+
+            // Add click event to show event details or open event dialog
+            int selectedDay = day;
+            dayButton.addActionListener(e -> {
+                if (!events.isEmpty()) {
+                    String eventDetails = String.join("\n", events);
+                    JOptionPane.showMessageDialog(frame, "Events for " + formattedDate + ":\n" + eventDetails,
+                            "Event Details", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    openEventDialog(selectedDay);
+                }
+            });
 
             calendarPanel.add(dayButton);
         }
 
-        // Refresh the frame to reflect updates
-        frame.revalidate();
-        frame.repaint();
+        // Revalidate and repaint the calendar panel to update the UI
+        calendarPanel.revalidate();
+        calendarPanel.repaint();
     }
 
     /**
-     * Main method to start the Swing application.
+     * Opens a dialog to enter an event for the selected date.
      *
-     * @param args Command-line arguments (not used).
+     * @param day The selected day of the month
      */
+    private void openEventDialog(int day) {
+        String title = JOptionPane.showInputDialog(frame, "Enter event title:", "New Event", JOptionPane.PLAIN_MESSAGE);
+        if (title == null || title.trim().isEmpty()) return;
+
+        String description = JOptionPane.showInputDialog(frame, "Enter event description:", "Event Details", JOptionPane.PLAIN_MESSAGE);
+        if (description == null || description.trim().isEmpty()) return;
+
+        // Time selection using dropdown
+        String[] times = {"08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
+                "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM",
+                "06:00 PM", "07:00 PM", "08:00 PM", "09:00 PM"};
+        String selectedTime = (String) JOptionPane.showInputDialog(frame,
+                "Select time:", "Event Time", JOptionPane.QUESTION_MESSAGE, null, times, times[0]);
+
+        if (selectedTime == null) return; // User canceled
+
+        // Convert time to 24-hour format
+        String formattedTime = convertTo24Hour(selectedTime);
+
+        // Format date-time string
+        String formattedDateTime = String.format("%d-%02d-%02d %s",
+                calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, day, formattedTime);
+
+        // Save the event
+        saveEvent(title, description, formattedDateTime);
+    }
+
+    /**
+     * Saves the event details to the database or memory.
+     *
+     * @param title       The title of the event.
+     * @param description The description of the event.
+     * @param startTime   The starting date and time of the event.
+     */
+    public void saveEvent(String title, String description, String startTime) {
+        eventDAO.saveEventToDatabase(title, description, startTime, startTime);
+        updateCalendar(); // Refresh UI to highlight event date
+    }
+
+    /**
+     * Converts 12-hour time format to 24-hour time format.
+     */
+    private String convertTo24Hour(String time12h) {
+        try {
+            SimpleDateFormat sdf12 = new SimpleDateFormat("hh:mm a", Locale.US);
+            SimpleDateFormat sdf24 = new SimpleDateFormat("HH:mm:ss", Locale.US);
+            return sdf24.format(sdf12.parse(time12h));
+        } catch (Exception e) {
+            return "00:00:00"; // Fallback in case of error
+        }
+    }
+
     public static void main(String[] args) {
+        DatabaseSetup.createTables();
         SwingUtilities.invokeLater(CalendarApp::new);
     }
 }
