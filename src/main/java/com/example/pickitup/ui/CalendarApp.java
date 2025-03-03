@@ -1,9 +1,14 @@
 package com.example.pickitup.ui;
 
+import com.example.pickitup.database.CalendarEventDAO;
+import com.example.pickitup.database.DatabaseSetup;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.List;
+
 /**
  * CalendarApp is a simple Swing-based calendar application.
  * It allows users to navigate through months and view a calendar layout.
@@ -15,6 +20,7 @@ public class CalendarApp {
     private JLabel monthLabel;       // Label to display current month and year
     private Calendar calendar;       // Calendar instance to manage date operations
     private Calendar today;          // Tracks the current date
+    private CalendarEventDAO eventDAO = new CalendarEventDAO(); // DAO for events
     /**
      * Constructor initializes the calendar UI components and sets up the frame.
      */
@@ -35,6 +41,7 @@ public class CalendarApp {
         JButton nextButton = new JButton(">");
         preButton.addActionListener(e -> updateMonth(-1));
         nextButton.addActionListener(e -> updateMonth(1));
+
         // Create header panel containing navigation buttons and month label
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.add(preButton, BorderLayout.WEST);
@@ -48,11 +55,14 @@ public class CalendarApp {
         frame.setLayout(new BorderLayout());
         frame.add(headerPanel, BorderLayout.NORTH);
         frame.add(calendarPanel, BorderLayout.CENTER);
-        // Populate calendar with the current months data
+
+        // Populate calendar with the current month's data
         updateCalendar();
+
         // Make the frame visible
         frame.setVisible(true);
     }
+
     /**
      * Updates the calendar by changing the month based on user navigation.
      *
@@ -62,12 +72,12 @@ public class CalendarApp {
         calendar.add(Calendar.MONTH, change);
         updateCalendar();
     }
+
     /**
      * Updates the calendar display for the current month.
      * Clears the panel and repopulates it with the correct day labels and date buttons.
      */
-    private void updateCalendar()
-    {
+    private void updateCalendar() {
         // Clear previous calendar content
         calendarPanel.removeAll();
 
@@ -110,7 +120,21 @@ public class CalendarApp {
 
             // Add click event to open event entry dialog
             int selectedDay = day;
-            dayButton.addActionListener(e -> openEventDialog(selectedDay));
+            dayButton.addActionListener(e -> {
+                String formattedDate = String.format("%d-%02d-%02d 00:00:00",
+                        calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, selectedDay);
+
+                // Call the DAO to fetch events
+                List<String> events = eventDAO.getEvents(formattedDate);
+
+                if (!events.isEmpty()) {
+                    String eventDetails = String.join("\n", events);
+                    JOptionPane.showMessageDialog(frame, "Events for " + formattedDate + ":\n" + eventDetails,
+                            "Event Details", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    openEventDialog(selectedDay);
+                }
+            });
 
             calendarPanel.add(dayButton);
         }
@@ -119,29 +143,43 @@ public class CalendarApp {
         frame.revalidate();
         frame.repaint();
     }
-    /**
-     * Main method to start the Swing application.
-     *
-     * @param args Command-line arguments (not used).
-     */
+
     /**
      * Opens a dialog to enter an event for the selected date.
      *
      * @param day The selected day of the month.
      */
-    private void openEventDialog(int day)
-    {
-        String event = JOptionPane.showInputDialog(frame, "Enter event for " +
-                monthLabel.getText() + " " + day + ":", "New Event", JOptionPane.PLAIN_MESSAGE);
+    private void openEventDialog(int day) {
+        String title = JOptionPane.showInputDialog(frame, "Enter event title:", "New Event", JOptionPane.PLAIN_MESSAGE);
+        if (title == null || title.trim().isEmpty()) return;
 
-        if (event != null && !event.trim().isEmpty())
-        {
-            JOptionPane.showMessageDialog(frame, "Event saved: " + event,
-                    "Event Confirmation", JOptionPane.INFORMATION_MESSAGE);
-            // You can modify this to actually store the event.
-        }
+        String description = JOptionPane.showInputDialog(frame, "Enter event description:", "Event Details", JOptionPane.PLAIN_MESSAGE);
+        if (description == null || description.trim().isEmpty()) return;
+
+        // Format the date for storing
+        String formattedDate = String.format("%d-%02d-%02d 00:00:00",
+                calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, day);
+
+        saveEvent(title, description, formattedDate);  // Call the saveEvent method
     }
-    public static void main(String[] args) {
+
+    /**
+     * Saves the event details to the database or memory.
+     *
+     * @param title       The title of the event.
+     * @param description The description of the event.
+     * @param startTime   The starting date and time of the event.
+     */
+    public void saveEvent(String title, String description, String startTime) {
+        // Implement the logic to save the event details to the database or memory
+        // For now, we just print the event details
+        System.out.println("Event saved: " + title + ", " + description + ", " + startTime);
+    }
+
+    public static void main(String[] args)
+    {
+        DatabaseSetup.createTables();
         SwingUtilities.invokeLater(CalendarApp::new);
     }
 }
+

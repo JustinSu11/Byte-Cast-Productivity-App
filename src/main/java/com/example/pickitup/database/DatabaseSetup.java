@@ -4,9 +4,9 @@ import java.sql.Connection;
 import java.sql.Statement;
 
 public class DatabaseSetup {
-    //Define tables for storing notes
+    // Define tables for storing notes and calendar events
     public static void createTables() {
-        //create a notes table with the structure below for each note
+        // Create a notes table with the structure below for each note
         String notesTable = "CREATE TABLE IF NOT EXISTS notes (" +
                 "notes_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "journal_id INTEGER NOT NULL, " +
@@ -16,7 +16,7 @@ public class DatabaseSetup {
                 "FOREIGN KEY (journal_id) REFERENCES journal(journal_id) " +
                 ");";
 
-        //Create a calendar events table
+        // Create a calendar events table
         String calendarEventsTable = "CREATE TABLE IF NOT EXISTS calendar_events (" +
                 "event_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "title TEXT NOT NULL, " +
@@ -55,14 +55,13 @@ public class DatabaseSetup {
                 "title TEXT NOT NULL " +
                 ");";
 
-
-        //if connection is successful execute the above sql statements to make tables if they don't exist already
+        // If connection is successful, execute the above SQL statements to create tables if they don't exist already
         try (
                 Connection connection = DatabaseConnection.connect();
                 Statement statement = connection.createStatement()
         ) {
             statement.execute(workspacesTable);
-            System.out.println("Workspace notes table created");
+            System.out.println("Workspace table created");
             statement.execute(notesTable);
             System.out.println("Notes table created");
             statement.execute(calendarEventsTable);
@@ -74,10 +73,11 @@ public class DatabaseSetup {
             statement.execute(workspaceJournalsTable);
             System.out.println("Workspace journal table created");
         } catch (Exception e) {
-            System.out.println("Error creating table: " + e.getMessage());
+            System.out.println("Error creating tables: " + e.getMessage());
         }
     }
-    public static void main(String[] args){
+
+    public static void main(String[] args) {
         createTables();
     }
 }
