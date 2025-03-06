@@ -8,3 +8,14 @@
 /dataSources.local.xml
 # environment
 .env
+
+# Compiled class files
+*.class
+/target/classes
+
+# Application properties
+**/application.properties
+src/main/java/resources/application.properties
+
+# VS Code configuration
+.vscode/settings.json

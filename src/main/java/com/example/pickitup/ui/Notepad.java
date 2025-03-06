@@ -13,6 +13,8 @@ import javax.swing.*;  // to make the text area and GUI
 import com.example.pickitup.services.models.NotesDataModel; // to create Notes object
 import com.example.pickitup.services.dao.NotesDAO; // to use CRUD methods for notes
 import java.awt.*; // for border layout
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 // makes the popup window
@@ -25,11 +27,17 @@ public class Notepad extends JFrame
     JToolBar toolbar = null;
     JLabel toolbarLabel = null;
     String title = "Notepad";
+    private NotesDAO notesDAO;
+    private AIAssistantPanel aiAssistantPanel;
+    private JTextField titleField;
 
     // this method is the "main" method of the Notepad class that
     // calls the other methods to make the notepad program
     public void newWindow()
     {
+        // Initialize NotesDAO
+        notesDAO = new NotesDAO();
+        
         // make the basic frame
         makeFrame();
 
@@ -41,6 +49,9 @@ public class Notepad extends JFrame
 
         // add scroll pane
         addScrollPane();
+        
+        // add AI Assistant Panel
+        addAIAssistant();
 
         // show the frame
         frame.setVisible(true);
@@ -52,7 +63,7 @@ public class Notepad extends JFrame
         // set some attributes of the frame
         frame = new JFrame();
         frame.setTitle(title);
-        frame.setSize(800, 600);
+        frame.setSize(1000, 700);
 
         // closes the program when the X is clicked
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -73,9 +84,6 @@ public class Notepad extends JFrame
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
 
-        // add the text area to the frame
-        frame.add(textArea);
-
         // write a line to the editor to guide users
         textArea.setText("Begin writing here: ");
 
@@ -91,17 +99,82 @@ public class Notepad extends JFrame
         toolbar.setFloatable(false);
         frame.add(toolbar, BorderLayout.NORTH);
 
-        // write a text line to the toolbar, and add the toolbar
-        toolbarLabel = new JLabel
-                ("This is the toolbar; Add buttons here; Also try to make this bigger");
-        toolbar.add(toolbarLabel);
+        // Create title input field
+        JLabel titleLabel = new JLabel("Note Title: ");
+        toolbar.add(titleLabel);
+        
+        titleField = new JTextField(15);
+        toolbar.add(titleField);
+        
+        toolbar.addSeparator(new Dimension(10, 10));
+        
+        // Add save button
+        JButton saveButton = new JButton("Save Note");
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveCurrentNote();
+            }
+        });
+        toolbar.add(saveButton);
+        
+        // Add share with AI button
+        JButton shareWithAIButton = new JButton("Share with AI");
+        shareWithAIButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                shareNoteWithAI();
+            }
+        });
+        toolbar.add(shareWithAIButton);
     }
 
     // adds the scroll bar to the text editor
     private void addScrollPane()
     {
         scrollPane = new JScrollPane(textArea);
-        frame.add(scrollPane);
+        frame.add(scrollPane, BorderLayout.CENTER);
     }
-
+    
+    // adds the AI Assistant panel to the right side of the frame
+    private void addAIAssistant() {
+        aiAssistantPanel = new AIAssistantPanel();
+        frame.add(aiAssistantPanel, BorderLayout.EAST);
+        aiAssistantPanel.setPreferredSize(new Dimension(300, 0));
+    }
+    
+    // Saves the current note to the database
+    private void saveCurrentNote() {
+        String noteTitle = titleField.getText().trim();
+        String noteContent = textArea.getText();
+        
+        if (noteTitle.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, 
+                    "Please enter a title for your note.",
+                    "Missing Title", 
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Create and save the note
+        NotesDataModel note = new NotesDataModel(noteTitle, noteContent);
+        notesDAO.createNote(note);
+        
+        JOptionPane.showMessageDialog(frame, 
+                "Note saved successfully!",
+                "Save Successful", 
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    // Shares the current note with the AI Assistant
+    private void shareNoteWithAI() {
+        String noteTitle = titleField.getText().trim();
+        String noteContent = textArea.getText();
+        
+        if (noteTitle.isEmpty()) {
+            noteTitle = "Untitled Note";
+        }
+        
+        aiAssistantPanel.addNoteAsDocument(noteTitle, noteContent);
+    }
 }
