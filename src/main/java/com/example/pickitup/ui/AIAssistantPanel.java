@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 
 /**
  * Panel for AI Assistant functionality in the UI
- * @author GitHub Copilot
+ * @author Maaz Haque
  * @version 1.0
  */
 public class AIAssistantPanel extends JPanel {

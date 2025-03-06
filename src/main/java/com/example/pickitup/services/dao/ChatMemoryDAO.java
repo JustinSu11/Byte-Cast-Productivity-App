@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * Data Access Object for managing chat conversation memory in SQLite
- * @author GitHub Copilot
+ * @author Maaz Haque
  * @version 1.0
  */
 public class ChatMemoryDAO {

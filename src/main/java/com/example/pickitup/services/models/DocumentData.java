@@ -2,7 +2,7 @@ package com.example.pickitup.services.models;
 
 /**
  * Model class representing a document for RAG retrieval
- * @author GitHub Copilot
+ * @author Maaz Haque
  * @version 1.0
  */
 public class DocumentData {

@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 /**
  * Service for managing chat memory and persistence
- * @author GitHub Copilot
+ * @author Maaz Haque
  * @version 1.0
  */
 public class ChatMemoryService {

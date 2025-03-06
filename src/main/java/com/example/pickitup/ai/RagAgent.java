@@ -24,7 +24,7 @@ import java.util.List;
  * RAG (Retrieval Augmented Generation) Agent that uses langchain4j to retrieve relevant information
  * and augment LLM responses
  * 
- * @author GitHub Copilot
+ * @author Maaz Haque
  * @version 1.0
  */
 public class RagAgent {
