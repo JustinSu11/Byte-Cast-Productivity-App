@@ -5,14 +5,17 @@ package com.example.pickitup.ai;
  Version: 1.0
  Purpose: This class contains the necessary parameters for the Large Language Model Class
  ***********************/
+import io.github.cdimascio.dotenv.Dotenv;
+
 
 public class LargeLanguageModelParameters {
     //API Key for OpenAI
-    public static final String API_KEY = System.getenv("OPENAI_API_KEY");
+    private static final Dotenv dotenv = Dotenv.configure().load();
+    public static final String API_KEY = dotenv.get("OPENAI_API_KEY");
     //Model Name
     public static final String MODEL_NAME = "gpt-4o-mini";
-    //Max Tokens that the model can generate (2048 is usually the default)
-    public static final int MAX_TOKENS = 2048;
+    //Max Tokens that the model can generate (2048 is usually the default but since we are on trial rn we will use 500)
+    public static final int MAX_TOKENS = 500;
     //Temperature of the model (between 0.0 and 1.0, the less it is the less creative and more precise the model is)
     public static final double TEMPERATURE = 0.0;
 

@@ -32,7 +32,7 @@ public class LargeLanguageModel {
     public String generateResponse(String userMessage)
     {
         //Generating a response from the Large Language Model
-        return largeLanguageModel.generate(userMessage);
+        return largeLanguageModel.chat(userMessage);
     } //End of method generateResponse
 
     public static void main (String[] args)
