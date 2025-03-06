@@ -108,15 +108,7 @@ public class Notepad extends JFrame
         
         toolbar.addSeparator(new Dimension(10, 10));
         
-        // Add save button
-        JButton saveButton = new JButton("Save Note");
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                saveCurrentNote();
-            }
-        });
-        toolbar.add(saveButton);
+
         
         // Add share with AI button
         JButton shareWithAIButton = new JButton("Share with AI");
@@ -142,29 +134,7 @@ public class Notepad extends JFrame
         frame.add(aiAssistantPanel, BorderLayout.EAST);
         aiAssistantPanel.setPreferredSize(new Dimension(300, 0));
     }
-    
-    // Saves the current note to the database
-    private void saveCurrentNote() {
-        String noteTitle = titleField.getText().trim();
-        String noteContent = textArea.getText();
-        
-        if (noteTitle.isEmpty()) {
-            JOptionPane.showMessageDialog(frame, 
-                    "Please enter a title for your note.",
-                    "Missing Title", 
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        
-        // Create and save the note
-        NotesDataModel note = new NotesDataModel(noteTitle, noteContent);
-        notesDAO.createNote(note);
-        
-        JOptionPane.showMessageDialog(frame, 
-                "Note saved successfully!",
-                "Save Successful", 
-                JOptionPane.INFORMATION_MESSAGE);
-    }
+
     
     // Shares the current note with the AI Assistant
     private void shareNoteWithAI() {

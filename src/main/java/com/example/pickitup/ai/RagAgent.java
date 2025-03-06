@@ -134,6 +134,7 @@ public class RagAgent {
     
     /**
      * Clears all documents from the embedding store
+     * not yet implemented
      */
     public void clearDocuments() {
         // Fixed: Now clears the embedding store properly
