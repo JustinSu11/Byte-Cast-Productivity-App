@@ -21,6 +21,22 @@ public class NotesDAO {
         }
     }
 
+    //
+    public static void getNote(String title) {
+        String selectStatement = "SELECT * FROM notes WHERE title = ?";
+
+        try (
+                Connection connection = DatabaseConnection.connect();
+                PreparedStatement preparedStatement = connection.prepareStatement(selectStatement);
+                ){
+            preparedStatement.setString(1, title);
+
+
+        } catch (SQLException error) {
+            System.out.println("Error getting note: " + error.getMessage());
+        }
+    }
+
     public static void main(String[] args) {
         insertNote("test note", "This is a test of the insertNote function");
     }
