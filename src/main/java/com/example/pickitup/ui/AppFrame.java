@@ -25,7 +25,6 @@ public class AppFrame extends JFrame
     private JFrame mainFrame = null;
     private JPanel mainPanel = null;
     private final String TITLE = "Pick It Up"; // constant
-    public static AIAssistantPanel aiAssistantPanel;
 
 
     // constructor creates the objects
@@ -35,24 +34,14 @@ public class AppFrame extends JFrame
         mainPanel = new JPanel();
     }
 
-    // adds the AI Assistant panel to the right side of the frame
-    private void addAIAssistant() {
-        aiAssistantPanel = new AIAssistantPanel();
-        mainFrame.add(aiAssistantPanel, BorderLayout.EAST);
-        aiAssistantPanel.setPreferredSize(new Dimension(300, 0));
-    }
-
     // This method sets basic attributes of the main app frame
     public void makeMainAppFrame()
     {
         // set some attributes of the frame
-        setTitle(TITLE);
+        mainFrame.setTitle(TITLE);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // close app when X is clicked
         setExtendedState(JFrame.MAXIMIZED_BOTH); // open in fullscreen
         setLocationRelativeTo(null); // open in the center of the screen
-
-        //Add AI Assistant panel
-        addAIAssistant();
 
         // border layout is used for the main panel
         mainPanel.setLayout(new BorderLayout());

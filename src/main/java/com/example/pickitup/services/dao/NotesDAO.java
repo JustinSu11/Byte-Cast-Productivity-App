@@ -1,7 +1,9 @@
 package com.example.pickitup.services.dao;
 
+import com.example.pickitup.services.models.Note;
 import com.example.pickitup.services.database.*;
 import java.sql.*;
+import java.time.LocalDateTime;
 
 public class NotesDAO {
     //method to insert note into SQLite database
@@ -27,9 +29,19 @@ public class NotesDAO {
 
         try (
                 Connection connection = DatabaseConnection.connect();
-                PreparedStatement preparedStatement = connection.prepareStatement(selectStatement)
+                PreparedStatement preparedStatement = connection.prepareStatement(selectStatement);
+                ResultSet resultSet = preparedStatement.executeQuery();
                 ){
-            preparedStatement.setString(1, title);
+            while (resultSet.next()) {
+                //retrieve the columns and store into variables
+                long id = resultSet.getLong("id");
+                String noteTitle = resultSet.getString("title");
+                String noteContent = resultSet.getString("content");
+                LocalDateTime createdAt = resultSet.getTimestamp("createdAt").toLocalDateTime();
+                LocalDateTime updatedAt = resultSet.getTimestamp("createdAt").toLocalDateTime();
+
+                Note note = new Note(id, noteTitle, noteContent, createdAt, updatedAt);
+            }
 
 
         } catch (SQLException error) {
