@@ -1,4 +1,6 @@
 package com.example.pickitup.services.dao;
+
+import com.example.pickitup.services.database.*;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,16 +12,14 @@ import java.util.List;
  * @version 1.0
  */
 public class ChatMemoryDAO {
-    
-    private static final String DB_URL = "jdbc:sqlite:chat_memory.db";
-    
+
     /**
      * Initializes the database and creates necessary tables if they don't exist
      */
     public ChatMemoryDAO() {
         try {
             // Create the database and table if they don't exist
-            Connection connection = DriverManager.getConnection(DB_URL);
+            Connection connection = DatabaseConnection.connect();
             Statement statement = connection.createStatement();
             
             // Create table for chat messages
@@ -44,7 +44,7 @@ public class ChatMemoryDAO {
      * @param content The content of the message
      */
     public void saveMessage(String role, String content) {
-        try (Connection connection = DriverManager.getConnection(DB_URL);
+        try (Connection connection = DatabaseConnection.connect();
              PreparedStatement pstmt = connection.prepareStatement(
                      "INSERT INTO chat_messages (role, content, timestamp) VALUES (?, ?, ?)")) {
             
@@ -66,7 +66,7 @@ public class ChatMemoryDAO {
     public List<ChatMessage> getAllMessages() {
         List<ChatMessage> messages = new ArrayList<>();
         
-        try (Connection connection = DriverManager.getConnection(DB_URL);
+        try (Connection connection = DatabaseConnection.connect();
              Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT role, content FROM chat_messages ORDER BY id ASC")) {
             
@@ -86,7 +86,7 @@ public class ChatMemoryDAO {
      * Clears all chat messages from the database
      */
     public void clearAllMessages() {
-        try (Connection connection = DriverManager.getConnection(DB_URL);
+        try (Connection connection = DatabaseConnection.connect();
              Statement stmt = connection.createStatement()) {
             
             stmt.executeUpdate("DELETE FROM chat_messages");
