@@ -499,7 +499,7 @@
     </routine>
     <schema id="191" parent="1" name="main">
       <Current>1</Current>
-      <LastIntrospectionLocalTimestamp>2025-02-26.19:56:19</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2025-03-07.05:28:09</LastIntrospectionLocalTimestamp>
     </schema>
     <argument id="192" parent="16">
       <ArgumentDirection>R</ArgumentDirection>
@@ -1600,183 +1600,149 @@
     <table id="560" parent="191" name="sqlite_sequence">
       <System>1</System>
     </table>
-    <table id="561" parent="191" name="workspace_journals"/>
-    <table id="562" parent="191" name="workspaces"/>
-    <column id="563" parent="555" name="id">
+    <column id="561" parent="555" name="event_id">
       <AutoIncrement>1</AutoIncrement>
       <Position>1</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="564" parent="555" name="title">
+    <column id="562" parent="555" name="title">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="565" parent="555" name="event_description">
+    <column id="563" parent="555" name="event_description">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="566" parent="555" name="created_at">
-      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    <column id="564" parent="555" name="start_time">
+      <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>TIMESTAMP|0s</StoredType>
     </column>
-    <key id="567" parent="555">
-      <ColNames>id</ColNames>
+    <column id="565" parent="555" name="end_time">
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+      <StoredType>TIMESTAMP|0s</StoredType>
+    </column>
+    <column id="566" parent="555" name="location">
+      <Position>6</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="567" parent="555" name="created_at">
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <Position>7</Position>
+      <StoredType>TIMESTAMP|0s</StoredType>
+    </column>
+    <key id="568" parent="555">
+      <ColNames>event_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="568" parent="556" name="journal_id">
+    <column id="569" parent="556" name="journal_id">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="569" parent="556" name="note_id">
+    <column id="570" parent="556" name="note_id">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <foreign-key id="570" parent="556">
+    <foreign-key id="571" parent="556">
       <ColNames>journal_id</ColNames>
       <RefColNames>journals_id</RefColNames>
       <RefTableName>journals</RefTableName>
     </foreign-key>
-    <foreign-key id="571" parent="556">
+    <foreign-key id="572" parent="556">
       <ColNames>note_id</ColNames>
       <RefColNames>notes_id</RefColNames>
       <RefTableName>notes</RefTableName>
     </foreign-key>
-    <index id="572" parent="556" name="sqlite_autoindex_journal_notes_1">
+    <index id="573" parent="556" name="sqlite_autoindex_journal_notes_1">
       <ColNames>journal_id
 note_id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Unique>1</Unique>
     </index>
-    <key id="573" parent="556">
+    <key id="574" parent="556">
       <ColNames>journal_id
 note_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>sqlite_autoindex_journal_notes_1</UnderlyingIndexName>
     </key>
-    <column id="574" parent="557" name="journal_id">
+    <column id="575" parent="557" name="journal_id">
       <AutoIncrement>1</AutoIncrement>
       <Position>1</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="575" parent="557" name="workspace_id">
+    <column id="576" parent="557" name="workspace_id">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="576" parent="557" name="title">
+    <column id="577" parent="557" name="title">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <foreign-key id="577" parent="557">
+    <foreign-key id="578" parent="557">
       <ColNames>workspace_id</ColNames>
       <RefColNames>workspace_id</RefColNames>
       <RefTableName>workspaces</RefTableName>
     </foreign-key>
-    <key id="578" parent="557">
+    <key id="579" parent="557">
       <ColNames>journal_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="579" parent="558" name="id">
+    <column id="580" parent="558" name="id">
       <AutoIncrement>1</AutoIncrement>
       <Position>1</Position>
       <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="580" parent="558" name="title">
+    <column id="581" parent="558" name="title">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="581" parent="558" name="content">
+    <column id="582" parent="558" name="content">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="582" parent="558" name="created_at">
+    <column id="583" parent="558" name="created_at">
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <Position>4</Position>
       <StoredType>TIMESTAMP|0s</StoredType>
     </column>
-    <key id="583" parent="558">
+    <key id="584" parent="558">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="584" parent="559" name="type">
+    <column id="585" parent="559" name="type">
       <Position>1</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="585" parent="559" name="name">
+    <column id="586" parent="559" name="name">
       <Position>2</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="586" parent="559" name="tbl_name">
+    <column id="587" parent="559" name="tbl_name">
       <Position>3</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="587" parent="559" name="rootpage">
+    <column id="588" parent="559" name="rootpage">
       <Position>4</Position>
       <StoredType>INT|0s</StoredType>
     </column>
-    <column id="588" parent="559" name="sql">
+    <column id="589" parent="559" name="sql">
       <Position>5</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="589" parent="560" name="name">
+    <column id="590" parent="560" name="name">
       <Position>1</Position>
     </column>
-    <column id="590" parent="560" name="seq">
+    <column id="591" parent="560" name="seq">
       <Position>2</Position>
     </column>
-    <column id="591" parent="561" name="workspace_id">
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-      <StoredType>INTEGER|0s</StoredType>
-    </column>
-    <column id="592" parent="561" name="journal_id">
-      <NotNull>1</NotNull>
-      <Position>2</Position>
-      <StoredType>INTEGER|0s</StoredType>
-    </column>
-    <foreign-key id="593" parent="561">
-      <ColNames>workspace_id</ColNames>
-      <RefColNames>workspace_id</RefColNames>
-      <RefTableName>workspaces</RefTableName>
-    </foreign-key>
-    <foreign-key id="594" parent="561">
-      <ColNames>journal_id</ColNames>
-      <RefColNames>journals_id</RefColNames>
-      <RefTableName>journals</RefTableName>
-    </foreign-key>
-    <index id="595" parent="561" name="sqlite_autoindex_workspace_journals_1">
-      <ColNames>workspace_id
-journal_id</ColNames>
-      <NameSurrogate>1</NameSurrogate>
-      <Unique>1</Unique>
-    </index>
-    <key id="596" parent="561">
-      <ColNames>workspace_id
-journal_id</ColNames>
-      <Primary>1</Primary>
-      <UnderlyingIndexName>sqlite_autoindex_workspace_journals_1</UnderlyingIndexName>
-    </key>
-    <column id="597" parent="562" name="workspace_id">
-      <AutoIncrement>1</AutoIncrement>
-      <Position>1</Position>
-      <StoredType>INTEGER|0s</StoredType>
-    </column>
-    <column id="598" parent="562" name="title">
-      <NotNull>1</NotNull>
-      <Position>2</Position>
-      <StoredType>TEXT|0s</StoredType>
-    </column>
-    <key id="599" parent="562">
-      <ColNames>workspace_id</ColNames>
-      <Primary>1</Primary>
-    </key>
   </database-model>
 </dataSource>
