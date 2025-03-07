@@ -19,3 +19,5 @@ src/main/java/resources/application.properties
 
 # VS Code configuration
 .vscode/settings.json
+/.idea/dataSources.xml
+/.idea/dataSources.local.xml
