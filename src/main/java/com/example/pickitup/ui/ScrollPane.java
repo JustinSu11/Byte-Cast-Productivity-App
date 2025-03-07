@@ -55,4 +55,10 @@ public class ScrollPane
         return scrollPane;
     } // end getScrollPane
 
+    //get all  the text in the text area
+    public String getTextInTextEditor()
+    {
+        return textArea.getText();
+    } // end getText
+
 } // end Notepad class

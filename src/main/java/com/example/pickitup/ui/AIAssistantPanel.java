@@ -20,29 +20,58 @@ public class AIAssistantPanel extends JPanel {
     private final JTextField userInputField;
     private final JButton sendButton;
     private final JButton clearButton;
+    private final JButton shareWithAIButton;
+    private ScrollPane noteEditor;
 
     /**
      * Constructor initializes the AI Assistant panel
      */
-    public AIAssistantPanel() {
+    public AIAssistantPanel(ScrollPane noteEditor) {
         // Initialize RAG Agent
         ragAgent = new RagAgent();
-        
+        // Set note editor
+        this.noteEditor = noteEditor;
         // Set up layout
         setLayout(new BorderLayout());
-        
+
+        // Create a title panel
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        JLabel titleLabel = new JLabel("AI Assistant", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
+
         // Create chat history display area
         chatHistoryArea = new JTextArea();
         chatHistoryArea.setEditable(false);
         chatHistoryArea.setLineWrap(true);
         chatHistoryArea.setWrapStyleWord(true);
+        chatHistoryArea.setFont(new Font("Arial", Font.PLAIN, 14));
         JScrollPane scrollPane = new JScrollPane(chatHistoryArea);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         
         // Create user input field and send button
         userInputField = new JTextField();
+        userInputField.setFont(new Font("Arial", Font.PLAIN, 14));
+        userInputField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.BLUE, 1),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+
+        // Create buttons
         sendButton = new JButton("Send");
         clearButton = new JButton("Clear Chat");
+        shareWithAIButton = new JButton("Share Note with AI");
+        // Make buttons more visible with colors and fonts
+        shareWithAIButton.setBackground(new Color(0, 150, 136));
+        shareWithAIButton.setForeground(Color.WHITE);
+        shareWithAIButton.setFont(new Font("Arial", Font.BOLD, 14));
+
+        sendButton.setBackground(new Color(63, 81, 181));
+        sendButton.setForeground(Color.WHITE);
+
+        // Create panel for the share button (top of the panel)
+        JPanel sharePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        sharePanel.add(shareWithAIButton);
+        titlePanel.add(sharePanel, BorderLayout.SOUTH);
         
         // Create panel for input components
         JPanel inputPanel = new JPanel(new BorderLayout());
@@ -55,12 +84,16 @@ public class AIAssistantPanel extends JPanel {
         inputPanel.add(buttonPanel, BorderLayout.EAST);
         
         // Add components to main panel
+        add(titlePanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
         add(inputPanel, BorderLayout.SOUTH);
         
         // Set up event handlers
         setupEventHandlers();
-        
+
+        //set preferred size for better visibility
+        setPreferredSize(new Dimension(350, 600));
+
         // Load previous chat history if any
         updateChatDisplay();
     }
@@ -77,6 +110,9 @@ public class AIAssistantPanel extends JPanel {
         
         // Clear button action
         clearButton.addActionListener(e -> clearChat());
+
+        // Share with AI button action
+        shareWithAIButton.addActionListener(e -> addNoteAsDocument());
     }
     
     /**
@@ -119,13 +155,12 @@ public class AIAssistantPanel extends JPanel {
     
     /**
      * Adds current note text as a document to the RAG agent
-     * 
-     * @param noteTitle The title of the note
-     * @param noteContent The content of the note
+     *
      */
-    public void addNoteAsDocument(String noteTitle, String noteContent) {
+    public void addNoteAsDocument() {
+        String noteContent = noteEditor.getTextInTextEditor();
         if (noteContent != null && !noteContent.trim().isEmpty()) {
-            DocumentData document = new DocumentData(noteContent, noteTitle);
+            DocumentData document = new DocumentData(noteContent, "Current Note");
             ragAgent.addDocument(document);
             JOptionPane.showMessageDialog(this, 
                     "Note added to AI Assistant's knowledge base.",

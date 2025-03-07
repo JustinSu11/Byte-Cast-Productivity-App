@@ -25,7 +25,7 @@ public class App
     private AppFrame appFrame = null;
     private MenuBar menuBar = null;
     private ScrollPane scrollPane = null;
-    private AIAssistantPanel aiAssistantPanel;
+    private AIAssistantPanel aiAssistantPanel = null;
 
     // constructor
     public App()
@@ -34,7 +34,7 @@ public class App
         appFrame = new AppFrame();
         menuBar = new MenuBar();
         scrollPane = new ScrollPane();
-        aiAssistantPanel = new AIAssistantPanel();
+        aiAssistantPanel = new AIAssistantPanel(scrollPane);
     }
 
 
@@ -55,9 +55,10 @@ public class App
         scrollPane.makeScrollPane();
         appFrame.add(scrollPane.getScrollPane(), BorderLayout.CENTER);
 
-        // add the AI panel to the right of frame
-        aiAssistantPanel.setPreferredSize(new Dimension(300, 0));
+        // add the AI Assistant Panel
         appFrame.add(aiAssistantPanel, BorderLayout.EAST);
+
+
 
         // show the frame
         // this should stay as the last thing done in this method
