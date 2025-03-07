@@ -59,14 +59,14 @@ public class MenuBar extends JMenuBar
 
     // Shares the current note with the AI Assistant
     private void shareNoteWithAI() {
-        String noteTitle = titleField.getText().trim();
-        String noteContent = textArea.getText();
-
-        if (noteTitle.isEmpty()) {
-            noteTitle = "Untitled Note";
-        }
-
-        AppFrame.aiAssistantPanel.addNoteAsDocument(noteTitle, noteContent);
+//        String noteTitle = titleField.getText().trim();
+//        String noteContent = textArea.getText();
+//
+//        if (noteTitle.isEmpty()) {
+//            noteTitle = "Untitled Note";
+//        }
+//
+//        AppFrame.aiAssistantPanel.addNoteAsDocument(noteTitle, noteContent);
     }
 
     // adds the menus to the menu bar

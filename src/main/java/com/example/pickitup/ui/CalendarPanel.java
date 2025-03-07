@@ -1,7 +1,6 @@
 package com.example.pickitup.ui;
 
-import com.example.pickitup.database.CalendarEventDAO;
-import com.example.pickitup.database.DatabaseSetup;
+import com.example.pickitup.services.dao.CalendarEventDAO;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +14,7 @@ import java.util.Locale;
  * It allows users to navigate through months and view a calendar layout.
  * The current day is highlighted for better visibility.
  */
-public class CalendarApp {
+public class CalendarPanel {
     private JFrame frame;            // Main application window
     private JPanel calendarPanel;    // Panel to display the calendar
     private JLabel monthLabel;       // Label to display current month and year
@@ -26,7 +25,7 @@ public class CalendarApp {
     /**
      * Constructor initializes the calendar UI components and sets up the frame.
      */
-    public CalendarApp() {
+    public CalendarPanel() {
         // Create the main frame
         frame = new JFrame("Calendar");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -210,7 +209,6 @@ public class CalendarApp {
     }
 
     public static void main(String[] args) {
-        DatabaseSetup.createTables();
-        SwingUtilities.invokeLater(CalendarApp::new);
+        SwingUtilities.invokeLater(CalendarPanel::new);
     }
 }

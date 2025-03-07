@@ -1,4 +1,4 @@
-package com.example.pickitup.database;
+package com.example.pickitup.services.database;
 
 import java.sql.Connection;
 import java.sql.Statement;
@@ -29,7 +29,6 @@ public class DatabaseSetup {
 
         String journalsTable = "CREATE TABLE IF NOT EXISTS journals (" +
                 "journal_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "workspace_id INTEGER NOT NULL, " +
                 "title TEXT NOT NULL, " +
                 "FOREIGN KEY (workspace_id) REFERENCES workspaces(workspace_id) " +
                 ");";
@@ -42,27 +41,11 @@ public class DatabaseSetup {
                 "FOREIGN KEY (journal_id) REFERENCES journals(journals_id) " +
                 ");";
 
-        String workspaceJournalsTable = "CREATE TABLE IF NOT EXISTS workspace_journals (" +
-                "workspace_id INTEGER NOT NULL," +
-                "journal_id INTEGER NOT NULL, " +
-                "PRIMARY KEY (workspace_id, journal_id), " +
-                "FOREIGN KEY (workspace_id) REFERENCES workspaces(workspace_id), " +
-                "FOREIGN KEY (journal_id) REFERENCES journals(journals_id) " +
-                ");";
-
-        String workspacesTable = "CREATE TABLE IF NOT EXISTS workspaces (" +
-                "workspace_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "title TEXT NOT NULL " +
-                ");";
-
-
         //if connection is successful execute the above sql statements to make tables if they don't exist already
         try (
                 Connection connection = DatabaseConnection.connect();
                 Statement statement = connection.createStatement()
         ) {
-            statement.execute(workspacesTable);
-            System.out.println("Workspace notes table created");
             statement.execute(notesTable);
             System.out.println("Notes table created");
             statement.execute(calendarEventsTable);
@@ -71,8 +54,6 @@ public class DatabaseSetup {
             System.out.println("Journal table created");
             statement.execute(journalNotesTable);
             System.out.println("Journal notes table created");
-            statement.execute(workspaceJournalsTable);
-            System.out.println("Workspace journal table created");
         } catch (Exception e) {
             System.out.println("Error creating table: " + e.getMessage());
         }

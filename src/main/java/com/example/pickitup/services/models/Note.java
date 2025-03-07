@@ -1,4 +1,4 @@
-package com.example.pickitup.models;
+package com.example.pickitup.services.models;
 
 import java.time.LocalDateTime; //For time of creation/update
 
