@@ -46,28 +46,9 @@ public class MenuBar extends JMenuBar
         fontMenu.setFont(DEFAULT_FONT);
         fontSizeMenu.setFont(DEFAULT_FONT);
 
-        // Add share with AI button
-        JButton shareWithAIButton = new JButton("Share with AI");
-        shareWithAIButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                shareNoteWithAI();
-            }
-        });
-        menuBar.add(shareWithAIButton);
+
     }
 
-    // Shares the current note with the AI Assistant
-    private void shareNoteWithAI() {
-//        String noteTitle = titleField.getText().trim();
-//        String noteContent = textArea.getText();
-//
-//        if (noteTitle.isEmpty()) {
-//            noteTitle = "Untitled Note";
-//        }
-//
-//        AppFrame.aiAssistantPanel.addNoteAsDocument(noteTitle, noteContent);
-    }
 
     // adds the menus to the menu bar
     public void makeMenuBar()

@@ -25,6 +25,7 @@ public class App
     private AppFrame appFrame = null;
     private MenuBar menuBar = null;
     private ScrollPane scrollPane = null;
+    private AIAssistantPanel aiAssistantPanel = null;
 
     // constructor
     public App()
@@ -33,6 +34,7 @@ public class App
         appFrame = new AppFrame();
         menuBar = new MenuBar();
         scrollPane = new ScrollPane();
+        aiAssistantPanel = new AIAssistantPanel(scrollPane);
     }
 
 
@@ -52,6 +54,10 @@ public class App
         // make and add the scroll pane (text area)
         scrollPane.makeScrollPane();
         appFrame.add(scrollPane.getScrollPane(), BorderLayout.CENTER);
+
+        // add the AI Assistant Panel
+        appFrame.add(aiAssistantPanel, BorderLayout.EAST);
+
 
 
         // show the frame
