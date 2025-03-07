@@ -1,0 +1,16 @@
+Index: .idea/modules.xml
+===================================================================
+diff --git a/.idea/modules.xml b/.idea/modules.xml
+deleted file mode 100644
+--- a/.idea/modules.xml	(revision b2b256b01d816372e62676b2867bf8b9b84c2864)
++++ /dev/null	(revision b2b256b01d816372e62676b2867bf8b9b84c2864)
+@@ -1,8 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="ProjectModuleManager">
+-    <modules>
+-      <module fileurl="file://$PROJECT_DIR$/Byte-Cast-Productivity-App.iml" filepath="$PROJECT_DIR$/Byte-Cast-Productivity-App.iml" />
+-    </modules>
+-  </component>
+-</project>
+\ No newline at end of file
