@@ -27,7 +27,7 @@ public class NotesDAO {
 
         try (
                 Connection connection = DatabaseConnection.connect();
-                PreparedStatement preparedStatement = connection.prepareStatement(selectStatement);
+                PreparedStatement preparedStatement = connection.prepareStatement(selectStatement)
                 ){
             preparedStatement.setString(1, title);
 
