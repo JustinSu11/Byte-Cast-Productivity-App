@@ -1,9 +1,13 @@
 # Byte-Cast-Productivity-App
 
-Last Updated 02/19/2025 
-- Major changes made
-- moved text area down to save a space for toolbar
-- changed constant values and variable names
+Last Updated 02/28/2025 
+- Major changes
+- created new classes
+- separated code for modularity
+- removed redundant lines of code
+- Changed layout in main panel from null to border layout
+- added menu bar with some test buttons
+
 
 To run:
   1. Navigate to Launch found in pickitup/src/main/java/com/example/pickitup
