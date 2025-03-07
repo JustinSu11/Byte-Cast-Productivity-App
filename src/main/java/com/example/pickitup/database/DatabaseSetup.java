@@ -3,9 +3,11 @@ package com.example.pickitup.database;
 import java.sql.Connection;
 import java.sql.Statement;
 
-public class DatabaseSetup {
+public class DatabaseSetup
+{
     // Define tables for storing notes and calendar events
-    public static void createTables() {
+    public static void createTables()
+    {
         // Create a notes table with the structure below for each note
         String notesTable = "CREATE TABLE IF NOT EXISTS notes (" +
                 "notes_id INTEGER PRIMARY KEY AUTOINCREMENT, " +

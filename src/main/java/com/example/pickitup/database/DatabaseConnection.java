@@ -8,7 +8,8 @@ public class DatabaseConnection {
     public static final String url = "jdbc:sqlite:pickitup.db";  // Adjust this path if needed
 
     // Attempt to connect to the database or create it if it doesn't exist
-    public static Connection connect() {
+    public static Connection connect()
+    {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(url);
