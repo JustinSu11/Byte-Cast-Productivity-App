@@ -1,7 +1,7 @@
 /*
     *******************************************************************************
     AppFrame Class
-    Updated 02/28/2025
+    Updated 03/06/2025
 
 
     This class creates the main frame for the app and
