@@ -1,4 +1,4 @@
-package com.example.pickitup.database;
+package com.example.pickitup.services.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

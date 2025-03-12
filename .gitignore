@@ -1,8 +1,23 @@
 # Default ignored files
+/.idea/
 /.idea/shelf/
 /.idea/workspace.xml
+/.idea/dataSources
 # Editor-based HTTP Client requests
 /httpRequests/
 # Datasource local storage ignored files
-/.idea/dataSources/
+/.idea/dataSources.xml
 /.idea/dataSources.local.xml
+# environment
+.env
+
+# Compiled class files
+*.class
+/target/classes
+
+# Application properties
+**/application.properties
+src/main/java/resources/application.properties
+
+# VS Code configuration
+.vscode/settings.json
