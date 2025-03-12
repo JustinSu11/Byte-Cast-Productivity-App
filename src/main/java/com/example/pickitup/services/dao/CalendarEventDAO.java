@@ -1,7 +1,6 @@
-package com.example.pickitup.dao;
+package com.example.pickitup.services.dao;
 
-import com.example.pickitup.database.DatabaseConnection;
-
+import com.example.pickitup.services.database.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
