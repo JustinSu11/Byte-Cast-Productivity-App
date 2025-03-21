@@ -21,3 +21,6 @@ src/main/java/resources/application.properties
 
 # VS Code configuration
 .vscode/settings.json
+
+# ignore local database
+pickitup.db
