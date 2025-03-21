@@ -6,16 +6,17 @@ import java.sql.*;
 import java.time.LocalDateTime;
 
 public class NotesDAO {
+    //CREATE methods
     //method to insert note into SQLite database
-    public static void insertNote(String title, String content) {
+    public static void insertNote(Note note) {
         String insertStatement = "INSERT INTO notes (title, content) VALUES (?, ?)";
 
         try (
                 Connection connection = DatabaseConnection.connect();
                 PreparedStatement preparedStatement = connection.prepareStatement(insertStatement)
         ){
-            preparedStatement.setString(1, title);
-            preparedStatement.setString(2, content);
+            preparedStatement.setString(1, note.getTitle());
+            preparedStatement.setString(2, note.getContent());
             preparedStatement.executeUpdate();
             System.out.println("Successfully inserted note");
         } catch (SQLException error){
@@ -23,7 +24,8 @@ public class NotesDAO {
         }
     }
 
-    //
+    //READ methods
+    //method to retrieve a note by title
     public static void getNote(String title) {
         String selectStatement = "SELECT * FROM notes WHERE title = ?";
 
@@ -49,7 +51,39 @@ public class NotesDAO {
         }
     }
 
-    public static void main(String[] args) {
-        insertNote("test note", "This is a test of the insertNote function");
+    //UPDATE methods
+    //method to save an existing note
+    public static void saveNote(Note note) {
+        String updateStatement = "UPDATE notes SET title = ?, content = ? WHERE notes_id = ?";
+
+        try (
+                Connection connection = DatabaseConnection.connect();
+                PreparedStatement preparedStatement = connection.prepareStatement(updateStatement)
+                ){
+            preparedStatement.setString(1, note.getTitle());
+            preparedStatement.setString(2, note.getContent());
+            preparedStatement.setLong(3, note.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException error) {
+            System.out.println("Error saving note: " + error.getMessage());
+        }
     }
+
+    //DELETE methods
+    //method to delete a note
+    public static void deleteNote(Note note) {
+        String deleteStatement = "DELETE FROM notes WHERE notes_id = ?";
+
+        try (
+                Connection connection = DatabaseConnection.connect();
+                PreparedStatement preparedStatement = connection.prepareStatement(deleteStatement)
+                ){
+            preparedStatement.setLong(1, note.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException error) {
+            System.out.println("Error deleting note: " + error.getMessage());
+        }
+    }
+    //delete all notes belonging to a journal (*will continue once journals are implemented*)
+
 }
