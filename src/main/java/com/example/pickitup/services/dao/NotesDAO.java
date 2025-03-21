@@ -32,7 +32,7 @@ public class NotesDAO {
         try (
                 Connection connection = DatabaseConnection.connect();
                 PreparedStatement preparedStatement = connection.prepareStatement(selectStatement);
-                ResultSet resultSet = preparedStatement.executeQuery();
+                ResultSet resultSet = preparedStatement.executeQuery()
                 ){
             while (resultSet.next()) {
                 //retrieve the columns and store into variables
