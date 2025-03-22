@@ -1,11 +1,10 @@
 /*
     *******************************************************************************
-    AppFrame Class
-    Updated 03/06/2025
+    MenuBar Class
+    Updated 03/21/2025
 
 
-    This class creates the main frame for the app and
-    sets some basic attributes for the frame.
+    This class creates the menu bar for the app with various options.
 
 
     Please remember to update the version date if any changes
@@ -28,7 +27,7 @@ public class MenuBar extends JMenuBar
     private JMenu saveMenu = null;
     private JMenu fontMenu = null;
     private JMenu fontSizeMenu = null;
-    private final Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 16); // constant
+    private JMenu viewMenu = null; // New menu for view options
 
     // constructor
     // makes the file menu and save menu with the default font
@@ -39,14 +38,29 @@ public class MenuBar extends JMenuBar
         saveMenu = new JMenu("Save");
         fontMenu = new JMenu("Fonts");
         fontSizeMenu = new JMenu("Font Size");
+        viewMenu = new JMenu("View"); // Initialize new view menu
 
         // set to the default font
+        // constant
+        Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 16);
         fileMenu.setFont(DEFAULT_FONT);
         saveMenu.setFont(DEFAULT_FONT);
         fontMenu.setFont(DEFAULT_FONT);
         fontSizeMenu.setFont(DEFAULT_FONT);
+        viewMenu.setFont(DEFAULT_FONT);
 
+        // Add view menu items
+        JMenuItem notesItem = new JMenuItem("Notes");
+        JMenuItem todoItem = new JMenuItem("To-Do List");
+        JMenuItem calendarItem = new JMenuItem("Calendar");
 
+        notesItem.setFont(DEFAULT_FONT);
+        todoItem.setFont(DEFAULT_FONT);
+        calendarItem.setFont(DEFAULT_FONT);
+
+        viewMenu.add(notesItem);
+        viewMenu.add(todoItem);
+        viewMenu.add(calendarItem);
     }
 
 
@@ -55,6 +69,7 @@ public class MenuBar extends JMenuBar
     {
         menuBar.add(fileMenu);
         menuBar.add(saveMenu);
+        menuBar.add(viewMenu); // Add the view menu
         menuBar.add(fontMenu);
         menuBar.add(fontSizeMenu);
     }

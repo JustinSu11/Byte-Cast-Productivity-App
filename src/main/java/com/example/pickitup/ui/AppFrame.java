@@ -21,8 +21,6 @@ import java.awt.*;
 
 public class AppFrame extends JFrame
 {
-    // fields
-    private JFrame mainFrame = null;
     private JPanel mainPanel = null;
     private final String TITLE = "Pick It Up"; // constant
     public static AIAssistantPanel aiAssistantPanel;
@@ -31,7 +29,8 @@ public class AppFrame extends JFrame
     // constructor creates the objects
     public AppFrame()
     {
-        mainFrame = new JFrame(TITLE);
+        // fields
+        JFrame mainFrame = new JFrame(TITLE);
         mainPanel = new JPanel();
     }
 
