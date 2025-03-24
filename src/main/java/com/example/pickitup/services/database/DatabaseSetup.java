@@ -47,7 +47,12 @@ public class DatabaseSetup {
                 "content TEXT NOT NULL, " +
                 "timestamp TEXT NOT NULL)";
 
-
+        String toDoItemsTable = "CREATE TABLE IF NOTE EXISTS to_do_items (" +
+                "to_do_item_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "task_name TEXT NOT NULL, " +
+                "due_date BLOB, " +
+                "completed_flag INTEGER NOT NULL, " +
+                ")";
 
         //if connection is successful execute the above sql statements to make tables if they don't exist already
         try (
@@ -64,11 +69,10 @@ public class DatabaseSetup {
             System.out.println("Journal notes table created");
             statement.execute(chatMemoryTable);
             System.out.println("Chat memory table created");
+            statement.execute(toDoItemsTable);
+            System.out.println("To do items table created");
         } catch (Exception e) {
             System.out.println("Error creating table: " + e.getMessage());
         }
-    }
-    public static void main(String[] args){
-        createTables();
     }
 }

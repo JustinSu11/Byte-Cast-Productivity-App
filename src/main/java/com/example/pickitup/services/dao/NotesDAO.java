@@ -1,9 +1,16 @@
+/*
+ * @author Justin Nguyen
+ * @version 0.1
+ * @updated 03/24/2025
+ * */
+
 package com.example.pickitup.services.dao;
 
 import com.example.pickitup.services.models.Note;
 import com.example.pickitup.services.database.*;
 import java.sql.*;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NotesDAO {
     //CREATE methods
@@ -36,19 +43,39 @@ public class NotesDAO {
                 ){
             while (resultSet.next()) {
                 //retrieve the columns and store into variables
-                long id = resultSet.getLong("id");
+                long note_id = resultSet.getLong("id");
+                long journal_id = resultSet.getLong("journal_id");
                 String noteTitle = resultSet.getString("title");
                 String noteContent = resultSet.getString("content");
-                LocalDateTime createdAt = resultSet.getTimestamp("createdAt").toLocalDateTime();
-                LocalDateTime updatedAt = resultSet.getTimestamp("createdAt").toLocalDateTime();
 
-                Note note = new Note(id, noteTitle, noteContent, createdAt, updatedAt);
+                Note note = new Note(note_id, journal_id, noteTitle, noteContent);
             }
-
-
         } catch (SQLException error) {
             System.out.println("Error getting note: " + error.getMessage());
         }
+    }
+    //method to retrieve all notes belonging to a journal
+    public static List<Note> getNotesByJournalId(int journalId) {
+        List<Note> notes = new ArrayList<>();
+        String retrieveStatement = "SELECT notes_id, journal_id, content FROM notes WHERE journal_id = ?";
+        try (
+                Connection connection = DatabaseConnection.connect();
+                PreparedStatement preparedStatement = connection.prepareStatement(retrieveStatement)
+        ) {
+            preparedStatement.setInt(1, journalId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int note_id = resultSet.getInt("notes_id");
+                int journal_id = resultSet.getInt("journal_id");
+                String content = resultSet.getString("content");
+                String title = resultSet.getString("title");
+                Note note = new Note(note_id, journal_id, content, title);
+                notes.add(note);
+            }
+        } catch (SQLException error) {
+            System.out.println("Error getting notes: " + error.getMessage());
+        }
+        return notes;
     }
 
     //UPDATE methods
