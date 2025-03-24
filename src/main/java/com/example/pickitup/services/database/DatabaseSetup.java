@@ -47,6 +47,8 @@ public class DatabaseSetup {
                 "content TEXT NOT NULL, " +
                 "timestamp TEXT NOT NULL)";
 
+
+
         //if connection is successful execute the above sql statements to make tables if they don't exist already
         try (
                 Connection connection = DatabaseConnection.connect();
@@ -62,7 +64,6 @@ public class DatabaseSetup {
             System.out.println("Journal notes table created");
             statement.execute(chatMemoryTable);
             System.out.println("Chat memory table created");
-            connection.close();
         } catch (Exception e) {
             System.out.println("Error creating table: " + e.getMessage());
         }
