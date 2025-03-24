@@ -1,7 +1,7 @@
 /*
     *******************************************************************************
     App Class
-    Last Updated 02/28/2025
+    Last Updated 03/21/2025
 
 
     This is the main class that uses all the classes as member variables.
@@ -16,6 +16,7 @@
 package com.example.pickitup.ui;
 
 
+import javax.swing.*;
 import java.awt.*;
 
 
@@ -26,6 +27,8 @@ public class App
     private MenuBar menuBar = null;
     private ScrollPane scrollPane = null;
     private AIAssistantPanel aiAssistantPanel = null;
+    private ToDoListPanel toDoListPanel = null;
+    private JPanel mainPanel = null;
 
     // constructor
     public App()
@@ -35,6 +38,7 @@ public class App
         menuBar = new MenuBar();
         scrollPane = new ScrollPane();
         aiAssistantPanel = new AIAssistantPanel(scrollPane);
+        toDoListPanel = new ToDoListPanel();
     }
 
 
@@ -51,13 +55,21 @@ public class App
         appFrame.add(menuBar.getMenuBar(), BorderLayout.NORTH);
 
 
+        // Create a center panel to hold the note editor and to-do list
+        JPanel centerPanel = new JPanel(new GridLayout(1, 2, 10, 0));
+
         // make and add the scroll pane (text area)
         scrollPane.makeScrollPane();
-        appFrame.add(scrollPane.getScrollPane(), BorderLayout.CENTER);
+        centerPanel.add(scrollPane.getScrollPane());
+
+        // Add the to-do list panel
+        centerPanel.add(toDoListPanel);
+
+        // Add the center panel to the main frame
+        appFrame.add(centerPanel, BorderLayout.CENTER);
 
         // add the AI Assistant Panel
         appFrame.add(aiAssistantPanel, BorderLayout.EAST);
-
 
 
         // show the frame
