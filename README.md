@@ -1,12 +1,12 @@
 # Byte-Cast-Productivity-App
 
-Last Updated 02/28/2025 
+CJ Quintero
+Last Updated 03/26/2025
 - Major changes
-- created new classes
-- separated code for modularity
-- removed redundant lines of code
-- Changed layout in main panel from null to border layout
-- added menu bar with some test buttons
+- Created TabbedPane class
+- Removed ScrollPane object from Main Frame and replaced with TabbedPane
+- added New Page and Delete Page buttons to the File menu
+- commented out all AI related stuff to avoid errors
 
 
 To run:

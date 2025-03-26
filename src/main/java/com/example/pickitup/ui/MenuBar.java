@@ -1,10 +1,12 @@
 /*
     *******************************************************************************
     MenuBar Class
-    Updated 03/21/2025
+    Updated 03/26/2025
+    Developer CJ Quintero
 
 
-    This class creates the menu bar for the app with various options.
+    This class creates the menu bar and sets some menus.
+    Each menu has its own menu items.
 
 
     Please remember to update the version date if any changes
@@ -22,59 +24,71 @@ import java.awt.event.ActionListener;
 
 public class MenuBar extends JMenuBar
 {
+    // fields
     private JMenuBar menuBar = null;
+    private TabbedPane tabbedPane = null;
+    private final Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 16); // constant
+
+    // menu bar buttons
     private JMenu fileMenu = null;
     private JMenu saveMenu = null;
     private JMenu fontMenu = null;
     private JMenu fontSizeMenu = null;
-    private JMenu viewMenu = null; // New menu for view options
+
+    // menu item buttons for fileMenu
+    private JMenuItem newPage = null;
+    private JMenuItem deletePage = null;
+
+
 
     // constructor
-    // makes the file menu and save menu with the default font
-    public MenuBar()
+    public MenuBar(TabbedPane tabbedPane)
     {
         menuBar = new JMenuBar();
+        this.tabbedPane = tabbedPane; // reference to the main frame's tabbed pane
+
+        // menu bar tabs
         fileMenu = new JMenu("File");
         saveMenu = new JMenu("Save");
         fontMenu = new JMenu("Fonts");
         fontSizeMenu = new JMenu("Font Size");
-        viewMenu = new JMenu("View"); // Initialize new view menu
 
-        // set to the default font
-        // constant
-        Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 16);
+        // menu items for fileMenu
+        newPage = new JMenuItem("New Page");
+        deletePage = new JMenuItem("Delete Page");
+
+
+        // default font for the menus
         fileMenu.setFont(DEFAULT_FONT);
         saveMenu.setFont(DEFAULT_FONT);
         fontMenu.setFont(DEFAULT_FONT);
         fontSizeMenu.setFont(DEFAULT_FONT);
-        viewMenu.setFont(DEFAULT_FONT);
 
-        // Add view menu items
-        JMenuItem notesItem = new JMenuItem("Notes");
-        JMenuItem todoItem = new JMenuItem("To-Do List");
-        JMenuItem calendarItem = new JMenuItem("Calendar");
-
-        notesItem.setFont(DEFAULT_FONT);
-        todoItem.setFont(DEFAULT_FONT);
-        calendarItem.setFont(DEFAULT_FONT);
-
-        viewMenu.add(notesItem);
-        viewMenu.add(todoItem);
-        viewMenu.add(calendarItem);
+        // for menu items
+        newPage.setFont(DEFAULT_FONT);
+        deletePage.setFont(DEFAULT_FONT);
     }
 
 
     // adds the menus to the menu bar
     public void makeMenuBar()
     {
+        // menu items for file menu
+        newPage.addActionListener(e -> tabbedPane.addTab());
+        deletePage.addActionListener(e -> tabbedPane.deleteTab());
+        fileMenu.add(newPage);
+        fileMenu.add(deletePage);
+
+
+        // add the menus to the menu bar
+        // keep these at the bottom of this method
         menuBar.add(fileMenu);
         menuBar.add(saveMenu);
-        menuBar.add(viewMenu); // Add the view menu
         menuBar.add(fontMenu);
         menuBar.add(fontSizeMenu);
     }
 
-    // returns the menu bar to be added to a panel
+    // returns the menu bar to the App class
     public JMenuBar getMenuBar()
     {
         return menuBar;
