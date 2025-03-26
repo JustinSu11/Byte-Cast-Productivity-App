@@ -25,7 +25,7 @@ public class AppFrame extends JFrame
     private JFrame mainFrame = null;
     private JPanel mainPanel = null;
     private final String TITLE = "Pick It Up"; // constant
-    public static AIAssistantPanel aiAssistantPanel;
+    //public static AIAssistantPanel aiAssistantPanel;
 
 
     // constructor creates the objects

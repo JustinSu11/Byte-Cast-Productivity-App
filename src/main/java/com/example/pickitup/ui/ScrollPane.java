@@ -1,7 +1,8 @@
 /*
     *******************************************************************************
-    Scroll Pane Class
-    Last Updated 02/28/2025
+    ScrollPane Class
+    Last Updated 03/26/2025
+    Developer CJ Quintero
 
     This class is for making the scroll pane which holds the
     text area.
