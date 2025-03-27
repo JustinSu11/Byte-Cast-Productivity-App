@@ -116,6 +116,15 @@ public class AIAssistantPanel extends JPanel {
 
         // Load previous chat history if any
         updateChatDisplay();
+        
+        // Add component listener to handle visibility changes
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                userInputField.requestFocus();
+                updateChatDisplay();
+            }
+        });
     }
     
     /**
@@ -302,3 +311,4 @@ public class AIAssistantPanel extends JPanel {
         }
     }
 }
+
