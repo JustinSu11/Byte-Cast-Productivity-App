@@ -2,6 +2,7 @@ package com.example.pickitup.ai;
 
 import com.example.pickitup.services.ChatMemoryService;
 import com.example.pickitup.services.models.DocumentData;
+import com.example.pickitup.utils.PdfUtils;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.Metadata;
 import dev.langchain4j.data.document.splitter.DocumentSplitters; // Fixed incorrect import
@@ -17,6 +18,8 @@ import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,22 +117,56 @@ public class RagAgent {
     }
     
     /**
+     * Adds a PDF document to the RAG agent's knowledge base
+     * 
+     * @param pdfFile The PDF file to process
+     * @return true if successful, false otherwise
+     */
+    public boolean addPdfDocument(File pdfFile) {
+        try {
+            // Extract text from PDF
+            String pdfContent = PdfUtils.extractTextFromPdf(pdfFile);
+            
+            // Create document data
+            DocumentData documentData = new DocumentData(
+                pdfContent,
+                "PDF: " + pdfFile.getName()
+            );
+            
+            // Add document to RAG system
+            addDocument(documentData);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    /**
      * Processes user message, stores it in memory, and gets AI response
      * 
      * @param userMessage The user message to process
-     * @return The AI's response
+     * @return The AI's response or an error message if processing fails
      */
     public String processMessage(String userMessage) {
         // Add user message to memory
         chatMemoryService.addUserMessage(userMessage);
         
-        // Get response from assistant
-        String response = assistant.chat(userMessage);
-        
-        // Store AI response in memory
-        chatMemoryService.addAiMessage(response);
-        
-        return response;
+        try {
+            // Get response from assistant
+            String response = assistant.chat(userMessage);
+            
+            // Store AI response in memory
+            chatMemoryService.addAiMessage(response);
+            
+            return response;
+        } catch (Exception e) {
+            // Log the exception for debugging
+            e.printStackTrace();
+            
+            // Return a user-friendly error message
+            return "Error generating response, check connection or message content";
+        }
     }
     
     /**
