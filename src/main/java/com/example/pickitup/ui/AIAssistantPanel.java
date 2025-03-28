@@ -214,9 +214,6 @@ public class AIAssistantPanel extends JPanel {
      */
     private void updateKnowledgeBaseInfo() {
         KnowledgeBase kb = ragAgent.getActiveKnowledgeBase();
-        if (kb != null) {
-            statusLabel.setText("Using: " + kb.getName() + " (" + kb.getDocumentCount() + " docs)");
-        }
     }
     
     /**
