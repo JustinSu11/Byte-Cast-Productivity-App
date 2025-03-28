@@ -1,6 +1,7 @@
 package com.example.pickitup.ui;
 
-import com.example.pickitup.services.dao.CalendarEventDAO;
+import com.example.pickitup.dao.CalendarEventDAO;
+import com.example.pickitup.database.DatabaseSetup;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,21 +12,21 @@ import java.util.Locale;
 
 /**
  * CalendarApp is a simple Swing-based calendar application.
- * It allows users to navigate through months and view a calendar layout.
+ * It allows users to navigate through months, view existing events, and add new events.
  * The current day is highlighted for better visibility.
  */
-public class CalendarPanel {
-    private JFrame frame;            // Main application window
-    private JPanel calendarPanel;    // Panel to display the calendar
-    private JLabel monthLabel;       // Label to display current month and year
-    private Calendar calendar;       // Calendar instance to manage date operations
-    private Calendar today;          // Tracks the current date
-    private CalendarEventDAO eventDAO = new CalendarEventDAO(); // DAO for events
+public class CalendarApp {
+    private final JFrame frame;            // Main application window
+    private final JPanel calendarPanel;    // Panel to display the calendar
+    private final JLabel monthLabel;       // Label to display current month and year
+    private final Calendar calendar;       // Calendar instance to manage date operations
+    private final Calendar today;          // Tracks the current date
+    private final CalendarEventDAO eventDAO = new CalendarEventDAO(); // DAO for events
 
     /**
      * Constructor initializes the calendar UI components and sets up the frame.
      */
-    public CalendarPanel() {
+    public CalendarApp() {
         // Create the main frame
         frame = new JFrame("Calendar");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,6 +57,9 @@ public class CalendarPanel {
         frame.setLayout(new BorderLayout());
         frame.add(headerPanel, BorderLayout.NORTH);
         frame.add(calendarPanel, BorderLayout.CENTER);
+
+        // Ensure database tables are created
+        DatabaseSetup.createTables(); // Add this to ensure tables exist
 
         // Populate calendar with the current month's data
         updateCalendar();
@@ -105,6 +109,7 @@ public class CalendarPanel {
             calendarPanel.add(new JLabel(""));
         }
 
+        // Add buttons for each day of the month
         for (int day = 1; day <= maxDays; day++) {
             JButton dayButton = new JButton(String.valueOf(day));
             dayButton.setFont(new Font("Arial", Font.PLAIN, 10));
@@ -121,24 +126,43 @@ public class CalendarPanel {
             if (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
                     calendar.get(Calendar.MONTH) == today.get(Calendar.MONTH) &&
                     day == today.get(Calendar.DAY_OF_MONTH)) {
-                dayButton.setBackground(Color.WHITE); // Highlight today's date with a different color
+                dayButton.setBackground(Color.CYAN); // Highlight today's date
                 dayButton.setForeground(Color.BLACK);
             }
 
             // Highlight days with events
             if (!events.isEmpty()) {
-                dayButton.setBackground(Color.CYAN); // Change color for event days
+                dayButton.setBackground(Color.PINK); // Change color for event days
                 dayButton.setToolTipText("<html>" + String.join("<br>", events) + "</html>"); // Show events on hover
             }
 
-            // Add click event to show event details or open event dialog
+            // Add click event to display existing events and optionally add or delete
             int selectedDay = day;
-            dayButton.addActionListener(e -> {
+            dayButton.addActionListener(e ->
+            {
                 if (!events.isEmpty()) {
+                    // Display existing events in a dialog with options
                     String eventDetails = String.join("\n", events);
-                    JOptionPane.showMessageDialog(frame, "Events for " + formattedDate + ":\n" + eventDetails,
-                            "Event Details", JOptionPane.INFORMATION_MESSAGE);
-                } else {
+                    int choice = JOptionPane.showOptionDialog(frame,
+                            "Events for " + formattedDate.split(" ")[0] + ":\n" + eventDetails,
+                            "Event Details",
+                            JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.INFORMATION_MESSAGE,
+                            null,
+                            new String[]{"Add New Event", "Delete", "Close"},
+                            "Close");
+
+                    if (choice == 0)
+                    { // "Add New Event" selected
+                        openEventDialog(selectedDay);
+                    }
+                    else if (choice == 1)
+                    { // Deletes Event selected
+                        deleteEvent(events);
+                    }
+                } else
+                {
+                    // No events found, prompt to add a new event
                     openEventDialog(selectedDay);
                 }
             });
@@ -146,7 +170,7 @@ public class CalendarPanel {
             calendarPanel.add(dayButton);
         }
 
-        // Revalidate and repaint the calendar panel to update the UI
+        // Refresh the frame to reflect updates
         calendarPanel.revalidate();
         calendarPanel.repaint();
     }
@@ -154,7 +178,7 @@ public class CalendarPanel {
     /**
      * Opens a dialog to enter an event for the selected date.
      *
-     * @param day The selected day of the month
+     * @param day The selected day of the month.
      */
     private void openEventDialog(int day) {
         String title = JOptionPane.showInputDialog(frame, "Enter event title:", "New Event", JOptionPane.PLAIN_MESSAGE);
@@ -166,9 +190,10 @@ public class CalendarPanel {
         // Time selection using dropdown
         String[] times = {"08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
                 "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM",
-                "06:00 PM", "07:00 PM", "08:00 PM", "09:00 PM"};
-        String selectedTime = (String) JOptionPane.showInputDialog(frame,
-                "Select time:", "Event Time", JOptionPane.QUESTION_MESSAGE, null, times, times[0]);
+                "06:00 PM", "07:00 PM", "08:00 PM", "09:00 PM","10:00 PM", "11:00 PM", "12:00 AM",
+                "01:00 AM", "02:00 AM", "03:00 AM", "04:00 AM", "05:00 AM",
+                "06:00 AM", "07:00 AM"};
+        String selectedTime = (String) JOptionPane.showInputDialog(frame, "Select time:", "Event Time", JOptionPane.QUESTION_MESSAGE, null, times, times[0]);
 
         if (selectedTime == null) return; // User canceled
 
@@ -182,17 +207,63 @@ public class CalendarPanel {
         // Save the event
         saveEvent(title, description, formattedDateTime);
     }
+    /**
+     * Deletes an event based on user selection.
+     *
+     * @param events List of event strings including their event_ids.
+     */
+    private void deleteEvent (List<String> events)
+    {
+        if (events == null || events.isEmpty()) return;
+
+        String[] eventOptions = new String[events.size()];
+        for (int i=0; i<events.size(); i++)
+        {
+            eventOptions[i] = events.get(i);
+        }
+        String selectedEvent = (String) JOptionPane.showInputDialog(
+                frame,
+                "Select event to delete:",
+                "Delete event",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                eventOptions,
+                eventOptions[0]);
+                if (selectedEvent != null)
+                {
+                    try
+                    {
+                        // Extract the event_id from the selected event string (e.g., "1: Meeting: Team sync at 14:00:00")
+                        int eventId = Integer.parseInt(selectedEvent.split(":")[0].trim());
+                        boolean success = eventDAO.deleteEvent(eventId);
+                        if (success)
+                        {
+                            JOptionPane.showMessageDialog(frame, "Event deleted successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                            updateCalendar(); // Refresh the calendar to reflect the deletion
+                        }
+                        else
+                        {
+                            JOptionPane.showMessageDialog(frame, "Failed to delete event.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                    catch (NumberFormatException | ArrayIndexOutOfBoundsException e)
+                    {
+                        JOptionPane.showMessageDialog(frame, "Invalid event selection.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+    }
 
     /**
-     * Saves the event details to the database or memory.
+     * Saves the event details to the database.
      *
      * @param title       The title of the event.
      * @param description The description of the event.
-     * @param startTime   The starting date and time of the event.
+     * @param startTime   The starting date and time of the event (used for both start and end for simplicity).
      */
     public void saveEvent(String title, String description, String startTime) {
-        eventDAO.saveEventToDatabase(title, description, startTime, startTime);
+        eventDAO.saveEventToDatabase(title, description, startTime, startTime); // Use existing eventDAO instance
         updateCalendar(); // Refresh UI to highlight event date
+        System.out.println("Event saved: " + title + ", " + description + ", " + startTime);
     }
 
     /**
@@ -209,6 +280,7 @@ public class CalendarPanel {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(CalendarPanel::new);
+        // Ensure database tables are created before launching the app
+        SwingUtilities.invokeLater(CalendarApp::new);
     }
 }
