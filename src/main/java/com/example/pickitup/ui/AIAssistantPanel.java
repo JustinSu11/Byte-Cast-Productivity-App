@@ -2,13 +2,16 @@ package com.example.pickitup.ui;
 
 import com.example.pickitup.ai.RagAgent;
 import com.example.pickitup.services.models.DocumentData;
+import com.example.pickitup.services.models.KnowledgeBase;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.List;
 
 /**
  * Panel for AI Assistant functionality in the UI
@@ -22,6 +25,9 @@ public class AIAssistantPanel extends JPanel {
     private final JButton clearButton;
     private final JButton shareWithAIButton;
     private final JButton uploadPdfButton;
+    private JComboBox<KnowledgeBase> knowledgeBaseComboBox;
+    private JButton createKnowledgeBaseButton;
+    private JButton detailsButton;
     private JFileChooser fileChooser;
     private ScrollPane noteEditor;
     private JLabel statusLabel;
@@ -46,6 +52,10 @@ public class AIAssistantPanel extends JPanel {
         JLabel titleLabel = new JLabel("AI Assistant", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
         titlePanel.add(titleLabel, BorderLayout.CENTER);
+        
+        // Create knowledge base selector panel
+        JPanel knowledgeBasePanel = createKnowledgeBasePanel();
+        titlePanel.add(knowledgeBasePanel, BorderLayout.NORTH);
 
         // Create chat history display area
         chatHistoryArea = new JTextArea();
@@ -128,6 +138,168 @@ public class AIAssistantPanel extends JPanel {
     }
     
     /**
+     * Creates the knowledge base selector panel
+     */
+    private JPanel createKnowledgeBasePanel() {
+        JPanel panel = new JPanel(new BorderLayout(5, 0));
+        panel.setBorder(new TitledBorder("Knowledge Base"));
+        
+        // Create knowledge base combo box
+        knowledgeBaseComboBox = new JComboBox<>();
+        refreshKnowledgeBases();
+        knowledgeBaseComboBox.addActionListener(e -> knowledgeBaseSelected());
+        
+        // Create new knowledge base button
+        createKnowledgeBaseButton = new JButton("+");
+        createKnowledgeBaseButton.setToolTipText("Create New Knowledge Base");
+        createKnowledgeBaseButton.addActionListener(e -> createNewKnowledgeBase());
+        
+        // Create a details button
+        detailsButton = new JButton("📋");
+        detailsButton.setToolTipText("Show Knowledge Base Details");
+        detailsButton.addActionListener(e -> showKnowledgeBaseDetails());
+        
+        // Create a clear button
+        JButton clearButton = new JButton("🗑️");
+        clearButton.setToolTipText("Clear Knowledge Base");
+        clearButton.addActionListener(e -> clearKnowledgeBase());
+        
+        // Create a panel for the buttons
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 2, 0));
+        buttonPanel.add(createKnowledgeBaseButton);
+        buttonPanel.add(detailsButton);
+        buttonPanel.add(clearButton);
+        
+        // Create a panel for the combo box and buttons
+        JPanel comboPanel = new JPanel(new BorderLayout());
+        comboPanel.add(knowledgeBaseComboBox, BorderLayout.CENTER);
+        comboPanel.add(buttonPanel, BorderLayout.EAST);
+        
+        panel.add(comboPanel, BorderLayout.CENTER);
+        
+        return panel;
+    }
+    
+    /**
+     * Refreshes the knowledge base dropdown with current knowledge bases
+     */
+    private void refreshKnowledgeBases() {
+        knowledgeBaseComboBox.removeAllItems();
+        
+        List<KnowledgeBase> knowledgeBases = ragAgent.getAllKnowledgeBases();
+        for (KnowledgeBase kb : knowledgeBases) {
+            knowledgeBaseComboBox.addItem(kb);
+        }
+        
+        // Select active knowledge base
+        KnowledgeBase activeKB = ragAgent.getActiveKnowledgeBase();
+        if (activeKB != null) {
+            knowledgeBaseComboBox.setSelectedItem(activeKB);
+        }
+    }
+    
+    /**
+     * Handler for knowledge base selection change
+     */
+    private void knowledgeBaseSelected() {
+        KnowledgeBase selectedKB = (KnowledgeBase) knowledgeBaseComboBox.getSelectedItem();
+        if (selectedKB != null) {
+            ragAgent.setActiveKnowledgeBase(selectedKB.getId());
+            updateKnowledgeBaseInfo();
+        }
+    }
+    
+    /**
+     * Updates the status label with information about the active knowledge base
+     */
+    private void updateKnowledgeBaseInfo() {
+        KnowledgeBase kb = ragAgent.getActiveKnowledgeBase();
+        if (kb != null) {
+            statusLabel.setText("Using: " + kb.getName() + " (" + kb.getDocumentCount() + " docs)");
+        }
+    }
+    
+    /**
+     * Creates a new knowledge base
+     */
+    private void createNewKnowledgeBase() {
+        String name = JOptionPane.showInputDialog(this, "Enter knowledge base name:");
+        if (name != null && !name.trim().isEmpty()) {
+            String description = JOptionPane.showInputDialog(this, "Enter description (optional):");
+            if (description == null) {
+                description = "";
+            }
+            
+            ragAgent.createKnowledgeBase(name, description);
+            refreshKnowledgeBases();
+        }
+    }
+    
+    /**
+     * Shows a dialog with details about the current knowledge base
+     */
+    private void showKnowledgeBaseDetails() {
+        KnowledgeBase kb = ragAgent.getActiveKnowledgeBase();
+        if (kb == null) {
+            return;
+        }
+        
+        StringBuilder details = new StringBuilder();
+        details.append("Name: ").append(kb.getName()).append("\n");
+        details.append("Description: ").append(kb.getDescription()).append("\n");
+        details.append("Document Count: ").append(kb.getDocumentCount()).append("\n\n");
+        details.append("Documents:\n");
+        
+        List<DocumentData> documents = kb.getDocuments();
+        for (int i = 0; i < documents.size(); i++) {
+            DocumentData doc = documents.get(i);
+            details.append(i + 1).append(". ").append(doc.getSource()).append("\n");
+        }
+        
+        JTextArea textArea = new JTextArea(details.toString());
+        textArea.setEditable(false);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setPreferredSize(new Dimension(400, 300));
+        
+        JOptionPane.showMessageDialog(
+                this,
+                scrollPane,
+                kb.getName() + " Details",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+    
+    /**
+     * Clears all documents from the selected knowledge base
+     */
+    private void clearKnowledgeBase() {
+        KnowledgeBase kb = ragAgent.getActiveKnowledgeBase();
+        if (kb == null) {
+            JOptionPane.showMessageDialog(this, "No active knowledge base selected");
+            return;
+        }
+        
+        int result = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to clear all documents from \"" + kb.getName() + "\"?",
+                "Confirm Clear", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        
+        if (result == JOptionPane.YES_OPTION) {
+            boolean success = ragAgent.clearKnowledgeBase(kb.getId());
+            
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Knowledge base cleared successfully!");
+                updateKnowledgeBaseInfo();
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to clear knowledge base", 
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
+    /**
      * Sets up event handlers for buttons and input field
      */
     private void setupEventHandlers() {
@@ -156,9 +328,19 @@ public class AIAssistantPanel extends JPanel {
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             
+            // Get the active knowledge base
+            KnowledgeBase activeKB = ragAgent.getActiveKnowledgeBase();
+            if (activeKB == null) {
+                JOptionPane.showMessageDialog(this, 
+                        "No active knowledge base found", 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
             // Show loading message
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            JOptionPane pane = new JOptionPane("Processing PDF document...", 
+            JOptionPane pane = new JOptionPane("Processing PDF document for " + activeKB.getName() + "...", 
                     JOptionPane.INFORMATION_MESSAGE, 
                     JOptionPane.DEFAULT_OPTION, 
                     null, 
@@ -183,9 +365,10 @@ public class AIAssistantPanel extends JPanel {
                         boolean success = get();
                         if (success) {
                             JOptionPane.showMessageDialog(AIAssistantPanel.this,
-                                    "PDF document successfully added to AI Assistant's knowledge base.",
+                                    "PDF document successfully added to " + activeKB.getName() + ".",
                                     "Document Added",
                                     JOptionPane.INFORMATION_MESSAGE);
+                            updateKnowledgeBaseInfo();
                         } else {
                             JOptionPane.showMessageDialog(AIAssistantPanel.this,
                                     "Failed to process PDF document.",
@@ -248,7 +431,7 @@ public class AIAssistantPanel extends JPanel {
                         // Re-enable input
                         userInputField.setEnabled(true);
                         sendButton.setEnabled(true);
-                        statusLabel.setText("");
+                        updateKnowledgeBaseInfo();
                         
                         // Request focus back to the input field
                         userInputField.requestFocus();
@@ -283,10 +466,20 @@ public class AIAssistantPanel extends JPanel {
     public void addNoteAsDocument() {
         String noteContent = noteEditor.getTextInTextEditor();
         if (noteContent != null && !noteContent.trim().isEmpty()) {
+            // Get the active knowledge base
+            KnowledgeBase activeKB = ragAgent.getActiveKnowledgeBase();
+            if (activeKB == null) {
+                JOptionPane.showMessageDialog(this, 
+                        "No active knowledge base found", 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
             // Show processing indicator
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             shareWithAIButton.setEnabled(false);
-            statusLabel.setText("Processing note...");
+            statusLabel.setText("Processing note for " + activeKB.getName() + "...");
             
             SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
                 @Override
@@ -300,15 +493,24 @@ public class AIAssistantPanel extends JPanel {
                 protected void done() {
                     setCursor(Cursor.getDefaultCursor());
                     shareWithAIButton.setEnabled(true);
-                    statusLabel.setText("");
+                    updateKnowledgeBaseInfo();
                     JOptionPane.showMessageDialog(AIAssistantPanel.this, 
-                            "Note added to AI Assistant's knowledge base.",
+                            "Note added to " + activeKB.getName() + ".",
                             "Document Added", 
                             JOptionPane.INFORMATION_MESSAGE);
                 }
             };
             worker.execute();
         }
+    }
+    
+    /**
+     * Gets the RAG Agent for use by other components
+     * 
+     * @return The RAG Agent
+     */
+    public RagAgent getRagAgent() {
+        return ragAgent;
     }
 }
 
