@@ -9,23 +9,29 @@ import java.util.List;
 
 /**
  * Data Access Object for managing To-Do items
- * This implementation uses in-memory storage, but could be extended
- * to use database storage in the future
+ * This implementation uses both in-memory storage and file-based persistence
  *
- * @version 1.0
+ * @version 1.1
  */
 public class ToDoItemDAO {
-    private final List<ToDoItem> todoItems;
+    private List<ToDoItem> todoItems;
+    private ToDoItemFileStorage fileStorage;
 
     /**
-     * Constructor initializes the storage for to-do items
+     * Constructor initializes the storage for to-do items and loads existing items
      */
     public ToDoItemDAO() {
-        todoItems = new ArrayList<>();
+        fileStorage = new ToDoItemFileStorage();
+        todoItems = fileStorage.loadFromFile();
+
+        // If no items were loaded (first run or error), initialize with empty list
+        if (todoItems == null) {
+            todoItems = new ArrayList<>();
+        }
     }
 
     /**
-     * Adds a new to-do item to the list
+     * Adds a new to-do item to the list and saves to file
      *
      * @param task The task description
      * @param dueDate The due date for the task
@@ -34,6 +40,7 @@ public class ToDoItemDAO {
     public ToDoItem addItem(String task, Date dueDate) {
         ToDoItem item = new ToDoItem(task, dueDate);
         todoItems.add(item);
+        saveItems(); // Save changes to file
         return item;
     }
 
@@ -86,7 +93,7 @@ public class ToDoItemDAO {
     }
 
     /**
-     * Updates the completion status of an item
+     * Updates the completion status of an item and saves changes
      *
      * @param index The index of the item to update
      * @param completed The new completion status
@@ -95,13 +102,14 @@ public class ToDoItemDAO {
     public boolean updateItemStatus(int index, boolean completed) {
         if (index >= 0 && index < todoItems.size()) {
             todoItems.get(index).setCompleted(completed);
+            saveItems(); // Save changes to file
             return true;
         }
         return false;
     }
 
     /**
-     * Removes a to-do item from the list
+     * Removes a to-do item from the list and saves changes
      *
      * @param index The index of the item to remove
      * @return true if removal was successful, false otherwise
@@ -109,6 +117,7 @@ public class ToDoItemDAO {
     public boolean removeItem(int index) {
         if (index >= 0 && index < todoItems.size()) {
             todoItems.remove(index);
+            saveItems(); // Save changes to file
             return true;
         }
         return false;
@@ -121,5 +130,14 @@ public class ToDoItemDAO {
      */
     public int getItemCount() {
         return todoItems.size();
+    }
+
+    /**
+     * Saves all items to the file
+     *
+     * @return true if save was successful, false otherwise
+     */
+    public boolean saveItems() {
+        return fileStorage.saveToFile(todoItems);
     }
 }
