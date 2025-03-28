@@ -1,7 +1,7 @@
 package com.example.pickitup.ui;
 
-import com.example.pickitup.dao.CalendarEventDAO;
-import com.example.pickitup.database.DatabaseSetup;
+import com.example.pickitup.services.dao.CalendarEventDAO;
+import com.example.pickitup.services.database.DatabaseSetup;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,65 +83,56 @@ public class CalendarApp {
      * Clears the panel and repopulates it with the correct day labels and date buttons.
      */
     private void updateCalendar() {
-        // Clear previous calendar content
         calendarPanel.removeAll();
-
-        // Set month and year in the header
         monthLabel.setText(calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()) +
                 " " + calendar.get(Calendar.YEAR));
 
-        // Add day labels (Sunday to Saturday)
+        // Add day labels
         String[] days = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
         for (String day : days) {
             JLabel dayLabel = new JLabel(day, SwingConstants.CENTER);
             dayLabel.setFont(new Font("Arial", Font.BOLD, 12));
+            dayLabel.setPreferredSize(new Dimension(30, 30)); // Consistent size
             calendarPanel.add(dayLabel);
         }
 
-        // Get the first day of the month and total number of days
+        // Get first day and max days
         Calendar temp = (Calendar) calendar.clone();
         temp.set(Calendar.DAY_OF_MONTH, 1);
-        int firstDay = temp.get(Calendar.DAY_OF_WEEK) - 1; // Convert to 0-based index
+        int firstDay = temp.get(Calendar.DAY_OF_WEEK) - 1;
         int maxDays = temp.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-        // Add empty labels for alignment before the first day of the month
+        // Add padding before first day
         for (int i = 0; i < firstDay; i++) {
-            calendarPanel.add(new JLabel(""));
+            JLabel emptyLabel = new JLabel("");
+            emptyLabel.setPreferredSize(new Dimension(30, 30)); // Consistent size
+            calendarPanel.add(emptyLabel);
         }
 
-        // Add buttons for each day of the month
+        // Add day buttons
         for (int day = 1; day <= maxDays; day++) {
             JButton dayButton = new JButton(String.valueOf(day));
             dayButton.setFont(new Font("Arial", Font.PLAIN, 10));
             dayButton.setPreferredSize(new Dimension(30, 30));
 
-            // Format date for querying
             String formattedDate = String.format("%d-%02d-%02d 00:00:00",
                     calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, day);
-
-            // Fetch events from the database
             List<String> events = eventDAO.getEvents(formattedDate);
 
-            // Highlight today's date
             if (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
                     calendar.get(Calendar.MONTH) == today.get(Calendar.MONTH) &&
                     day == today.get(Calendar.DAY_OF_MONTH)) {
-                dayButton.setBackground(Color.CYAN); // Highlight today's date
+                dayButton.setBackground(Color.CYAN);
                 dayButton.setForeground(Color.BLACK);
             }
-
-            // Highlight days with events
             if (!events.isEmpty()) {
-                dayButton.setBackground(Color.PINK); // Change color for event days
-                dayButton.setToolTipText("<html>" + String.join("<br>", events) + "</html>"); // Show events on hover
+                dayButton.setBackground(Color.PINK);
+                dayButton.setToolTipText("<html>" + String.join("<br>", events) + "</html>");
             }
 
-            // Add click event to display existing events and optionally add or delete
             int selectedDay = day;
-            dayButton.addActionListener(e ->
-            {
+            dayButton.addActionListener(e -> {
                 if (!events.isEmpty()) {
-                    // Display existing events in a dialog with options
                     String eventDetails = String.join("\n", events);
                     int choice = JOptionPane.showOptionDialog(frame,
                             "Events for " + formattedDate.split(" ")[0] + ":\n" + eventDetails,
@@ -151,26 +142,27 @@ public class CalendarApp {
                             null,
                             new String[]{"Add New Event", "Delete", "Close"},
                             "Close");
-
-                    if (choice == 0)
-                    { // "Add New Event" selected
+                    if (choice == 0) {
                         openEventDialog(selectedDay);
-                    }
-                    else if (choice == 1)
-                    { // Deletes Event selected
+                    } else if (choice == 1) {
                         deleteEvent(events);
                     }
-                } else
-                {
-                    // No events found, prompt to add a new event
+                } else {
                     openEventDialog(selectedDay);
                 }
             });
-
             calendarPanel.add(dayButton);
         }
 
-        // Refresh the frame to reflect updates
+        // Fill remaining slots
+        int totalComponents = 7 + firstDay + maxDays;
+        int remaining = 49 - totalComponents;
+        for (int i = 0; i < remaining; i++) {
+            JLabel emptyLabel = new JLabel("");
+            emptyLabel.setPreferredSize(new Dimension(30, 30));
+            calendarPanel.add(emptyLabel);
+        }
+
         calendarPanel.revalidate();
         calendarPanel.repaint();
     }

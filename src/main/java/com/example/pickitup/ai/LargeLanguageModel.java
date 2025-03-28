@@ -19,7 +19,8 @@ public class LargeLanguageModel {
      * 
      * @return Configured ChatLanguageModel
      */
-    public static ChatLanguageModel createChatModel() {
+    public static ChatLanguageModel createChatModel()
+    {
         return OpenAiChatModel.builder()
             .apiKey(LargeLanguageModelParameters.API_KEY)
             .modelName(LargeLanguageModelParameters.MODEL_NAME)
