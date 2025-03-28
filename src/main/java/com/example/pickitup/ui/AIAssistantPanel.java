@@ -5,6 +5,7 @@ import com.example.pickitup.services.models.DocumentData;
 
 import javax.swing.*;
 import java.awt.*;
+import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -27,6 +28,11 @@ public class AIAssistantPanel extends JPanel {
      * Constructor initializes the AI Assistant panel
      */
     public AIAssistantPanel(ScrollPane noteEditor) {
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // Initialize RAG Agent
         ragAgent = new RagAgent();
         // Set note editor
@@ -48,7 +54,7 @@ public class AIAssistantPanel extends JPanel {
         chatHistoryArea.setFont(new Font("Arial", Font.PLAIN, 14));
         JScrollPane scrollPane = new JScrollPane(chatHistoryArea);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        
+
         // Create user input field and send button
         userInputField = new JTextField();
         userInputField.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -72,22 +78,22 @@ public class AIAssistantPanel extends JPanel {
         JPanel sharePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         sharePanel.add(shareWithAIButton);
         titlePanel.add(sharePanel, BorderLayout.SOUTH);
-        
+
         // Create panel for input components
         JPanel inputPanel = new JPanel(new BorderLayout());
         inputPanel.add(userInputField, BorderLayout.CENTER);
-        
+
         // Create panel for buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(sendButton);
         buttonPanel.add(clearButton);
         inputPanel.add(buttonPanel, BorderLayout.EAST);
-        
+
         // Add components to main panel
         add(titlePanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
         add(inputPanel, BorderLayout.SOUTH);
-        
+
         // Set up event handlers
         setupEventHandlers();
 
@@ -97,24 +103,24 @@ public class AIAssistantPanel extends JPanel {
         // Load previous chat history if any
         updateChatDisplay();
     }
-    
+
     /**
      * Sets up event handlers for buttons and input field
      */
     private void setupEventHandlers() {
         // Send button action
         sendButton.addActionListener(e -> sendMessage());
-        
+
         // Enter key in the input field also sends message
         userInputField.addActionListener(e -> sendMessage());
-        
+
         // Clear button action
         clearButton.addActionListener(e -> clearChat());
 
         // Share with AI button action
         shareWithAIButton.addActionListener(e -> addNoteAsDocument());
     }
-    
+
     /**
      * Sends user message to RAG agent and displays response
      */
@@ -123,28 +129,28 @@ public class AIAssistantPanel extends JPanel {
         if (!userMessage.isEmpty()) {
             // Process message through RAG agent
             String aiResponse = ragAgent.processMessage(userMessage);
-            
+
             // Clear input field
             userInputField.setText("");
-            
+
             // Update chat display
             updateChatDisplay();
-            
+
             // Request focus back to the input field
             userInputField.requestFocus();
         }
     }
-    
+
     /**
      * Updates the chat display with current chat history
      */
     private void updateChatDisplay() {
         chatHistoryArea.setText(ragAgent.getChatMemoryService().getFormattedChatHistory());
-        
+
         // Scroll to the bottom of the chat
         chatHistoryArea.setCaretPosition(chatHistoryArea.getDocument().getLength());
     }
-    
+
     /**
      * Clears the chat history
      */
@@ -152,7 +158,7 @@ public class AIAssistantPanel extends JPanel {
         ragAgent.getChatMemoryService().clearMemory();
         updateChatDisplay();
     }
-    
+
     /**
      * Adds current note text as a document to the RAG agent
      *
@@ -162,9 +168,9 @@ public class AIAssistantPanel extends JPanel {
         if (noteContent != null && !noteContent.trim().isEmpty()) {
             DocumentData document = new DocumentData(noteContent, "Current Note");
             ragAgent.addDocument(document);
-            JOptionPane.showMessageDialog(this, 
+            JOptionPane.showMessageDialog(this,
                     "Note added to AI Assistant's knowledge base.",
-                    "Document Added", 
+                    "Document Added",
                     JOptionPane.INFORMATION_MESSAGE);
         }
     }

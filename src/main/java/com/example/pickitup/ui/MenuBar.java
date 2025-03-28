@@ -2,6 +2,7 @@ package com.example.pickitup.ui;
 
 import javax.swing.*;
 import java.awt.*;
+import com.formdev.flatlaf.FlatLightLaf;
 
 public class MenuBar extends JMenuBar {
     private JMenuBar menuBar = null;
@@ -14,6 +15,11 @@ public class MenuBar extends JMenuBar {
 
     // constructor
     public MenuBar() {
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf()); // Apply FlatLaf Theme
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
         saveMenu = new JMenu("Save");

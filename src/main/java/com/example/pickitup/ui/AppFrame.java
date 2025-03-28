@@ -1,54 +1,44 @@
-/*
-    *******************************************************************************
-    AppFrame Class
-    Updated 03/06/2025
-
-
-    This class creates the main frame for the app and
-    sets some basic attributes for the frame.
-
-
-    Please remember to update the version date if any changes
-    are made to this file.
-    *******************************************************************************
- */
 package com.example.pickitup.ui;
 
-
+import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.*;
 import java.awt.*;
 
-
-public class AppFrame extends JFrame
-{
-    // fields
-    private JFrame mainFrame = null;
-    private JPanel mainPanel = null;
-    private final String TITLE = "Pick It Up"; // constant
+public class AppFrame extends JFrame {
+    // Fields
+    private final JPanel mainPanel;
+    private final String TITLE = "Pick It Up"; // Constant
     public static AIAssistantPanel aiAssistantPanel;
 
+    // Constructor: Creates the objects and sets Look and Feel
+    public AppFrame() {
+        // Apply FlatLaf theme
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-    // constructor creates the objects
-    public AppFrame()
-    {
-        mainFrame = new JFrame(TITLE);
-        mainPanel = new JPanel();
-    }
-
-
-    // This method sets basic attributes of the main app frame
-    public void makeMainAppFrame()
-    {
-        // set some attributes of the frame
+        // Create frame and panel
         setTitle(TITLE);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // close app when X is clicked
-        setExtendedState(JFrame.MAXIMIZED_BOTH); // open in fullscreen
-        setLocationRelativeTo(null); // open in the center of the screen
-
-
-        // border layout is used for the main panel
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setLocationRelativeTo(null); // Center the window
+        mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         add(mainPanel);
-    } // end makeMainAppFrame()
+    }
 
-} // end Frame class
+    // This method initializes the main frame attributes
+    public void makeMainAppFrame() {
+        setVisible(true); // Show the window
+    }
+
+    // Main method to launch the app
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            AppFrame app = new AppFrame();
+            app.makeMainAppFrame();
+        });
+    }
+}

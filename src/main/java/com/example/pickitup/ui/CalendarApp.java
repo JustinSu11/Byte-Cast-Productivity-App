@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import com.formdev.flatlaf.FlatLightLaf;
 
 /**
  * CalendarApp is a simple Swing-based calendar application.
@@ -28,6 +29,12 @@ public class CalendarApp {
      */
     public CalendarApp() {
         // Create the main frame
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         frame = new JFrame("Calendar");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
