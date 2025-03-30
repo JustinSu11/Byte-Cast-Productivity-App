@@ -43,23 +43,25 @@ public class App
     // to create the entire app
     public void runApp()
     {
-        // Create and set up components first
+        // make the menu bar and add it to the main frame
         menuBar.makeMenuBar();
-        scrollPane.makeScrollPane();
+        // make the Main App Frame
+        appFrame.makeMainAppFrame();
 
-        // Add components to the frame
         appFrame.add(menuBar.getMenuBar(), BorderLayout.NORTH);
+        scrollPane.makeScrollPane();// make and add the scroll pane (text area)
         appFrame.add(scrollPane.getScrollPane(), BorderLayout.CENTER);
-        appFrame.add(aiAssistantPanel, BorderLayout.EAST);
+        appFrame.add(aiAssistantPanel, BorderLayout.EAST);// add the AI Assistant Panel
 
-        // Important: Update UI and layout before making visible
+        // Force update all components
         appFrame.validate();
         appFrame.pack();
 
         // Set to maximized state AFTER pack but BEFORE setVisible
         appFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        // Now make the frame visible
+        // show the frame
+        // this should stay as the last thing done in this method
         appFrame.setVisible(true);
     } // end runApp()
 
