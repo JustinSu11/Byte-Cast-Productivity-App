@@ -11,17 +11,21 @@ public class AppFrame extends JFrame {
     private final String TITLE = "Pick It Up"; // Constant
     public static AIAssistantPanel aiAssistantPanel;
 
-    // ✅ Apply FlatLaf before anything else
-    static {
+    // Constructor: Creates the objects and sets Look and Feel
+    public AppFrame() {
         try {
+            // Simple setup without checking for UIScale
+            FlatLightLaf.setup();
             UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (Exception e) {
             e.printStackTrace();
+            // Fall back to system look and feel if FlatLaf fails
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
-    }
-
-    // Constructor: Creates the objects and sets Look and Feel
-    public AppFrame() {
         setTitle(TITLE);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -35,6 +39,11 @@ public class AppFrame extends JFrame {
 
     // This method initializes the main frame attributes
     public void makeMainAppFrame() {
+        SwingUtilities.updateComponentTreeUI(this);
+        // Force revalidation and repainting
+        revalidate();
+        repaint();
+
         setVisible(true); // Show the window
     }
 
@@ -44,6 +53,8 @@ public class AppFrame extends JFrame {
             AppFrame app = new AppFrame();
             app.makeMainAppFrame();
             SwingUtilities.updateComponentTreeUI(app);
+            app.revalidate();
+            app.repaint();
         });
 
     }

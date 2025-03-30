@@ -16,6 +16,7 @@
 package com.example.pickitup.ui;
 
 
+import javax.swing.*;
 import java.awt.*;
 
 
@@ -42,26 +43,23 @@ public class App
     // to create the entire app
     public void runApp()
     {
-        // make the Main App Frame
-        appFrame.makeMainAppFrame();
-
-
-        // make the menu bar and add it to the main frame
+        // Create and set up components first
         menuBar.makeMenuBar();
-        appFrame.add(menuBar.getMenuBar(), BorderLayout.NORTH);
-
-
-        // make and add the scroll pane (text area)
         scrollPane.makeScrollPane();
-        appFrame.add(scrollPane.getScrollPane(), BorderLayout.CENTER);
 
-        // add the AI Assistant Panel
+        // Add components to the frame
+        appFrame.add(menuBar.getMenuBar(), BorderLayout.NORTH);
+        appFrame.add(scrollPane.getScrollPane(), BorderLayout.CENTER);
         appFrame.add(aiAssistantPanel, BorderLayout.EAST);
 
+        // Important: Update UI and layout before making visible
+        appFrame.validate();
+        appFrame.pack();
 
+        // Set to maximized state AFTER pack but BEFORE setVisible
+        appFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        // show the frame
-        // this should stay as the last thing done in this method
+        // Now make the frame visible
         appFrame.setVisible(true);
     } // end runApp()
 

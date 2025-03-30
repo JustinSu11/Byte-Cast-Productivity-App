@@ -2,6 +2,7 @@ package com.example.pickitup.ui;
 
 import javax.swing.*;
 import java.awt.*;
+import com.formdev.flatlaf.FlatLightLaf;
 
 public class MenuBar extends JMenuBar {
     private JMenuBar menuBar = null;
@@ -30,6 +31,8 @@ public class MenuBar extends JMenuBar {
 
         // Set up the calendar menu
         setupCalendarMenu();
+        revalidate();
+        repaint();
     }
 
     // Method to set up the Calendar menu with actions
