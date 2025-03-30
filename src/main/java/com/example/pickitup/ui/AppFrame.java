@@ -1,6 +1,7 @@
 package com.example.pickitup.ui;
 
 import com.formdev.flatlaf.FlatLightLaf;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -10,22 +11,25 @@ public class AppFrame extends JFrame {
     private final String TITLE = "Pick It Up"; // Constant
     public static AIAssistantPanel aiAssistantPanel;
 
-    // Constructor: Creates the objects and sets Look and Feel
-    public AppFrame() {
-        // Apply FlatLaf theme
+    // ✅ Apply FlatLaf before anything else
+    static {
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
-        // Create frame and panel
+    // Constructor: Creates the objects and sets Look and Feel
+    public AppFrame() {
         setTitle(TITLE);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLocationRelativeTo(null); // Center the window
+
         mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
+
         add(mainPanel);
     }
 
@@ -39,6 +43,8 @@ public class AppFrame extends JFrame {
         SwingUtilities.invokeLater(() -> {
             AppFrame app = new AppFrame();
             app.makeMainAppFrame();
+            SwingUtilities.updateComponentTreeUI(app);
         });
+
     }
 }

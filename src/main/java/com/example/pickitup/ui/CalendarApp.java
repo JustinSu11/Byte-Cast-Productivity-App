@@ -9,14 +9,17 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import com.formdev.flatlaf.FlatLightLaf;
+
 
 /**
- * CalendarApp is a simple Swing-based calendar application.
- * It allows users to navigate through months, view existing events, and add new events.
+ *  Author: Anney & Aron
+ *  Date: 3/21/2025
+ *  Version: 1.0
+ *  Purpose: CalendarApp is a simple Swing-based calendar application.
+ *  It allows users to navigate through months, view existing events, and add new events.
  * The current day is highlighted for better visibility.
  */
-public class CalendarApp {
+public class CalendarApp extends Component {
     private final JFrame frame;            // Main application window
     private final JPanel calendarPanel;    // Panel to display the calendar
     private final JLabel monthLabel;       // Label to display current month and year
@@ -28,12 +31,6 @@ public class CalendarApp {
      * Constructor initializes the calendar UI components and sets up the frame.
      */
     public CalendarApp() {
-        // Create the main frame
-        try {
-            UIManager.setLookAndFeel(new FlatLightLaf());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         frame = new JFrame("Calendar");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -73,6 +70,8 @@ public class CalendarApp {
 
         // Make the frame visible
         frame.setVisible(true);
+        revalidate();
+        repaint();
     }
 
     /**

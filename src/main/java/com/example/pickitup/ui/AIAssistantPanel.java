@@ -5,7 +5,6 @@ import com.example.pickitup.services.models.DocumentData;
 
 import javax.swing.*;
 import java.awt.*;
-import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -27,12 +26,8 @@ public class AIAssistantPanel extends JPanel {
     /**
      * Constructor initializes the AI Assistant panel
      */
-    public AIAssistantPanel(ScrollPane noteEditor) {
-        try {
-            UIManager.setLookAndFeel(new FlatLightLaf());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public AIAssistantPanel(ScrollPane noteEditor)
+    {
         // Initialize RAG Agent
         ragAgent = new RagAgent();
         // Set note editor
@@ -102,7 +97,9 @@ public class AIAssistantPanel extends JPanel {
 
         // Load previous chat history if any
         updateChatDisplay();
+
     }
+
 
     /**
      * Sets up event handlers for buttons and input field

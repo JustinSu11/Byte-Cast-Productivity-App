@@ -28,6 +28,7 @@ public class ScrollPane
     {
         textArea = new JTextArea();
         scrollPane = new JScrollPane(textArea);
+
     }
 
 
@@ -47,6 +48,7 @@ public class ScrollPane
 
         // set the "cursor line" to appear after the example text
         textArea.setCaretPosition(20);
+
     } // end addScrollPane
 
     // get the scroll pane to add it to the main panel

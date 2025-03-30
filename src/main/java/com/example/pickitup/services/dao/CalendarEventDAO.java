@@ -7,6 +7,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+/***************************
+ Author: Aron Rios
+ Date: 3/21/2025
+ Version: 1.0
+ Purpose: This class contains the necessary parameters for Calendar Events
+ ***********************/
 
 public class CalendarEventDAO {
     // Method to save an event to the database
@@ -39,11 +45,13 @@ public class CalendarEventDAO {
         String sql = "SELECT event_id, title, event_description, start_time FROM calendar_events WHERE DATE(start_time) = ?";
 
         try (Connection connection = DatabaseConnection.connect();
-             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+             PreparedStatement pstmt = connection.prepareStatement(sql))
+        {
             pstmt.setString(1, datePart);
             ResultSet rs = pstmt.executeQuery();
 
-            while (rs.next()) {
+            while (rs.next())
+            {
                 int eventId = rs.getInt("event_id");
                 String title = rs.getString("title");
                 String description = rs.getString("event_description");
