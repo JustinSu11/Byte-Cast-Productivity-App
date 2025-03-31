@@ -14,6 +14,7 @@
  */
 package com.example.pickitup.ui;
 
+import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,9 +30,28 @@ public class AppFrame extends JFrame
     // constructor creates the objects
     public AppFrame()
     {
-        // fields
-        JFrame mainFrame = new JFrame(TITLE);
+        try {
+            // Simple setup without checking for UIScale
+            FlatLightLaf.setup();
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Fall back to system look and feel if FlatLaf fails
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        setTitle(TITLE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setLocationRelativeTo(null); // Center the window
+
         mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+
+        add(mainPanel);
     }
 
 

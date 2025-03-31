@@ -50,6 +50,12 @@
             <artifactId>logback-classic</artifactId>
             <version>1.4.14</version>
         </dependency>
+        <!-- for flat look and feel ui -->
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.2</version>
+        </dependency>
 
     </dependencies>
 

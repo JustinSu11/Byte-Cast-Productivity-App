@@ -16,7 +16,7 @@ import java.util.List;
 
 public class CalendarEventDAO {
     // Method to save an event to the database
-    public void saveEventToDatabase(String title, String description, String startTime, String endTime) {
+    public static void saveEventToDatabase(String title, String description, String startTime, String endTime) {
         String sql = "INSERT INTO calendar_events (title, event_description, start_time, end_time) VALUES (?, ?, ?, ?)";
         try (Connection connection = DatabaseConnection.connect()) {
             assert connection != null;
@@ -39,7 +39,7 @@ public class CalendarEventDAO {
     }
 
     // Method to fetch events based on the date part of start_time
-    public List<String> getEvents(String date) {
+    public static List<String> getEvents(String date) {
         List<String> events = new ArrayList<>();
         String datePart = date.split(" ")[0];
         String sql = "SELECT event_id, title, event_description, start_time FROM calendar_events WHERE DATE(start_time) = ?";
@@ -66,7 +66,7 @@ public class CalendarEventDAO {
     }
 
     // Method to delete an event by its event_id
-    public boolean deleteEvent(int eventId)
+    public static boolean deleteEvent(int eventId)
     {
         String sql = "DELETE FROM calendar_events WHERE event_id = ?";
         try (Connection connection = DatabaseConnection.connect();

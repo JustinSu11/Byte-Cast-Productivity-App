@@ -19,21 +19,20 @@ import java.util.Locale;
  *  It allows users to navigate through months, view existing events, and add new events.
  * The current day is highlighted for better visibility.
  */
-public class CalendarApp extends Component {
+public class CalendarPanel extends Component {
     private final JFrame frame;            // Main application window
     private final JPanel calendarPanel;    // Panel to display the calendar
     private final JLabel monthLabel;       // Label to display current month and year
     private final Calendar calendar;       // Calendar instance to manage date operations
     private final Calendar today;          // Tracks the current date
-    private final CalendarEventDAO eventDAO = new CalendarEventDAO(); // DAO for events
 
     /**
      * Constructor initializes the calendar UI components and sets up the frame.
      */
-    public CalendarApp() {
+    public CalendarPanel() {
 
         frame = new JFrame("Calendar");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(400, 400);
 
         // Initialize calendar and track today's date
@@ -61,9 +60,6 @@ public class CalendarApp extends Component {
         frame.setLayout(new BorderLayout());
         frame.add(headerPanel, BorderLayout.NORTH);
         frame.add(calendarPanel, BorderLayout.CENTER);
-
-        // Ensure database tables are created
-        DatabaseSetup.createTables(); // Add this to ensure tables exist
 
         // Populate calendar with the current month's data
         updateCalendar();
@@ -123,7 +119,7 @@ public class CalendarApp extends Component {
 
             String formattedDate = String.format("%d-%02d-%02d 00:00:00",
                     calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, day);
-            List<String> events = eventDAO.getEvents(formattedDate);
+            List<String> events = CalendarEventDAO.getEvents(formattedDate);
 
             if (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
                     calendar.get(Calendar.MONTH) == today.get(Calendar.MONTH) &&
@@ -233,7 +229,7 @@ public class CalendarApp extends Component {
                     {
                         // Extract the event_id from the selected event string (e.g., "1: Meeting: Team sync at 14:00:00")
                         int eventId = Integer.parseInt(selectedEvent.split(":")[0].trim());
-                        boolean success = eventDAO.deleteEvent(eventId);
+                        boolean success = CalendarEventDAO.deleteEvent(eventId);
                         if (success)
                         {
                             JOptionPane.showMessageDialog(frame, "Event deleted successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -259,7 +255,7 @@ public class CalendarApp extends Component {
      * @param startTime   The starting date and time of the event (used for both start and end for simplicity).
      */
     public void saveEvent(String title, String description, String startTime) {
-        eventDAO.saveEventToDatabase(title, description, startTime, startTime); // Use existing eventDAO instance
+        CalendarEventDAO.saveEventToDatabase(title, description, startTime, startTime); // Use existing eventDAO instance
         updateCalendar(); // Refresh UI to highlight event date
         System.out.println("Event saved: " + title + ", " + description + ", " + startTime);
     }
@@ -275,10 +271,5 @@ public class CalendarApp extends Component {
         } catch (Exception e) {
             return "00:00:00"; // Fallback in case of error
         }
-    }
-
-    public static void main(String[] args) {
-        // Ensure database tables are created before launching the app
-        SwingUtilities.invokeLater(CalendarApp::new);
     }
 }

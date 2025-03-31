@@ -89,7 +89,7 @@ public class MenuBar extends JMenuBar
         openCalendarItem.setFont(DEFAULT_FONT);
         openCalendarItem.addActionListener(e ->
         {
-            new CalendarApp();
+            new CalendarPanel();
         });
         calendarMenu.add(openCalendarItem);
     }
