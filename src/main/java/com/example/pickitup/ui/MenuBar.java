@@ -18,6 +18,7 @@ package com.example.pickitup.ui;
 
 import javax.swing.*;
 import java.awt.*;
+import com.formdev.flatlaf.FlatLightLaf;
 
 
 public class MenuBar extends JMenuBar
@@ -33,6 +34,8 @@ public class MenuBar extends JMenuBar
     private JMenu saveMenu = null;
     private JMenu fontMenu = null;
     private JMenu fontSizeMenu = null;
+    private JMenu calendarMenu = null;
+    private final Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 16); // constant
 
     // menu item buttons for fileMenu
     private JMenuItem newPage = null;
@@ -54,6 +57,7 @@ public class MenuBar extends JMenuBar
         saveMenu = new JMenu("Save");
         fontMenu = new JMenu("Fonts");
         fontSizeMenu = new JMenu("Font Size");
+        calendarMenu = new JMenu("Calendar");
 
         // menu items for fileMenu
         newPage = new JMenuItem("New Page");
@@ -66,6 +70,12 @@ public class MenuBar extends JMenuBar
         saveMenu.setFont(DEFAULT_FONT);
         fontMenu.setFont(DEFAULT_FONT);
         fontSizeMenu.setFont(DEFAULT_FONT);
+        calendarMenu.setFont(DEFAULT_FONT);
+
+        // Set up the calendar menu
+        setupCalendarMenu();
+        revalidate();
+        repaint();
 
         // for menu items
         newPage.setFont(DEFAULT_FONT);
@@ -74,6 +84,17 @@ public class MenuBar extends JMenuBar
         deleteJournal.setFont(DEFAULT_FONT);
     }
 
+    // Method to set up the Calendar menu with actions
+    private void setupCalendarMenu()
+    {
+        JMenuItem openCalendarItem = new JMenuItem("Open Calendar");
+        openCalendarItem.setFont(DEFAULT_FONT);
+        openCalendarItem.addActionListener(e ->
+        {
+            new CalendarApp();
+        });
+        calendarMenu.add(openCalendarItem);
+    }
 
     // adds the menus to the menu bar
     public void makeMenuBar()
@@ -94,6 +115,8 @@ public class MenuBar extends JMenuBar
         menuBar.add(saveMenu);
         menuBar.add(fontMenu);
         menuBar.add(fontSizeMenu);
+        menuBar.add(calendarMenu);
+
     }
 
     // returns the menu bar to the App class

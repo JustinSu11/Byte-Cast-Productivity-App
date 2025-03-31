@@ -29,6 +29,7 @@ public class NoteEditor
     {
         textArea = new JTextArea();
         scrollPane = new JScrollPane(textArea);
+
     }
 
 
@@ -48,6 +49,7 @@ public class NoteEditor
 
         // set the "cursor line" to appear after the example text
         textArea.setCaretPosition(20);
+
     } // end addScrollPane
 
     // get the scroll pane to add it to the main panel
