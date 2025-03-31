@@ -18,7 +18,6 @@ package com.example.pickitup.ui;
 
 import javax.swing.*;
 import java.awt.*;
-import com.formdev.flatlaf.FlatLightLaf;
 
 
 public class MenuBar extends JMenuBar
@@ -35,7 +34,6 @@ public class MenuBar extends JMenuBar
     private JMenu fontMenu = null;
     private JMenu fontSizeMenu = null;
     private JMenu calendarMenu = null;
-    private final Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 16); // constant
 
     // menu item buttons for fileMenu
     private JMenuItem newPage = null;
