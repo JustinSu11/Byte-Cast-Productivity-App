@@ -16,9 +16,6 @@ public class JournalsPane extends JTabbedPane {
         journalsPane = new JTabbedPane();
     }
 
-    public NotesPane getNotesPane() {
-        return notesPane;
-    }
 
     public void makeJournalsPane() {
         title = "Journal " + (journalsPane.getTabCount() + 1);
@@ -34,14 +31,23 @@ public class JournalsPane extends JTabbedPane {
         journalsPane.addTab(title, newNotesPane.getTabbedPane());
     }
 
-    public void deleteJournalTab() {
+    public void deleteJournalTab()
+    {
         selectedJournalIndex = journalsPane.getSelectedIndex();
-        if(selectedJournalIndex >= 0) {
+        if(selectedJournalIndex >= 0)
+        {
             journalsPane.removeTabAt(selectedJournalIndex);
         }
     }
 
-    public JTabbedPane getJournalsPane() {
+    public JTabbedPane getJournalsPane()
+    {
         return journalsPane;
+    }
+
+    public NotesPane getNotesPane()
+    {
+
+        return notesPane;
     }
 }

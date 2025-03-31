@@ -33,7 +33,7 @@ public class App
         // make the objects
         appFrame = new AppFrame();
         journalsPane = new JournalsPane();
-        menuBar = new MenuBar(journalsPane);
+
 
         //aiAssistantPanel = new AIAssistantPanel(scrollPane);
     }
@@ -54,8 +54,13 @@ public class App
 
 
         // make the menu bar and add it to the main frame
+        // this MUST go after making the journals pane to avoid
+        // errors
+        menuBar = new MenuBar(journalsPane);
         menuBar.makeMenuBar();
         appFrame.add(menuBar.getMenuBar(), BorderLayout.NORTH);
+
+
 
 
         // add the AI Assistant Panel

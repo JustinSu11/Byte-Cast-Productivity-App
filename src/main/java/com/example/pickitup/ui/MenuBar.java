@@ -47,7 +47,7 @@ public class MenuBar extends JMenuBar
     {
         menuBar = new JMenuBar();
         this.journalsPane = journalsPane; // reference to the main frame's tabbed pane
-//        this.notesPane = journalsPane;
+        notesPane = journalsPane.getNotesPane();
 
         // menu bar tabs
         fileMenu = new JMenu("File");
