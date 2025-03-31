@@ -45,14 +45,15 @@ public class DatabaseSetup {
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "role TEXT NOT NULL, " +
                 "content TEXT NOT NULL, " +
-                "timestamp TEXT NOT NULL)";
+                "timestamp TEXT NOT NULL " +
+                ");";
 
-        String toDoItemsTable = "CREATE TABLE IF NOTE EXISTS to_do_items (" +
+        String toDoItemsTable = "CREATE TABLE IF NOT EXISTS to_do_items (" +
                 "to_do_item_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "task_name TEXT NOT NULL, " +
                 "due_date BLOB, " +
-                "completed_flag INTEGER NOT NULL, " +
-                ")";
+                "completed_flag INTEGER NOT NULL " +
+                ");";
 
         //if connection is successful execute the above sql statements to make tables if they don't exist already
         try (

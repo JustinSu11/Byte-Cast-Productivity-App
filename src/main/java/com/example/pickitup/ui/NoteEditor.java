@@ -17,7 +17,7 @@ package com.example.pickitup.ui;
 import javax.swing.*;
 
 
-public class ScrollPane
+public class NoteEditor
 {
     // fields
     private JTextArea textArea = null;
@@ -25,7 +25,7 @@ public class ScrollPane
 
 
     // constructor
-    public ScrollPane()
+    public NoteEditor()
     {
         textArea = new JTextArea();
         scrollPane = new JScrollPane(textArea);

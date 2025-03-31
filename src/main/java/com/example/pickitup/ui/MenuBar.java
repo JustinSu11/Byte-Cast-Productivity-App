@@ -18,15 +18,14 @@ package com.example.pickitup.ui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 
 public class MenuBar extends JMenuBar
 {
     // fields
     private JMenuBar menuBar = null;
-    private TabbedPane tabbedPane = null;
+    private NotesPane notesPane = null;
+    private JournalsPane journalsPane = null;
     private final Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 16); // constant
 
     // menu bar buttons
@@ -38,14 +37,17 @@ public class MenuBar extends JMenuBar
     // menu item buttons for fileMenu
     private JMenuItem newPage = null;
     private JMenuItem deletePage = null;
+    private JMenuItem newJournal = null;
+    private JMenuItem deleteJournal = null;
 
 
 
     // constructor
-    public MenuBar(TabbedPane tabbedPane)
+    public MenuBar(JournalsPane journalsPane)
     {
         menuBar = new JMenuBar();
-        this.tabbedPane = tabbedPane; // reference to the main frame's tabbed pane
+        this.journalsPane = journalsPane; // reference to the main frame's tabbed pane
+//        this.notesPane = journalsPane;
 
         // menu bar tabs
         fileMenu = new JMenu("File");
@@ -56,7 +58,8 @@ public class MenuBar extends JMenuBar
         // menu items for fileMenu
         newPage = new JMenuItem("New Page");
         deletePage = new JMenuItem("Delete Page");
-
+        newJournal = new JMenuItem("New Journal");
+        deleteJournal = new JMenuItem("Delete Journal");
 
         // default font for the menus
         fileMenu.setFont(DEFAULT_FONT);
@@ -67,6 +70,8 @@ public class MenuBar extends JMenuBar
         // for menu items
         newPage.setFont(DEFAULT_FONT);
         deletePage.setFont(DEFAULT_FONT);
+        newJournal.setFont(DEFAULT_FONT);
+        deleteJournal.setFont(DEFAULT_FONT);
     }
 
 
@@ -74,11 +79,14 @@ public class MenuBar extends JMenuBar
     public void makeMenuBar()
     {
         // menu items for file menu
-        newPage.addActionListener(e -> tabbedPane.addTab());
-        deletePage.addActionListener(e -> tabbedPane.deleteTab());
+        newPage.addActionListener(e -> notesPane.addTab());
+        deletePage.addActionListener(e -> notesPane.deleteTab());
+        newJournal.addActionListener(e -> journalsPane.addJournalTab());
+        deleteJournal.addActionListener(e -> journalsPane.deleteJournalTab());
         fileMenu.add(newPage);
         fileMenu.add(deletePage);
-
+        fileMenu.add(newJournal);
+        fileMenu.add(deleteJournal);
 
         // add the menus to the menu bar
         // keep these at the bottom of this method

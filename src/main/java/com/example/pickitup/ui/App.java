@@ -24,7 +24,7 @@ public class App
     // fields
     private AppFrame appFrame = null;
     private MenuBar menuBar = null;
-    private TabbedPane tabbedPane = null;
+    private JournalsPane journalsPane = null;
     //private AIAssistantPanel aiAssistantPanel = null;
 
     // constructor
@@ -32,8 +32,8 @@ public class App
     {
         // make the objects
         appFrame = new AppFrame();
-        tabbedPane = new TabbedPane();
-        menuBar = new MenuBar(tabbedPane);
+        journalsPane = new JournalsPane();
+        menuBar = new MenuBar(journalsPane);
 
         //aiAssistantPanel = new AIAssistantPanel(scrollPane);
     }
@@ -49,8 +49,8 @@ public class App
 
         // make and add the tabbed pane
         // makes a single tab by default
-        tabbedPane.makeTabbedPane();
-        appFrame.add(tabbedPane.getTabbedPane(), BorderLayout.CENTER);
+        journalsPane.makeJournalsPane();
+        appFrame.add(journalsPane.getJournalsPane(), BorderLayout.CENTER);
 
 
         // make the menu bar and add it to the main frame

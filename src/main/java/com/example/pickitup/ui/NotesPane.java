@@ -14,48 +14,56 @@ package com.example.pickitup.ui;
 
 import javax.swing.*;
 import java.awt.*;
+import com.example.pickitup.services.dao.NotesDAO;
+import com.example.pickitup.services.models.Note;
 
-public class TabbedPane extends JTabbedPane
+public class NotesPane extends JournalsPane
 {
     // fields
     private JTabbedPane tabbedPane = null;
     private String title = null;
-    private ScrollPane scrollPane = null;
+    private NoteEditor noteEditor = null;
     private int selectedIndex = 0;
     private final Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 16); // constant
 
 
     // constructor
-    public TabbedPane()
+    public NotesPane()
     {
         // initialize the variables
         tabbedPane = new JTabbedPane();
-        scrollPane = new ScrollPane();
+        noteEditor = new NoteEditor();
 
         // set the default font
         tabbedPane.setFont(DEFAULT_FONT);
     }
 
     // makes a single tab as an example
-    public void makeTabbedPane()
+    public void makeNotesPane()
     {
-        // sets the tab name, makes the scroll pane (text area), then
-        // adds the scroll pane to the new tab
+        // sets the tab name, makes the scroll pane (text area)
         title = "Page " + (tabbedPane.getTabCount() + 1);
-        scrollPane.makeScrollPane();
-        tabbedPane.addTab(title, scrollPane.getScrollPane());
+        noteEditor.makeScrollPane();
+        //inserts blank note into database (commented out due to missing journal tabs)
+//        Note currentNote = new Note(title, noteEditor.getTextInTextEditor());
+//        NotesDAO.insertNote(currentNote);
+        // adds the scroll pane to the new tab
+        tabbedPane.addTab(title, noteEditor.getScrollPane());
     }
 
 
     // method to add a new tab to the tabbed pane
     public void addTab()
     {
-        // sets the tab name, makes the scroll pane (text area), then
-        // adds the scroll pane to the new tab
+        // sets the tab name, makes the scroll pane (text area)
         title = "Page " + (tabbedPane.getTabCount() + 1);
-        ScrollPane newScrollPane = new ScrollPane();
-        newScrollPane.makeScrollPane();
-        tabbedPane.addTab(title, newScrollPane.getScrollPane());
+        NoteEditor newNoteEditor = new NoteEditor();
+        newNoteEditor.makeScrollPane();
+        //inserts blank note into database (commented out due to missing journal tabs)
+//        Note currentNote = new Note(title, newNoteEditor.getTextInTextEditor());
+//        NotesDAO.insertNote(currentNote);
+        // adds the scroll pane to the new tab
+        tabbedPane.addTab(title, newNoteEditor.getScrollPane());
     }
 
 

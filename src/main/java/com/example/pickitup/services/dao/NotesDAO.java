@@ -22,6 +22,7 @@ public class NotesDAO {
                 Connection connection = DatabaseConnection.connect();
                 PreparedStatement preparedStatement = connection.prepareStatement(insertStatement)
         ){
+
             preparedStatement.setString(1, note.getTitle());
             preparedStatement.setString(2, note.getContent());
             preparedStatement.executeUpdate();
