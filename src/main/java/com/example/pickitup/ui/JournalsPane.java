@@ -1,27 +1,25 @@
 package com.example.pickitup.ui;
 
 import javax.swing.*;
-import java.awt.*;
-import com.example.pickitup.services.dao.JournalDAO;
-import com.example.pickitup.services.models.Journal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JournalsPane extends JTabbedPane {
     private JTabbedPane journalsPane = null;
-    private NotesPane notesPane = null;
+    private List<NotesPane> notesPanes = new ArrayList<>(); // Store NotesPanes
     private String title = null;
     private int selectedJournalIndex = 0;
-    private int selectedNoteIndex = 0;
 
     public JournalsPane() {
         journalsPane = new JTabbedPane();
     }
 
-
     public void makeJournalsPane() {
         title = "Journal " + (journalsPane.getTabCount() + 1);
-        notesPane = new NotesPane();
+        NotesPane notesPane = new NotesPane();
         notesPane.makeNotesPane();
         journalsPane.addTab(title, notesPane.getTabbedPane());
+        notesPanes.add(notesPane); // Add the NotesPane to the list
     }
 
     public void addJournalTab() {
@@ -29,25 +27,26 @@ public class JournalsPane extends JTabbedPane {
         NotesPane newNotesPane = new NotesPane();
         newNotesPane.makeNotesPane();
         journalsPane.addTab(title, newNotesPane.getTabbedPane());
+        notesPanes.add(newNotesPane); // Add the new NotesPane
     }
 
-    public void deleteJournalTab()
-    {
+    public void deleteJournalTab() {
         selectedJournalIndex = journalsPane.getSelectedIndex();
-        if(selectedJournalIndex >= 0)
-        {
+        if (selectedJournalIndex >= 0) {
             journalsPane.removeTabAt(selectedJournalIndex);
+            notesPanes.remove(selectedJournalIndex); // Remove the NotesPane
         }
     }
 
-    public JTabbedPane getJournalsPane()
-    {
+    public JTabbedPane getJournalsPane() {
         return journalsPane;
     }
 
-    public NotesPane getNotesPane()
-    {
-
-        return notesPane;
+    public NotesPane getSelectedNotesPane() {
+        int selectedIndex = journalsPane.getSelectedIndex();
+        if (selectedIndex >= 0 && selectedIndex < notesPanes.size()) {
+            return notesPanes.get(selectedIndex);
+        }
+        return null; // Return null if no journal is selected or list is empty
     }
 }

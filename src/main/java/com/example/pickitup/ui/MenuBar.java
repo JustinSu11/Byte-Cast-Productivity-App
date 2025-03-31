@@ -15,17 +15,13 @@
  */
 package com.example.pickitup.ui;
 
-
 import javax.swing.*;
 import java.awt.*;
 
-
-public class MenuBar extends JMenuBar
-{
+public class MenuBar extends JMenuBar {
     // fields
     private JMenuBar menuBar = null;
-    private NotesPane notesPane = null;
-    private JournalsPane journalsPane = null;
+    private JournalsPane journalsPane = null; // Store JournalsPane
     private final Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 16); // constant
 
     // menu bar buttons
@@ -40,14 +36,10 @@ public class MenuBar extends JMenuBar
     private JMenuItem newJournal = null;
     private JMenuItem deleteJournal = null;
 
-
-
     // constructor
-    public MenuBar(JournalsPane journalsPane)
-    {
+    public MenuBar(JournalsPane journalsPane) {
         menuBar = new JMenuBar();
         this.journalsPane = journalsPane; // reference to the main frame's tabbed pane
-        notesPane = journalsPane.getNotesPane();
 
         // menu bar tabs
         fileMenu = new JMenu("File");
@@ -74,13 +66,21 @@ public class MenuBar extends JMenuBar
         deleteJournal.setFont(DEFAULT_FONT);
     }
 
-
     // adds the menus to the menu bar
-    public void makeMenuBar()
-    {
+    public void makeMenuBar() {
         // menu items for file menu
-        newPage.addActionListener(e -> notesPane.addTab());
-        deletePage.addActionListener(e -> notesPane.deleteTab());
+        newPage.addActionListener(e -> {
+            NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
+            if (selectedNotesPane != null) {
+                selectedNotesPane.addTab();
+            }
+        });
+        deletePage.addActionListener(e -> {
+            NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
+            if (selectedNotesPane != null) {
+                selectedNotesPane.deleteTab();
+            }
+        });
         newJournal.addActionListener(e -> journalsPane.addJournalTab());
         deleteJournal.addActionListener(e -> journalsPane.deleteJournalTab());
         fileMenu.add(newPage);
@@ -97,9 +97,7 @@ public class MenuBar extends JMenuBar
     }
 
     // returns the menu bar to the App class
-    public JMenuBar getMenuBar()
-    {
+    public JMenuBar getMenuBar() {
         return menuBar;
     } // end getMenuBar
-
 } // end MenuBar class
