@@ -1,20 +1,45 @@
+/*
+    *******************************************************************************
+    JournalsPane Class
+    Updated 03/31/2025
+    Developer CJ Quintero
+
+
+    This class creates the outer tabbed pane for users to make journals.
+    Each journal has its own instance of notesPane to allow multiple pages
+    inside a single journal to be made.
+
+
+    Please remember to update the version date if any changes
+    are made to this file.
+    *******************************************************************************
+ */
 package com.example.pickitup.ui;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JournalsPane extends JTabbedPane {
+public class JournalsPane extends JTabbedPane
+{
     private JTabbedPane journalsPane = null;
-    private List<NotesPane> notesPanes = new ArrayList<>(); // Store NotesPanes
+
+    // store a list of different notesPanes for the different journals
+    private List<NotesPane> notesPanes = new ArrayList<>();
     private String title = null;
     private int selectedJournalIndex = 0;
 
-    public JournalsPane() {
+
+    // constructor
+    public JournalsPane()
+    {
         journalsPane = new JTabbedPane();
     }
 
-    public void makeJournalsPane() {
+
+    // method to make a single journal pane by default
+    public void makeJournalsPane()
+    {
         title = "Journal " + (journalsPane.getTabCount() + 1);
         NotesPane notesPane = new NotesPane();
         notesPane.makeNotesPane();
@@ -22,7 +47,10 @@ public class JournalsPane extends JTabbedPane {
         notesPanes.add(notesPane); // Add the NotesPane to the list
     }
 
-    public void addJournalTab() {
+
+    // this method is used by the file menu to add a journal tab
+    public void addJournalTab()
+    {
         title = "Journal " + (journalsPane.getTabCount() + 1);
         NotesPane newNotesPane = new NotesPane();
         newNotesPane.makeNotesPane();
@@ -30,23 +58,35 @@ public class JournalsPane extends JTabbedPane {
         notesPanes.add(newNotesPane); // Add the new NotesPane
     }
 
+
+    // used by file menu to delete a journal
     public void deleteJournalTab() {
         selectedJournalIndex = journalsPane.getSelectedIndex();
-        if (selectedJournalIndex >= 0) {
+        if (selectedJournalIndex >= 0)
+        {
             journalsPane.removeTabAt(selectedJournalIndex);
             notesPanes.remove(selectedJournalIndex); // Remove the NotesPane
         }
     }
 
-    public JTabbedPane getJournalsPane() {
+
+    // return a JTabbedPane object to App class to use on main panel
+    public JTabbedPane getJournalsPane()
+    {
         return journalsPane;
     }
 
-    public NotesPane getSelectedNotesPane() {
+
+    // method for updating the current notesPane variable stored in MenuBar
+    // This tells the menu bar what journal you want to add or delete pages from
+    public NotesPane getSelectedNotesPane()
+    {
         int selectedIndex = journalsPane.getSelectedIndex();
-        if (selectedIndex >= 0 && selectedIndex < notesPanes.size()) {
+        if (selectedIndex >= 0 && selectedIndex < notesPanes.size())
+        {
             return notesPanes.get(selectedIndex);
         }
         return null; // Return null if no journal is selected or list is empty
-    }
-}
+    } // end getSelectedNotesPane
+
+} // end class

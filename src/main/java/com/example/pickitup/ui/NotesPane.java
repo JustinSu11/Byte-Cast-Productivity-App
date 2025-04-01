@@ -81,7 +81,7 @@ public class NotesPane extends JournalsPane
     }
 
 
-    // return the tabbed pane to the app class
+    // returns the notes pane to the JournalsPane class
     public JTabbedPane getTabbedPane()
     {
         return tabbedPane;
