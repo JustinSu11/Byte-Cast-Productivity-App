@@ -4,7 +4,7 @@
     Developed by Byte Cast
 
     Launch Class
-    Last Updated 03/26/2025
+    Last Updated 03/31/2025
 
     This class contains the main method
     Running this code creates the app
