@@ -37,30 +37,20 @@ public class JournalsPane extends JTabbedPane
     }
 
 
-    // method to make a single journal pane by default
-    public void makeJournalsPane()
-    {
-        title = "Journal " + (journalsPane.getTabCount() + 1);
-        NotesPane notesPane = new NotesPane();
-        notesPane.makeNotesPane();
-        journalsPane.addTab(title, notesPane.getTabbedPane());
-        notesPanes.add(notesPane); // Add the NotesPane to the list
-    }
-
-
     // this method is used by the file menu to add a journal tab
     public void addJournalTab()
     {
         title = "Journal " + (journalsPane.getTabCount() + 1);
         NotesPane newNotesPane = new NotesPane();
-        newNotesPane.makeNotesPane();
+        newNotesPane.addPageTab();
         journalsPane.addTab(title, newNotesPane.getTabbedPane());
         notesPanes.add(newNotesPane); // Add the new NotesPane
     }
 
 
     // used by file menu to delete a journal
-    public void deleteJournalTab() {
+    public void deleteJournalTab()
+    {
         selectedJournalIndex = journalsPane.getSelectedIndex();
         if (selectedJournalIndex >= 0)
         {

@@ -77,7 +77,7 @@ public class MenuBar extends JMenuBar
             NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
             if (selectedNotesPane != null)
             {
-                selectedNotesPane.addTab();
+                selectedNotesPane.addPageTab();
             }
         });
         deletePage.addActionListener(e ->
@@ -85,7 +85,7 @@ public class MenuBar extends JMenuBar
             NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
             if (selectedNotesPane != null)
             {
-                selectedNotesPane.deleteTab();
+                selectedNotesPane.deletePageTab();
             }
         });
 

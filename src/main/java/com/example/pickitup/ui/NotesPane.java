@@ -38,22 +38,9 @@ public class NotesPane extends JournalsPane
         tabbedPane.setFont(DEFAULT_FONT);
     }
 
-    // makes a single tab as an example
-    public void makeNotesPane()
-    {
-        // sets the tab name, makes the scroll pane (text area)
-        title = "Page " + (tabbedPane.getTabCount() + 1);
-        noteEditor.makeScrollPane();
-        //inserts blank note into database (commented out due to missing journal tabs)
-//        Note currentNote = new Note(title, noteEditor.getTextInTextEditor());
-//        NotesDAO.insertNote(currentNote);
-        // adds the scroll pane to the new tab
-        tabbedPane.addTab(title, noteEditor.getScrollPane());
-    }
-
 
     // method to add a new tab to the tabbed pane
-    public void addTab()
+    public void addPageTab()
     {
         // sets the tab name, makes the scroll pane (text area)
         title = "Page " + (tabbedPane.getTabCount() + 1);
@@ -68,7 +55,7 @@ public class NotesPane extends JournalsPane
 
 
     // method to remove tabs
-    public void deleteTab()
+    public void deletePageTab()
     {
         // get the index of the selected tab
         selectedIndex = tabbedPane.getSelectedIndex();

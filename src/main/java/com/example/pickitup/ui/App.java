@@ -48,8 +48,8 @@ public class App
 
 
         // make and add the tabbed pane
-        // makes a single tab by default
-        journalsPane.makeJournalsPane();
+        // adds a single tab by default
+        journalsPane.addJournalTab();
         appFrame.add(journalsPane.getJournalsPane(), BorderLayout.CENTER);
 
 
