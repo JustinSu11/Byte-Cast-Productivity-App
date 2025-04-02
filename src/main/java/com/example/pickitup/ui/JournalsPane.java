@@ -1,7 +1,7 @@
 /*
     *******************************************************************************
     JournalsPane Class
-    Updated 03/31/2025
+    Updated 04/02/2025
     Developer CJ Quintero
 
 
@@ -37,10 +37,25 @@ public class JournalsPane extends JTabbedPane
     }
 
 
+    //Replace with save loading if possible
+    public void journalConstructor()
+    {
+        title = "Journal " + (journalsPane.getTabCount() + 1);
+        NotesPane newNotesPane = new NotesPane();
+        newNotesPane.notesPaneConstuctor();
+        journalsPane.addTab(title, newNotesPane.getTabbedPane());
+        notesPanes.add(newNotesPane); // Add the new NotesPane
+    }
+
+
     // this method is used by the file menu to add a journal tab
     public void addJournalTab()
     {
-        title = "Journal " + (journalsPane.getTabCount() + 1);
+        //New name setter for tabs
+        String title = JOptionPane.showInputDialog("Enter title for new journal");
+        if (title == null || title.equals("")){
+            title = "Journal " + (journalsPane.getTabCount() + 1);
+        }
         NotesPane newNotesPane = new NotesPane();
         newNotesPane.addPageTab();
         journalsPane.addTab(title, newNotesPane.getTabbedPane());
@@ -78,5 +93,9 @@ public class JournalsPane extends JTabbedPane
         }
         return null; // Return null if no journal is selected or list is empty
     } // end getSelectedNotesPane
+
+    public void setNewJournalName(String newName) {
+        journalsPane.setTitleAt(journalsPane.getSelectedIndex(), newName);
+    }
 
 } // end class

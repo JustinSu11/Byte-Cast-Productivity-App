@@ -1,7 +1,7 @@
 /*
     *******************************************************************************
     ScrollPane Class
-    Last Updated 03/26/2025
+    Last Updated 04/02/2025
     Developer CJ Quintero
 
     This class is for making the scroll pane which holds the
@@ -61,5 +61,10 @@ public class NoteEditor
     {
         return textArea.getText();
     } // end getText
+
+    //Get tesxt area itself
+    public JTextArea getTextArea() {
+        return textArea;
+    }
 
 } // end Notepad class

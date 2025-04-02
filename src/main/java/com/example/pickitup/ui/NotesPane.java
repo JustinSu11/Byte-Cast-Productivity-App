@@ -1,7 +1,7 @@
 /*
     *******************************************************************************
     TabbedPane Class
-    Last Updated 03/31/2025
+    Last Updated 04/02/2025
     Developer CJ Quintero
 
     This class makes the tabbed pane and has methods to add or delete tabs.
@@ -39,11 +39,28 @@ public class NotesPane extends JournalsPane
     }
 
 
+    //Replace with save loading if possible
+    public void notesPaneConstuctor()
+    {
+        title = "Page " + (tabbedPane.getTabCount() + 1);
+        NoteEditor newNoteEditor = new NoteEditor();
+        newNoteEditor.makeScrollPane();
+        //inserts blank note into database (commented out due to missing journal tabs)
+//        Note currentNote = new Note(title, newNoteEditor.getTextInTextEditor());
+//        NotesDAO.insertNote(currentNote);
+        // adds the scroll pane to the new tab
+        tabbedPane.addTab(title, newNoteEditor.getScrollPane());
+    }
+
+
     // method to add a new tab to the tabbed pane
     public void addPageTab()
     {
-        // sets the tab name, makes the scroll pane (text area)
-        title = "Page " + (tabbedPane.getTabCount() + 1);
+        //New name setter for tabs
+        String title = JOptionPane.showInputDialog("Enter title for new note");
+        if (title == null || title.equals("")){
+            title = "Page " + (tabbedPane.getTabCount() + 1);
+        }
         NoteEditor newNoteEditor = new NoteEditor();
         newNoteEditor.makeScrollPane();
         //inserts blank note into database (commented out due to missing journal tabs)
@@ -67,6 +84,94 @@ public class NotesPane extends JournalsPane
         }
     }
 
+    // method to change the font size in the tabs
+    public void setFontSize(int fontSize){
+        /*
+        Font currentFont = tabbedPane.getFont();
+        Font newFont = new Font(currentFont.getName(), currentFont.getStyle(), fontSize);
+        tabbedPane.setFont(newFont);
+         */
+        // Update the font of the NoteEditor's textArea
+        int selectedTabIndex = tabbedPane.getSelectedIndex();
+        if (selectedTabIndex != -1) {
+            Component selectedComponent = tabbedPane.getComponentAt(selectedTabIndex);
+            if (selectedComponent instanceof JScrollPane) {
+                JScrollPane scrollPane = (JScrollPane) selectedComponent;
+                JViewport viewport = scrollPane.getViewport();
+                Component view = viewport.getView();
+                if (view instanceof JTextArea) {
+                    JTextArea textArea = (JTextArea) view;
+                    Font textAreaFont = textArea.getFont();
+                    Font newTextAreaFont = new Font(textAreaFont.getName(), textAreaFont.getStyle(), fontSize);
+                    textArea.setFont(newTextAreaFont);
+                }
+            }
+        }
+        //for testing out the code
+        System.out.println("Font size changed to " + fontSize);
+    }
+
+    // method to change the font in the tabs
+    public void setFontType(String fontStyle){
+        /*
+        Font currentFont = tabbedPane.getFont();
+        Font newFont = new Font(fontStyle, currentFont.getStyle(), currentFont.getSize());
+        tabbedPane.setFont(newFont);
+         */
+        // Update the font of the NoteEditor's textArea
+        int selectedTabIndex = tabbedPane.getSelectedIndex();
+        if (selectedTabIndex != -1) {
+            Component selectedComponent = tabbedPane.getComponentAt(selectedTabIndex);
+            if (selectedComponent instanceof JScrollPane) {
+                JScrollPane scrollPane = (JScrollPane) selectedComponent;
+                JViewport viewport = scrollPane.getViewport();
+                Component view = viewport.getView();
+                if (view instanceof JTextArea) {
+                    JTextArea textArea = (JTextArea) view;
+                    Font textAreaFont = textArea.getFont();
+                    Font newTextAreaFont = new Font(fontStyle, textAreaFont.getStyle(), textAreaFont.getSize());
+                    textArea.setFont(newTextAreaFont);
+                }
+            }
+        }
+        System.out.println("Font style changed to " + fontStyle);
+    }
+
+    public void setNewPageName(String newName){
+        tabbedPane.setTitleAt(tabbedPane.getSelectedIndex(), newName);
+    }
+
+    public void setFontColor(Color color){
+        int selectedTabIndex = tabbedPane.getSelectedIndex();
+        if (selectedTabIndex != -1) {
+            Component selectedComponent = tabbedPane.getComponentAt(selectedTabIndex);
+            if (selectedComponent instanceof JScrollPane) {
+                JScrollPane scrollPane = (JScrollPane) selectedComponent;
+                JViewport viewport = scrollPane.getViewport();
+                Component view = viewport.getView();
+                if (view instanceof JTextArea) {
+                    JTextArea textArea = (JTextArea) view;
+                    textArea.setForeground(color);
+                }
+            }
+        }
+    }
+
+    public void setBackgroundColor(Color color){
+        int selectedTabIndex = tabbedPane.getSelectedIndex();
+        if (selectedTabIndex != -1) {
+            Component selectedComponent = tabbedPane.getComponentAt(selectedTabIndex);
+            if (selectedComponent instanceof JScrollPane) {
+                JScrollPane scrollPane = (JScrollPane) selectedComponent;
+                JViewport viewport = scrollPane.getViewport();
+                Component view = viewport.getView();
+                if (view instanceof JTextArea) {
+                    JTextArea textArea = (JTextArea) view;
+                    textArea.setBackground(color);
+                }
+            }
+        }
+    }
 
     // returns the notes pane to the JournalsPane class
     public JTabbedPane getTabbedPane()
