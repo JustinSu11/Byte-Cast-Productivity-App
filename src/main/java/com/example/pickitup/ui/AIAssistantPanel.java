@@ -13,7 +13,6 @@ import java.awt.event.ActionListener;
  * @author Maaz Haque
  * @version 1.0
  */
-/*
 public class AIAssistantPanel extends JPanel
 {
 
@@ -23,13 +22,12 @@ public class AIAssistantPanel extends JPanel
     private final JButton sendButton;
     private final JButton clearButton;
     private final JButton shareWithAIButton;
-    private ScrollPane noteEditor;
+    private NoteEditor noteEditor;
 
     /**
      * Constructor initializes the AI Assistant panel
      */
-/*
-    public AIAssistantPanel(ScrollPane noteEditor) {
+    public AIAssistantPanel(NoteEditor noteEditor) {
         // Initialize RAG Agent
         ragAgent = new RagAgent();
         // Set note editor
@@ -104,7 +102,6 @@ public class AIAssistantPanel extends JPanel
     /**
      * Sets up event handlers for buttons and input field
      */
-/*
     private void setupEventHandlers() {
         // Send button action
         sendButton.addActionListener(e -> sendMessage());
@@ -122,7 +119,6 @@ public class AIAssistantPanel extends JPanel
     /**
      * Sends user message to RAG agent and displays response
      */
-/*
     private void sendMessage() {
         String userMessage = userInputField.getText().trim();
         if (!userMessage.isEmpty()) {
@@ -143,7 +139,6 @@ public class AIAssistantPanel extends JPanel
     /**
      * Updates the chat display with current chat history
      */
-/*
     private void updateChatDisplay() {
         chatHistoryArea.setText(ragAgent.getChatMemoryService().getFormattedChatHistory());
         
@@ -154,7 +149,6 @@ public class AIAssistantPanel extends JPanel
     /**
      * Clears the chat history
      */
-/*
     private void clearChat() {
         ragAgent.getChatMemoryService().clearMemory();
         updateChatDisplay();
@@ -164,7 +158,6 @@ public class AIAssistantPanel extends JPanel
      * Adds current note text as a document to the RAG agent
      *
      */
-/*
     public void addNoteAsDocument() {
         String noteContent = noteEditor.getTextInTextEditor();
         if (noteContent != null && !noteContent.trim().isEmpty()) {
@@ -176,6 +169,13 @@ public class AIAssistantPanel extends JPanel
                     JOptionPane.INFORMATION_MESSAGE);
         }
     }
+    
+    /**
+     * Updates the note editor reference
+     * 
+     * @param noteEditor The new note editor to use
+     */
+    public void setNoteEditor(NoteEditor noteEditor) {
+        this.noteEditor = noteEditor;
+    }
 }
-
- */

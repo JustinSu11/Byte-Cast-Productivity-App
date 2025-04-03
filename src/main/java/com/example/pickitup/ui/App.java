@@ -25,7 +25,7 @@ public class App
     private AppFrame appFrame = null;
     private MenuBar menuBar = null;
     private JournalsPane journalsPane = null;
-    //private AIAssistantPanel aiAssistantPanel = null;
+    private AIAssistantPanel aiAssistantPanel = null;
 
     // constructor
     public App()
@@ -33,9 +33,6 @@ public class App
         // make the objects
         appFrame = new AppFrame();
         journalsPane = new JournalsPane();
-
-
-        //aiAssistantPanel = new AIAssistantPanel(scrollPane);
     }
 
 
@@ -60,12 +57,16 @@ public class App
         menuBar.makeMenuBar();
         appFrame.add(menuBar.getMenuBar(), BorderLayout.NORTH);
 
-
-
-
-        // add the AI Assistant Panel
-        //appFrame.add(aiAssistantPanel, BorderLayout.EAST);
-
+        // Initialize the AI Assistant Panel with the current NoteEditor
+        NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
+        if (selectedNotesPane != null) {
+            NoteEditor currentNoteEditor = selectedNotesPane.getCurrentNoteEditor();
+            if (currentNoteEditor != null) {
+                aiAssistantPanel = new AIAssistantPanel(currentNoteEditor);
+                AppFrame.aiAssistantPanel = aiAssistantPanel;
+                appFrame.add(aiAssistantPanel, BorderLayout.EAST);
+            }
+        }
 
         // show the frame
         // this should stay as the last thing done in this method

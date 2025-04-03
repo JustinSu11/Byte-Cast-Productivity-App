@@ -14,6 +14,8 @@ package com.example.pickitup.ui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import com.example.pickitup.services.dao.NotesDAO;
 import com.example.pickitup.services.models.Note;
 
@@ -25,6 +27,7 @@ public class NotesPane extends JournalsPane
     private NoteEditor noteEditor = null;
     private int selectedIndex = 0;
     private final Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 16); // constant
+    private List<NoteEditor> noteEditors = new ArrayList<>();
 
 
     // constructor
@@ -36,6 +39,16 @@ public class NotesPane extends JournalsPane
 
         // set the default font
         tabbedPane.setFont(DEFAULT_FONT);
+        
+        // Add change listener to update AI Assistant when tab changes
+        tabbedPane.addChangeListener(e -> {
+            if (AppFrame.aiAssistantPanel != null) {
+                NoteEditor currentNoteEditor = getCurrentNoteEditor();
+                if (currentNoteEditor != null) {
+                    AppFrame.aiAssistantPanel.setNoteEditor(currentNoteEditor);
+                }
+            }
+        });
     }
 
 
@@ -51,6 +64,9 @@ public class NotesPane extends JournalsPane
 //        NotesDAO.insertNote(currentNote);
         // adds the scroll pane to the new tab
         tabbedPane.addTab(title, newNoteEditor.getScrollPane());
+        
+        // Store reference to the NoteEditor
+        noteEditors.add(newNoteEditor);
     }
 
 
@@ -64,6 +80,11 @@ public class NotesPane extends JournalsPane
         if(tabbedPane.getTabCount() > 0)
         {
             tabbedPane.removeTabAt(tabbedPane.getSelectedIndex());
+            
+            // Remove the NoteEditor reference
+            if (selectedIndex >= 0 && selectedIndex < noteEditors.size()) {
+                noteEditors.remove(selectedIndex);
+            }
         }
     }
 
@@ -73,5 +94,18 @@ public class NotesPane extends JournalsPane
     {
         return tabbedPane;
     } // end getTabbedPane
+    
+    /**
+     * Gets the current NoteEditor based on the selected tab
+     * 
+     * @return The current NoteEditor or null if no tab is selected
+     */
+    public NoteEditor getCurrentNoteEditor() {
+        int selectedIndex = tabbedPane.getSelectedIndex();
+        if (selectedIndex >= 0 && selectedIndex < noteEditors.size()) {
+            return noteEditors.get(selectedIndex);
+        }
+        return null;
+    }
 
 } // end class
