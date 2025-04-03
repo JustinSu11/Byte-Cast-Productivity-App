@@ -1,11 +1,11 @@
 /*
     *******************************************************************************
     MenuBar Class
-    Updated 03/27/2025 - Matthew Tomme
+    Updated 04/03/2025 - Matthew Tomme
 
 
     This class creates the menu bar for the app with various options.
-    Updated to include theme toggle functionality.
+    Updated to include theme toggle functionality and clock/timer access.
 
 
     Please remember to update the version date if any changes
@@ -32,6 +32,7 @@ public class MenuBar extends JMenuBar
     private JMenu themeMenu = null; // Menu for theme options
     private JMenuItem lightModeItem = null;
     private JMenuItem darkModeItem = null;
+    private JMenuItem clockTimerItem = null; // New menu item for clock/timer
     private final Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 16); // constant
     private final ThemeManager themeManager;
 
@@ -62,14 +63,17 @@ public class MenuBar extends JMenuBar
         JMenuItem notesItem = new JMenuItem("Notes");
         JMenuItem todoItem = new JMenuItem("To-Do List");
         JMenuItem calendarItem = new JMenuItem("Calendar");
+        clockTimerItem = new JMenuItem("Clock & Timer"); // New menu item
 
         notesItem.setFont(DEFAULT_FONT);
         todoItem.setFont(DEFAULT_FONT);
         calendarItem.setFont(DEFAULT_FONT);
+        clockTimerItem.setFont(DEFAULT_FONT);
 
         viewMenu.add(notesItem);
         viewMenu.add(todoItem);
         viewMenu.add(calendarItem);
+        viewMenu.add(clockTimerItem);
 
         // Add theme menu items
         lightModeItem = new JMenuItem("Light Mode");
@@ -84,8 +88,28 @@ public class MenuBar extends JMenuBar
         // Set up theme switcher actions
         setupThemeActions();
 
+        // Set up view item actions
+        setupViewActions();
+
         // Register with theme manager
         themeManager.registerComponent(menuBar);
+    }
+
+    /**
+     * Set up actions for view menu items
+     */
+    private void setupViewActions() {
+        // Here you would add action listeners for the view menu items
+        // For now, we'll focus on the clock/timer item
+        clockTimerItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // This would typically bring the clock panel into focus
+                // In our layout design, it's already visible so we don't need
+                // to do anything here, but in a more complex UI you might
+                // switch between different panels
+            }
+        });
     }
 
     /**

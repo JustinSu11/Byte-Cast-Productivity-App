@@ -1,14 +1,14 @@
 /*
     *******************************************************************************
     App Class
-    Last Updated 03/27/2025 - Matthew Tomme
+    Last Updated 04/03/2025 - Matthew Tomme
 
 
     This is the main class that uses all the classes as member variables.
     Launch.java creates an instance of this class and calls runApp()
     which adds everything to the main frame.
 
-    Updated to include theme support.
+    Updated to include theme support and clock/timer functionality.
 
     Please remember to update the version date if any changes
     are made to this file.
@@ -29,6 +29,7 @@ public class App
     private ScrollPane scrollPane = null;
     private AIAssistantPanel aiAssistantPanel = null;
     private ToDoListPanel toDoListPanel = null;
+    private ClockPanel clockPanel = null;
     private ThemeManager themeManager = null;
 
     // constructor
@@ -44,6 +45,7 @@ public class App
         scrollPane = new ScrollPane();
         aiAssistantPanel = new AIAssistantPanel(scrollPane);
         toDoListPanel = new ToDoListPanel();
+        clockPanel = new ClockPanel();
     }
 
 
@@ -56,13 +58,21 @@ public class App
 
         // make the menu bar and add it to the main frame
         menuBar.makeMenuBar();
-        appFrame.add(menuBar.getMenuBar(), BorderLayout.NORTH);
+
+        // Create a top panel for menu and clock
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(menuBar.getMenuBar(), BorderLayout.NORTH);
+        topPanel.add(clockPanel, BorderLayout.CENTER);
+
+        // Add top panel to the main frame
+        appFrame.add(topPanel, BorderLayout.NORTH);
 
         // Create a center panel to hold the note editor and to-do list
         JPanel centerPanel = new JPanel(new GridLayout(1, 2, 10, 0));
 
         // Register with theme manager
         themeManager.registerComponent(centerPanel);
+        themeManager.registerComponent(topPanel);
 
         // make and add the scroll pane (text area)
         scrollPane.makeScrollPane();
@@ -96,6 +106,7 @@ public class App
         themeManager.registerComponent(toDoListPanel);
         themeManager.registerComponent(aiAssistantPanel);
         themeManager.registerComponent(scrollPane.getScrollPane());
+        themeManager.registerComponent(clockPanel);
     }
 
 } // end App class
