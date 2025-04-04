@@ -179,8 +179,33 @@ public class CalendarApp extends Component {
      * @param day The selected day of the month.
      */
     private void openEventDialog(int day) {
+        Calendar selectedDate = (Calendar) calendar.clone();
+        selectedDate.set(Calendar.DAY_OF_MONTH, day);
+        selectedDate.set(Calendar.HOUR_OF_DAY, 0);
+        selectedDate.set(Calendar.MINUTE, 0);
+        selectedDate.set(Calendar.SECOND, 0);
+        selectedDate.set(Calendar.MILLISECOND, 0);
+
+        Calendar todayDate = (Calendar) today.clone();
+        todayDate.set(Calendar.HOUR_OF_DAY, 0);
+        todayDate.set(Calendar.MINUTE, 0);
+        todayDate.set(Calendar.SECOND, 0);
+        todayDate.set(Calendar.MILLISECOND, 0);
+
+        if (selectedDate.before(todayDate))
+        {
+            JOptionPane.showMessageDialog(frame,
+                    "You can't add events to past dates.",
+                    "Invalid Date",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         String title = JOptionPane.showInputDialog(frame, "Enter event title:", "New Event", JOptionPane.PLAIN_MESSAGE);
-        if (title == null || title.trim().isEmpty()) return;
+        if (title == null || title.trim().isEmpty())
+        {
+            JOptionPane.showMessageDialog(frame, "Description cannot be empty.", "Input Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
         String description = JOptionPane.showInputDialog(frame, "Enter event description:", "Event Details", JOptionPane.PLAIN_MESSAGE);
         if (description == null || description.trim().isEmpty()) return;
