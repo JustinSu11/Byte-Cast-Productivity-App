@@ -58,8 +58,14 @@ public class NotesPane extends JournalsPane
     {
         //New name setter for tabs
         String title = JOptionPane.showInputDialog("Enter title for new note");
-        if (title == null || title.equals("")){
+        if (title == null || title.isEmpty() || title.equals("")){
             title = "Page " + (tabbedPane.getTabCount() + 1);
+            JOptionPane.showMessageDialog(
+                    null,
+                    "No name was provided!\nDefault title is: " + title,
+                    "ERROR",
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
         NoteEditor newNoteEditor = new NoteEditor();
         newNoteEditor.makeScrollPane();

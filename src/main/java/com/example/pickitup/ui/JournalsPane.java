@@ -55,6 +55,12 @@ public class JournalsPane extends JTabbedPane
         String title = JOptionPane.showInputDialog("Enter title for new journal");
         if (title == null || title.equals("")){
             title = "Journal " + (journalsPane.getTabCount() + 1);
+            JOptionPane.showMessageDialog(
+                    null,
+                    "No name was provided!\nDefault title is: " + title,
+                    "ERROR",
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
         NotesPane newNotesPane = new NotesPane();
         newNotesPane.addPageTab();
@@ -66,12 +72,19 @@ public class JournalsPane extends JTabbedPane
     // used by file menu to delete a journal
     public void deleteJournalTab()
     {
-        selectedJournalIndex = journalsPane.getSelectedIndex();
-        if (selectedJournalIndex >= 0)
-        {
-            journalsPane.removeTabAt(selectedJournalIndex);
-            notesPanes.remove(selectedJournalIndex); // Remove the NotesPane
-        }
+        int yesNo = JOptionPane.showConfirmDialog(
+                null,
+                "Are you sure you want to delete this page!?",
+                "Delete Page?",
+                JOptionPane.YES_NO_OPTION
+        );
+        if (yesNo == JOptionPane.YES_OPTION){
+            selectedJournalIndex = journalsPane.getSelectedIndex();
+            if (selectedJournalIndex >= 0)
+            {
+                journalsPane.removeTabAt(selectedJournalIndex);
+                notesPanes.remove(selectedJournalIndex); // Remove the NotesPane
+            }}
     }
 
 

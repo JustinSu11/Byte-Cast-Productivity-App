@@ -30,19 +30,27 @@ public class MenuBar extends JMenuBar
 
     // menu bar buttons
     private JMenu fileMenu = null;
-    private JMenu saveMenu = null;
     private JMenu fontMenu = null;
-    private JMenu pagesMenu = null;
-    private JMenu journalsMenu = null;
 
-    // menu item buttons for fileMenu
-    private JMenuItem newPage = null;
-    private JMenuItem deletePage = null;
+    //----------Begin - File Menu Options----------//
+    // menu item buttons for journalsMenu
+    private JMenu journalsMenu = null;
     private JMenuItem newJournal = null;
     private JMenuItem deleteJournal = null;
     private JMenuItem renameJournal = null;
+
+    //menu item buttons for pagesMenu
+    private JMenu pagesMenu = null;
+    private JMenuItem newPage = null;
+    private JMenuItem deletePage = null;
     private JMenuItem renamePage = null;
+
+    // menu item buttons for saveMenu
+    private JMenu saveMenu = null;
+    private JMenuItem saveNotes = null;
+    private JMenuItem saveAnExit = null;
     private JMenuItem EXIT = null;
+    //----------End - File Menu Options----------//
 
     // menu item buttons for fontMenu
     private JMenu fontTypeMenu = null;
@@ -52,7 +60,7 @@ public class MenuBar extends JMenuBar
     private JMenuItem fontSize = null;
     private JMenuItem fontColor = null;
     private JMenuItem backgroundColor = null;
-    
+
 
     // constructor
     public MenuBar(JournalsPane journalsPane)
@@ -65,25 +73,32 @@ public class MenuBar extends JMenuBar
         saveMenu = new JMenu("Save");
         fontMenu = new JMenu("Font");
 
-        // menu items for fileMenu
-        newPage = new JMenuItem("New Page");
-        deletePage = new JMenuItem("Delete Page");
-        newJournal = new JMenuItem("New Journal");
-        deleteJournal = new JMenuItem("Delete Journal");
-        renameJournal = new JMenuItem("Rename Journal");
-        renamePage = new JMenuItem("Rename Page");
-        pagesMenu = new JMenu("Pages");
-        journalsMenu = new JMenu("Journals");
-        EXIT = new JMenuItem("Exit");
 
         // menu items for fontMenu
+        fontTypeMenu = new JMenu("Fonts");
         comicSans = new JMenuItem("Comic Sans");
         timesRoman = new JMenuItem("Times New Roman");
         arial = new JMenuItem("Arial");
         fontSize = new JMenuItem("Font Size");
         fontColor = new JMenuItem("Font Color");
         backgroundColor = new JMenuItem("Background Color");
-        fontTypeMenu = new JMenu("Fonts");
+
+        // menu items for saveMenu
+        EXIT = new JMenuItem("Exit");
+        saveNotes = new JMenuItem("Save Notes");
+        saveAnExit = new JMenuItem("Save An Exit");
+
+        // menu items for journalsMenu
+        newJournal = new JMenuItem("New Journal");
+        deleteJournal = new JMenuItem("Delete Journal");
+        renameJournal = new JMenuItem("Rename Journal");
+        journalsMenu = new JMenu("Journals");
+
+        // menu items for pagesMenu
+        newPage = new JMenuItem("New Page");
+        deletePage = new JMenuItem("Delete Page");
+        renamePage = new JMenuItem("Rename Page");
+        pagesMenu = new JMenu("Pages");
 
 
         // default font for the menus
@@ -101,6 +116,8 @@ public class MenuBar extends JMenuBar
         pagesMenu.setFont(DEFAULT_FONT);
         journalsMenu.setFont(DEFAULT_FONT);
         EXIT.setFont(DEFAULT_FONT);
+        saveNotes.setFont(DEFAULT_FONT);
+        saveAnExit.setFont(DEFAULT_FONT);
 
         // for font menu items
         fontTypeMenu.setFont(DEFAULT_FONT);
@@ -115,36 +132,8 @@ public class MenuBar extends JMenuBar
     // adds the menus to the menu bar
     public void makeMenuBar()
     {
-        // menu items for file menu
-        newPage.addActionListener(e ->
-        {
-            NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
-            if (selectedNotesPane != null)
-            {
-                selectedNotesPane.addPageTab();
-            }
-        });
-        deletePage.addActionListener(e ->
-        {
-            NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
-            if (selectedNotesPane != null)
-            {
-                selectedNotesPane.deletePageTab();
-            }
-        });
 
-        renamePage.addActionListener(e ->{
-            NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
-            String input = JOptionPane.showInputDialog("Enter New Name:");
-            selectedNotesPane.setNewPageName(input);
-        });
-
-        renameJournal.addActionListener(e ->{
-            String input = JOptionPane.showInputDialog("Enter New Journal Name:");
-            journalsPane.setNewJournalName(input);
-        });
-
-        //menu items for fontMenu
+        //fontMenu Creation
         fontSize.addActionListener(e ->{
             int number = 0;
             String input = JOptionPane.showInputDialog("Enter font size:");
@@ -163,22 +152,18 @@ public class MenuBar extends JMenuBar
             NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
             selectedNotesPane.setFontSize(number);
         });
-
         comicSans.addActionListener(e ->{
             NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
             selectedNotesPane.setFontType("Comic Sans");
         });
-
         arial.addActionListener(e ->{
             NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
             selectedNotesPane.setFontType("Arial");
         });
-
         timesRoman.addActionListener(e ->{
             NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
             selectedNotesPane.setFontType("Times New Roman");
         });
-
         fontColor.addActionListener(e ->{
             NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
             Color selectedColor = JColorChooser.showDialog(colorFrame, "Pick a color :D", INITIAL_FONT_COLOR);
@@ -186,7 +171,6 @@ public class MenuBar extends JMenuBar
                 selectedNotesPane.setFontColor(selectedColor);
             }
         });
-
         backgroundColor.addActionListener(e ->{
             NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
             Color selectedColor = JColorChooser.showDialog(colorFrame, "Pick a color :D", INITIAL_BACKGROUND_COLOR);
@@ -194,25 +178,6 @@ public class MenuBar extends JMenuBar
                 selectedNotesPane.setBackgroundColor(selectedColor);
             }
         });
-
-        EXIT.addActionListener(e ->{
-            System.exit(0);
-        });
-
-        //fileMenu creation
-        newJournal.addActionListener(e -> journalsPane.addJournalTab());
-        deleteJournal.addActionListener(e -> journalsPane.deleteJournalTab());
-        fileMenu.add(journalsMenu);
-        fileMenu.add(pagesMenu);
-        pagesMenu.add(renamePage);
-        pagesMenu.add(newPage);
-        pagesMenu.add(deletePage);
-        journalsMenu.add(renameJournal);
-        journalsMenu.add(newJournal);
-        journalsMenu.add(deleteJournal);
-        fileMenu.add(EXIT);
-
-        //fontMenu creation
         fontMenu.add(fontSize);
         fontMenu.add(fontColor);
         fontMenu.add(backgroundColor);
@@ -221,10 +186,101 @@ public class MenuBar extends JMenuBar
         fontTypeMenu.add(arial);
         fontMenu.add(fontTypeMenu);
 
+        //journalsMenu Creation
+        newJournal.addActionListener(e -> journalsPane.addJournalTab());
+        deleteJournal.addActionListener(e -> journalsPane.deleteJournalTab());
+        renameJournal.addActionListener(e ->{
+            String input = JOptionPane.showInputDialog("Enter New Journal Name:");
+            if(input == null || input.isEmpty() || input.equals("")){
+                JOptionPane.showMessageDialog(
+                        null,
+                        "No name was provided!",
+                        "ERROR",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
+            journalsPane.setNewJournalName(input);
+        });
+        journalsMenu.add(renameJournal);
+        journalsMenu.add(newJournal);
+        journalsMenu.add(deleteJournal);
+
+        //pagesMenu
+        newPage.addActionListener(e -> {
+            NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
+            if (selectedNotesPane != null)
+            {
+                selectedNotesPane.addPageTab();
+            }
+        });
+        deletePage.addActionListener(e -> {
+            int yesNo = JOptionPane.showConfirmDialog(
+                    null,
+                    "Are you sure you want to delete this page!?",
+                    "Delete Page?",
+                    JOptionPane.YES_NO_OPTION
+            );
+            if (yesNo == JOptionPane.YES_OPTION){
+                NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
+                if (selectedNotesPane != null)
+                {
+                    selectedNotesPane.deletePageTab();
+                }
+            }
+        });
+        renamePage.addActionListener(e -> {
+            NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
+            String input = JOptionPane.showInputDialog("Enter New Name:");
+            if(input == null || input.isEmpty() || input.equals("")){
+                JOptionPane.showMessageDialog(
+                        null,
+                        "No name was provided!",
+                        "ERROR",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
+            selectedNotesPane.setNewPageName(input);
+        });
+        pagesMenu.add(renamePage);
+        pagesMenu.add(newPage);
+        pagesMenu.add(deletePage);
+
+        //saveMenu Creation
+        EXIT.addActionListener(e ->{
+            int yesNo = JOptionPane.showConfirmDialog(
+                    null,
+                    "Are you sure you want to exit?\n"+
+                            "Any unsaved work may be lost!!!",
+                    "Exit?",
+                    JOptionPane.YES_NO_OPTION
+            );
+            if (yesNo == JOptionPane.YES_OPTION){System.exit(0);}
+        });
+        saveNotes.addActionListener(e ->{
+            System.out.println("Notes Saved!");
+        });
+        saveAnExit.addActionListener(e ->{
+            System.out.println("Notes Saved!");
+            System.exit(0);
+        });
+        saveMenu.add(saveNotes);
+        saveMenu.add(saveAnExit);
+        saveMenu.add(EXIT);
+
+
+        //fileMenu creation
+        fileMenu.add(journalsMenu);
+        fileMenu.add(pagesMenu);
+        fileMenu.add(saveMenu);
+        fileMenu.add(saveMenu);
+
+
         // add the menus to the menu bar
         // keep these at the bottom of this method
         menuBar.add(fileMenu);
-        menuBar.add(saveMenu);
+        //menuBar.add(saveMenu);
         menuBar.add(fontMenu);
     }
 
