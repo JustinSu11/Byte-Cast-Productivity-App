@@ -27,16 +27,12 @@ public class AppFrame extends JFrame
     public static AIAssistantPanel aiAssistantPanel;
 
 
-    // constructor creates the objects
-    public AppFrame()
-    {
+    // Constructor: Creates the objects and sets Look and Feel
+    public AppFrame() {
         // fields
         JFrame mainFrame = new JFrame(TITLE);
         mainPanel = new JPanel();
-    }
 
-    // Constructor: Creates the objects and sets Look and Feel
-    public AppFrame() {
         try {
             // Simple setup without checking for UIScale
             FlatLightLaf.setup();
@@ -54,7 +50,6 @@ public class AppFrame extends JFrame
 
     // This method initializes the main frame attributes
     public void makeMainAppFrame() {
-        SwingUtilities.updateComponentTreeUI(this);
         // Force revalidation and repainting
         revalidate();
         repaint();
@@ -68,7 +63,5 @@ public class AppFrame extends JFrame
         // border layout is used for the main panel
         mainPanel.setLayout(new BorderLayout());
         add(mainPanel);
-
-        setVisible(true); // Show the window
     }
 }
