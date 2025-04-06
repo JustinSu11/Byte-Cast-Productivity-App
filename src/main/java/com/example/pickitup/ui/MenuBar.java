@@ -1,12 +1,11 @@
 /*
     *******************************************************************************
-    MenuBar Class
-    Updated 03/31/2025
-    Developer CJ Quintero
+    AppFrame Class
+    Updated 03/06/2025
 
 
-    This class creates the menu bar and sets some menus.
-    Each menu has its own menu items.
+    This class creates the main frame for the app and
+    sets some basic attributes for the frame.
 
 
     Please remember to update the version date if any changes
@@ -14,6 +13,7 @@
     *******************************************************************************
  */
 package com.example.pickitup.ui;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,13 +23,14 @@ public class MenuBar extends JMenuBar
     // fields
     private JMenuBar menuBar = null;
     private JournalsPane journalsPane = null; // Store JournalsPane
-    private final Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 16); // constant
 
     // menu bar buttons
     private JMenu fileMenu = null;
     private JMenu saveMenu = null;
     private JMenu fontMenu = null;
     private JMenu fontSizeMenu = null;
+    private JMenu calendarMenu = null;
+    private final Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 16); // constant
 
     // menu item buttons for fileMenu
     private JMenuItem newPage = null;
@@ -48,6 +49,7 @@ public class MenuBar extends JMenuBar
         saveMenu = new JMenu("Save");
         fontMenu = new JMenu("Fonts");
         fontSizeMenu = new JMenu("Font Size");
+        calendarMenu = new JMenu("Calendar");
 
         // menu items for fileMenu
         newPage = new JMenuItem("New Page");
@@ -66,6 +68,24 @@ public class MenuBar extends JMenuBar
         deletePage.setFont(DEFAULT_FONT);
         newJournal.setFont(DEFAULT_FONT);
         deleteJournal.setFont(DEFAULT_FONT);
+        calendarMenu.setFont(DEFAULT_FONT);
+
+        // Set up the calendar menu
+        setupCalendarMenu();
+        revalidate();
+        repaint();
+    }
+
+    // Method to set up the Calendar menu with actions
+    private void setupCalendarMenu()
+    {
+        JMenuItem openCalendarItem = new JMenuItem("Open Calendar");
+        openCalendarItem.setFont(DEFAULT_FONT);
+        openCalendarItem.addActionListener(e ->
+        {
+            new CalendarApp();
+        });
+        calendarMenu.add(openCalendarItem);
     }
 
     // adds the menus to the menu bar
@@ -103,6 +123,8 @@ public class MenuBar extends JMenuBar
         menuBar.add(saveMenu);
         menuBar.add(fontMenu);
         menuBar.add(fontSizeMenu);
+        menuBar.add(calendarMenu);
+
     }
 
     // returns the menu bar to the App class

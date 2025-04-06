@@ -14,6 +14,7 @@
  */
 package com.example.pickitup.ui;
 
+import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,11 +35,30 @@ public class AppFrame extends JFrame
         mainPanel = new JPanel();
     }
 
+    // Constructor: Creates the objects and sets Look and Feel
+    public AppFrame() {
+        try {
+            // Simple setup without checking for UIScale
+            FlatLightLaf.setup();
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Fall back to system look and feel if FlatLaf fails
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 
-    // This method sets basic attributes of the main app frame
-    public void makeMainAppFrame()
-    {
-        // set some attributes of the frame
+    // This method initializes the main frame attributes
+    public void makeMainAppFrame() {
+        SwingUtilities.updateComponentTreeUI(this);
+        // Force revalidation and repainting
+        revalidate();
+        repaint();
+
         setTitle(TITLE);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // close app when X is clicked
         setExtendedState(JFrame.MAXIMIZED_BOTH); // open in fullscreen
@@ -48,6 +68,7 @@ public class AppFrame extends JFrame
         // border layout is used for the main panel
         mainPanel.setLayout(new BorderLayout());
         add(mainPanel);
-    } // end makeMainAppFrame()
 
-} // end Frame class
+        setVisible(true); // Show the window
+    }
+}

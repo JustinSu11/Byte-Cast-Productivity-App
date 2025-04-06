@@ -16,6 +16,7 @@
 package com.example.pickitup.ui;
 
 
+import javax.swing.*;
 import java.awt.*;
 
 
@@ -55,6 +56,7 @@ public class App
         // errors
         menuBar = new MenuBar(journalsPane);
         menuBar.makeMenuBar();
+
         appFrame.add(menuBar.getMenuBar(), BorderLayout.NORTH);
 
         // Initialize the AI Assistant Panel with the current NoteEditor
