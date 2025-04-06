@@ -1,8 +1,9 @@
 /*
     *******************************************************************************
     App Class
-    Last Updated 03/31/2025
+    Last Updated 04/03/2025
     Developed by CJ Quintero
+
 
     This is the main class that uses all the classes as member variables.
     Launch.java creates an instance of this class and calls runApp()
@@ -27,13 +28,23 @@ public class App
     private MenuBar menuBar = null;
     private JournalsPane journalsPane = null;
     private AIAssistantPanel aiAssistantPanel = null;
+    private ToDoListPanel toDoListPanel = null;
+    private ClockPanel clockPanel = null;
+    private ThemeManager themeManager = null;
 
     // constructor
     public App()
     {
+        // Initialize theme manager first
+        themeManager = ThemeManager.getInstance();
+        themeManager.initializeTheme();
+
         // make the objects
         appFrame = new AppFrame();
         journalsPane = new JournalsPane();
+//        aiAssistantPanel = new AIAssistantPanel(journalsPane);
+        toDoListPanel = new ToDoListPanel();
+        clockPanel = new ClockPanel();
     }
 
 
@@ -44,12 +55,27 @@ public class App
         // make the Main App Frame
         appFrame.makeMainAppFrame();
 
+        // Create a top panel for menu and clock
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(menuBar.getMenuBar(), BorderLayout.NORTH);
+        topPanel.add(clockPanel, BorderLayout.CENTER);
+
+        // Add top panel to the main frame
+        appFrame.add(topPanel, BorderLayout.NORTH);
+
+        // Create a center panel to hold the note editor and to-do list
+        JPanel centerPanel = new JPanel(new GridLayout(1, 2, 10, 0));
+
+        // Register with theme manager
+        themeManager.registerComponent(centerPanel);
+        themeManager.registerComponent(topPanel);
 
         // make and add the tabbed pane
         // adds a single tab by default
         journalsPane.addJournalTab();
-        appFrame.add(journalsPane.getJournalsPane(), BorderLayout.CENTER);
+        centerPanel.add(journalsPane.getJournalsPane());
 
+        appFrame.add(centerPanel, BorderLayout.CENTER);
 
         // make the menu bar and add it to the main frame
         // this MUST go after making the journals pane to avoid
@@ -69,6 +95,8 @@ public class App
                 appFrame.add(aiAssistantPanel, BorderLayout.EAST);
             }
         }
+
+        registerComponentsWithThemeManager();
 
         // show the frame
         // this should stay as the last thing done in this method

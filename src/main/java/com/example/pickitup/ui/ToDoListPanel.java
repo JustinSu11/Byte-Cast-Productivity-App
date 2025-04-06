@@ -1,18 +1,24 @@
 package com.example.pickitup.ui;
 
+import com.example.pickitup.services.models.ToDoItem;
+import com.example.pickitup.services.dao.ToDoItemDAO;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
 /**
  * Panel for To-Do List functionality in the UI
- * @version 1.0
+ * Updated with theme support and simplified date picker
+ * @version 1.2
  */
 public class ToDoListPanel extends JPanel {
 
@@ -22,12 +28,21 @@ public class ToDoListPanel extends JPanel {
     private JButton completeButton;
     private JButton deleteButton;
     private JTextField taskInput;
-    private JDateChooser dueDateChooser;
+    private JTextField dateInput; // Simple text field for date input
+    private ToDoItemDAO todoItemDAO;
+    private ThemeManager themeManager;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * Constructor initializes the To-Do List panel
      */
     public ToDoListPanel() {
+        // Initialize the DAO
+        todoItemDAO = new ToDoItemDAO();
+
+        // Get theme manager instance
+        themeManager = ThemeManager.getInstance();
+
         // Set up layout
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -40,7 +55,12 @@ public class ToDoListPanel extends JPanel {
 
         // Create the table model with columns
         String[] columnNames = {"Task", "Due Date", "Status"};
-        tableModel = new DefaultTableModel(columnNames, 0);
+        tableModel = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Make table cells non-editable
+            }
+        };
 
         // Create the table and set properties
         todoTable = new JTable(tableModel);
@@ -59,14 +79,12 @@ public class ToDoListPanel extends JPanel {
         // Task input field
         taskInput = new JTextField();
         taskInput.setFont(new Font("Arial", Font.PLAIN, 14));
-        taskInput.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.GRAY, 1),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
-        // Due date chooser
-        dueDateChooser = new JDateChooser();
-        dueDateChooser.setDateFormatString("yyyy-MM-dd");
-        dueDateChooser.setDate(new Date()); // Set to current date by default
+        // Date input field
+        dateInput = new JTextField(dateFormat.format(new Date())); // Set to current date by default
+        dateInput.setFont(new Font("Arial", Font.PLAIN, 14));
+        JButton datePickerButton = new JButton("...");
+        datePickerButton.addActionListener(e -> showDatePicker());
 
         // Create panel for task input and date chooser
         JPanel taskPanel = new JPanel(new BorderLayout());
@@ -74,8 +92,9 @@ public class ToDoListPanel extends JPanel {
         taskPanel.add(taskInput, BorderLayout.CENTER);
 
         JPanel datePanel = new JPanel(new BorderLayout());
-        datePanel.add(new JLabel("Due Date: "), BorderLayout.WEST);
-        datePanel.add(dueDateChooser, BorderLayout.CENTER);
+        datePanel.add(new JLabel("Due Date (yyyy-MM-dd): "), BorderLayout.WEST);
+        datePanel.add(dateInput, BorderLayout.CENTER);
+        datePanel.add(datePickerButton, BorderLayout.EAST);
 
         JPanel formPanel = new JPanel(new GridLayout(2, 1, 0, 5));
         formPanel.add(taskPanel);
@@ -85,19 +104,6 @@ public class ToDoListPanel extends JPanel {
         addButton = new JButton("Add Task");
         completeButton = new JButton("Mark Complete");
         deleteButton = new JButton("Delete Task");
-
-        // Customize button appearance
-        addButton.setBackground(new Color(46, 125, 50));
-        addButton.setForeground(Color.WHITE);
-        addButton.setFont(new Font("Arial", Font.BOLD, 14));
-
-        completeButton.setBackground(new Color(33, 150, 243));
-        completeButton.setForeground(Color.WHITE);
-        completeButton.setFont(new Font("Arial", Font.BOLD, 14));
-
-        deleteButton.setBackground(new Color(211, 47, 47));
-        deleteButton.setForeground(Color.WHITE);
-        deleteButton.setFont(new Font("Arial", Font.BOLD, 14));
 
         // Create panel for buttons
         JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 5, 0));
@@ -117,8 +123,120 @@ public class ToDoListPanel extends JPanel {
         // Setup event handlers
         setupEventHandlers();
 
+        // Load and display existing to-do items
+        loadTodoItems();
+
         // Set preferred size for panel
         setPreferredSize(new Dimension(500, 400));
+
+        // Register subcomponents with theme manager
+        registerComponentsWithThemeManager();
+
+        // Apply custom button styling AFTER registering with theme manager
+        // This ensures our custom styling takes precedence
+        styleButtonsForCurrentTheme();
+    }
+
+    /**
+     * Show a simple date picker dialog
+     */
+    private void showDatePicker() {
+        // Create a simple date picker using JOptionPane
+        String currentDate = dateInput.getText();
+        String newDate = (String) JOptionPane.showInputDialog(
+                this,
+                "Enter date (yyyy-MM-dd):",
+                "Date Picker",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                currentDate);
+
+        if (newDate != null && !newDate.isEmpty()) {
+            try {
+                // Validate the date format
+                Date date = dateFormat.parse(newDate);
+                dateInput.setText(dateFormat.format(date));
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Invalid date format. Please use yyyy-MM-dd",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    /**
+     * Applies button styling based on the current theme
+     */
+    private void styleButtonsForCurrentTheme() {
+        // Use the same colors regardless of theme to maintain the original look
+        // Add Task button (green)
+        addButton.setBackground(new Color(46, 125, 50));
+        addButton.setForeground(Color.WHITE);
+
+        // Mark Complete button (blue)
+        completeButton.setBackground(new Color(33, 150, 243));
+        completeButton.setForeground(Color.WHITE);
+
+        // Delete button (red)
+        deleteButton.setBackground(new Color(211, 47, 47));
+        deleteButton.setForeground(Color.WHITE);
+
+        // Common styling
+        addButton.setFont(new Font("Arial", Font.BOLD, 14));
+        completeButton.setFont(new Font("Arial", Font.BOLD, 14));
+        deleteButton.setFont(new Font("Arial", Font.BOLD, 14));
+
+        // Ensure buttons don't get overridden by the theme manager
+        addButton.setOpaque(true);
+        completeButton.setOpaque(true);
+        deleteButton.setOpaque(true);
+
+        // Ensure focus doesn't change the colors
+        addButton.setFocusPainted(false);
+        completeButton.setFocusPainted(false);
+        deleteButton.setFocusPainted(false);
+    }
+
+    /**
+     * Registers all components with the theme manager
+     * Note: We exclude the buttons from theme management to keep their colors
+     */
+    private void registerComponentsWithThemeManager() {
+        themeManager.registerComponent(this);
+        themeManager.registerComponent(todoTable);
+        themeManager.registerComponent((JComponent)todoTable.getTableHeader());
+        themeManager.registerComponent(taskInput);
+        themeManager.registerComponent(dateInput);
+
+        // Do NOT register the buttons with the theme manager
+        // This ensures they keep their original colors
+        // themeManager.registerComponent(addButton);
+        // themeManager.registerComponent(completeButton);
+        // themeManager.registerComponent(deleteButton);
+    }
+
+    /**
+     * Loads to-do items from the DAO and displays them in the table
+     */
+    private void loadTodoItems() {
+        // Clear the current table data
+        tableModel.setRowCount(0);
+
+        // Get all items from the DAO
+        List<ToDoItem> items = todoItemDAO.getAllItems();
+
+        // Add each item to the table
+        for (ToDoItem item : items) {
+            Vector<String> row = new Vector<>();
+            row.add(item.getTask());
+            row.add(dateFormat.format(item.getDueDate()));
+            row.add(item.getStatusText());
+
+            tableModel.addRow(row);
+        }
     }
 
     /**
@@ -163,26 +281,31 @@ public class ToDoListPanel extends JPanel {
      */
     private void addTask() {
         String task = taskInput.getText().trim();
-        Date dueDate = dueDateChooser.getDate();
+        String dateString = dateInput.getText().trim();
 
-        if (!task.isEmpty() && dueDate != null) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String formattedDate = dateFormat.format(dueDate);
+        if (!task.isEmpty() && !dateString.isEmpty()) {
+            try {
+                // Parse the date
+                Date dueDate = dateFormat.parse(dateString);
 
-            Vector<String> row = new Vector<>();
-            row.add(task);
-            row.add(formattedDate);
-            row.add("Pending");
+                // Add to the DAO (which handles persistence)
+                todoItemDAO.addItem(task, dueDate);
 
-            tableModel.addRow(row);
+                // Reload the table to show the updated list
+                loadTodoItems();
 
-            // Clear the input field and reset date to today
-            taskInput.setText("");
-            dueDateChooser.setDate(new Date());
-            taskInput.requestFocus();
+                // Clear the input field
+                taskInput.setText("");
+                taskInput.requestFocus();
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(this,
+                        "Invalid date format. Please use yyyy-MM-dd format.",
+                        "Date Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         } else {
             JOptionPane.showMessageDialog(this,
-                    "Please enter a task and select a due date.",
+                    "Please enter a task and a due date.",
                     "Input Required",
                     JOptionPane.WARNING_MESSAGE);
         }
@@ -196,13 +319,13 @@ public class ToDoListPanel extends JPanel {
 
         if (selectedRow != -1) {
             String currentStatus = (String) tableModel.getValueAt(selectedRow, 2);
+            boolean newStatus = currentStatus.equals("Pending"); // Toggle status
 
-            // Toggle between Pending and Completed
-            if (currentStatus.equals("Pending")) {
-                tableModel.setValueAt("Completed", selectedRow, 2);
-            } else {
-                tableModel.setValueAt("Pending", selectedRow, 2);
-            }
+            // Update in the DAO (which handles persistence)
+            todoItemDAO.updateItemStatus(selectedRow, newStatus);
+
+            // Reload the table to show the updated status
+            loadTodoItems();
         } else {
             JOptionPane.showMessageDialog(this,
                     "Please select a task to mark as complete.",
@@ -224,78 +347,17 @@ public class ToDoListPanel extends JPanel {
                     JOptionPane.YES_NO_OPTION);
 
             if (confirm == JOptionPane.YES_OPTION) {
-                tableModel.removeRow(selectedRow);
+                // Remove from the DAO (which handles persistence)
+                todoItemDAO.removeItem(selectedRow);
+
+                // Reload the table to show the updated list
+                loadTodoItems();
             }
         } else {
             JOptionPane.showMessageDialog(this,
                     "Please select a task to delete.",
                     "Selection Required",
                     JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
-    /**
-     * Inner class for date chooser component
-     * This is a simplified version. In a real application, you might use a third-party
-     * library like JDateChooser from JCalendar.
-     */
-    private class JDateChooser extends JPanel {
-        private JTextField dateField;
-        private JButton calendarButton;
-        private Date selectedDate;
-        private SimpleDateFormat dateFormat;
-
-        public JDateChooser() {
-            setLayout(new BorderLayout());
-
-            dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            selectedDate = new Date();
-
-            dateField = new JTextField(dateFormat.format(selectedDate));
-            dateField.setEditable(false);
-
-            calendarButton = new JButton("...");
-            calendarButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    // This would typically open a date picker dialog
-                    // For simplicity, we're just showing a simple option pane
-                    String newDate = JOptionPane.showInputDialog(
-                            ToDoListPanel.this,
-                            "Enter date (yyyy-MM-dd):",
-                            dateFormat.format(selectedDate));
-
-                    if (newDate != null && !newDate.isEmpty()) {
-                        try {
-                            selectedDate = dateFormat.parse(newDate);
-                            dateField.setText(dateFormat.format(selectedDate));
-                        } catch (Exception ex) {
-                            JOptionPane.showMessageDialog(
-                                    ToDoListPanel.this,
-                                    "Invalid date format. Please use yyyy-MM-dd",
-                                    "Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                }
-            });
-
-            add(dateField, BorderLayout.CENTER);
-            add(calendarButton, BorderLayout.EAST);
-        }
-
-        public void setDateFormatString(String format) {
-            dateFormat = new SimpleDateFormat(format);
-            dateField.setText(dateFormat.format(selectedDate));
-        }
-
-        public Date getDate() {
-            return selectedDate;
-        }
-
-        public void setDate(Date date) {
-            selectedDate = date;
-            dateField.setText(dateFormat.format(selectedDate));
         }
     }
 }
