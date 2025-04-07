@@ -1,8 +1,7 @@
 /*
     *******************************************************************************
     App Class
-    Last Updated 04/03/2025
-    Developed by CJ Quintero
+    Last Updated 02/28/2025
 
 
     This is the main class that uses all the classes as member variables.
@@ -31,6 +30,8 @@ public class App
     private ToDoListPanel toDoListPanel = null;
     private ClockPanel clockPanel = null;
     private ThemeManager themeManager = null;
+    private JButton toggleAiPanelButton = null;
+    private boolean aiPanelVisible = true;
 
     // constructor
     public App()
@@ -42,9 +43,10 @@ public class App
         // make the objects
         appFrame = new AppFrame();
         journalsPane = new JournalsPane();
-//        aiAssistantPanel = new AIAssistantPanel(journalsPane);
+        aiAssistantPanel = new AIAssistantPanel(journalsPane);
         toDoListPanel = new ToDoListPanel();
         clockPanel = new ClockPanel();
+        toggleAiPanelButton = new JButton("Hide AI Assistant");
     }
 
 
@@ -82,25 +84,33 @@ public class App
         // errors
         menuBar = new MenuBar(journalsPane);
         menuBar.makeMenuBar();
-
         appFrame.add(menuBar.getMenuBar(), BorderLayout.NORTH);
 
-        // Initialize the AI Assistant Panel with the current NoteEditor
-        NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
-        if (selectedNotesPane != null) {
-            NoteEditor currentNoteEditor = selectedNotesPane.getCurrentNoteEditor();
-            if (currentNoteEditor != null) {
-                aiAssistantPanel = new AIAssistantPanel(currentNoteEditor);
-                AppFrame.aiAssistantPanel = aiAssistantPanel;
-                appFrame.add(aiAssistantPanel, BorderLayout.EAST);
-            }
-        }
+        // Configure toggle button
+        toggleAiPanelButton.setFocusable(false);
+        toggleAiPanelButton.addActionListener(e -> toggleAiPanel());
 
-        registerComponentsWithThemeManager();
+        // Create a panel for the bottom of the UI that holds the toggle button
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        bottomPanel.add(toggleAiPanelButton);
+        appFrame.add(bottomPanel, BorderLayout.SOUTH);
+
+        // add the AI Assistant Panel
+        appFrame.add(aiAssistantPanel, BorderLayout.EAST);
 
         // show the frame
         // this should stay as the last thing done in this method
         appFrame.setVisible(true);
     } // end runApp()
+
+    /**
+     * Toggles the visibility of the AI Assistant panel
+     */
+    private void toggleAiPanel() {
+        aiPanelVisible = !aiPanelVisible;
+        aiAssistantPanel.setVisible(aiPanelVisible);
+        toggleAiPanelButton.setText(aiPanelVisible ? "Hide AI Assistant" : "Show AI Assistant");
+        appFrame.revalidate();
+    }
 
 } // end App class
