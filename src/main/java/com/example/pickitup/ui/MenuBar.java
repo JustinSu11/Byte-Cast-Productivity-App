@@ -81,14 +81,7 @@ public class MenuBar extends JMenuBar
         // Add view menu items
         JMenuItem notesItem = new JMenuItem("Notes");
         JMenuItem todoItem = new JMenuItem("To-Do List");
-        JMenuItem calendarItem = new JMenuItem("Calendar");
-        calendarMenu.setFont(DEFAULT_FONT);
         clockTimerItem = new JMenuItem("Clock Timer");
-
-        // Set up the calendar menu
-        setupCalendarMenu();
-        revalidate();
-        repaint();
 
         // for menu items
         newPage.setFont(DEFAULT_FONT);
@@ -98,12 +91,11 @@ public class MenuBar extends JMenuBar
         calendarMenu.setFont(DEFAULT_FONT);
         notesItem.setFont(DEFAULT_FONT);
         todoItem.setFont(DEFAULT_FONT);
-        calendarItem.setFont(DEFAULT_FONT);
         clockTimerItem.setFont(DEFAULT_FONT);
+        themeMenu.setFont(DEFAULT_FONT);
 
         viewMenu.add(notesItem);
         viewMenu.add(todoItem);
-        viewMenu.add(calendarItem);
         viewMenu.add(clockTimerItem);
 
         // Add theme menu items
