@@ -1,7 +1,7 @@
 /*
     *******************************************************************************
     App Class
-    Last Updated 03/26/2025
+    Last Updated 03/31/2025
     Developed by CJ Quintero
 
     This is the main class that uses all the classes as member variables.
@@ -64,7 +64,7 @@ public class App
 
         // make and add the tabbed pane
         // adds a single tab by default
-        journalsPane.addJournalTab();
+        journalsPane.journalConstructor();
         centerPanel.add(journalsPane.getJournalsPane());
 
         //Make as assistant panel after journal tab is created
