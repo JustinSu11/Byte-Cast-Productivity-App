@@ -14,6 +14,7 @@
  */
 package com.example.pickitup.ui;
 
+import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,24 +22,39 @@ import java.awt.*;
 
 public class AppFrame extends JFrame
 {
-    // fields
-    private JFrame mainFrame = null;
     private JPanel mainPanel = null;
     private final String TITLE = "Pick It Up"; // constant
     public static AIAssistantPanel aiAssistantPanel;
 
 
-    // constructor creates the objects
-    public AppFrame()
-    {
-        mainFrame = new JFrame(TITLE);
+    // Constructor: Creates the objects and sets Look and Feel
+    public AppFrame() {
+        // fields
+        JFrame mainFrame = new JFrame(TITLE);
         mainPanel = new JPanel();
-    }
 
+        try {
+            // Simple setup without checking for UIScale
+            FlatLightLaf.setup();
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Fall back to system look and feel if FlatLaf fails
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 
     // This method sets basic attributes of the main app frame
     public void makeMainAppFrame()
     {
+        // Force revalidation and repainting
+        revalidate();
+        repaint();
+
         // set some attributes of the frame
         setTitle(TITLE);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // close app when X is clicked

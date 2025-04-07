@@ -6,7 +6,7 @@ import dev.langchain4j.model.output.Response;
 
 /**
  * Class responsible for creating and managing the large language model instance
- * 
+ *
  * @author Maaz Haque
  * @version 1.0
  */
@@ -14,7 +14,7 @@ public class LargeLanguageModel {
     // Constants for error messages
     private static final String ERROR_MODEL_INIT = "Failed to initialize language model: ";
     private static final String ERROR_RESPONSE_GEN = "Failed to generate response: ";
-    
+
     // Initializing the langchain4j Large Language Model object instance
     private final ChatLanguageModel largeLanguageModel;
 
@@ -24,12 +24,12 @@ public class LargeLanguageModel {
      */
     public LargeLanguageModel() {
         this.largeLanguageModel = createChatModel();
-    }
+    } //End of constructor
 
     /**
      * Creates and configures a ChatLanguageModel using OpenAI
      * Uses parameters from LargeLanguageModelParameters class
-     * 
+     *
      * @return Configured ChatLanguageModel
      */
     public static ChatLanguageModel createChatModel() {
@@ -50,7 +50,7 @@ public class LargeLanguageModel {
 
     /**
      * Method to generate a response from the Large Language Model
-     * 
+     *
      * @param userMessage Message from user to respond to
      * @return AI generated response
      */
@@ -59,7 +59,7 @@ public class LargeLanguageModel {
         if (userMessage == null || userMessage.trim().isEmpty()) {
             return "Message cannot be empty";
         }
-        
+
         try {
             // Generating a response from the Large Language Model
             return largeLanguageModel.chat(userMessage);
@@ -73,20 +73,20 @@ public class LargeLanguageModel {
 
     /**
      * Sample main method to demonstrate usage
-     * 
+     *
      * @param args Command line arguments (not used)
      */
     public static void main(String[] args) {
         try {
             // Creating an instance of the Large Language Model
             LargeLanguageModel largeLanguageModel = new LargeLanguageModel();
-            
+
             // Test message
             String testMessage = "Hello, how are you?";
-            
+
             // Generating a response from the Large Language Model
             String response = largeLanguageModel.generateResponse(testMessage);
-            
+
             // Printing the response
             System.out.println(response);
         } catch (Exception e) {
