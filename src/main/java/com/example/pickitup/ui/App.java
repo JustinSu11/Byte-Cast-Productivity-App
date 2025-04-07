@@ -43,7 +43,6 @@ public class App
         // make the objects
         appFrame = new AppFrame();
         journalsPane = new JournalsPane();
-        aiAssistantPanel = new AIAssistantPanel(journalsPane);
         toDoListPanel = new ToDoListPanel();
         clockPanel = new ClockPanel();
         toggleAiPanelButton = new JButton("Hide AI Assistant");
@@ -68,6 +67,9 @@ public class App
         journalsPane.addJournalTab();
         centerPanel.add(journalsPane.getJournalsPane());
 
+        //Make as assistant panel after journal tab is created
+        aiAssistantPanel = new AIAssistantPanel(journalsPane);
+
         appFrame.add(centerPanel, BorderLayout.CENTER);
 
         // make the menu bar and add it to the main frame
@@ -75,7 +77,6 @@ public class App
         // errors
         menuBar = new MenuBar(journalsPane);
         menuBar.makeMenuBar();
-        appFrame.add(menuBar.getMenuBar(), BorderLayout.NORTH);
 
         // Create a top panel for menu and clock
         JPanel topPanel = new JPanel(new BorderLayout());
@@ -101,7 +102,20 @@ public class App
         // show the frame
         // this should stay as the last thing done in this method
         appFrame.setVisible(true);
+
+        registerComponentsWithThemeManager();
     } // end runApp()
+
+    private void registerComponentsWithThemeManager() {
+        // Register the main frame and its content pane
+        themeManager.registerComponent((JComponent)appFrame.getContentPane());
+
+        // Register individual panels
+        themeManager.registerComponent(toDoListPanel);
+        themeManager.registerComponent(aiAssistantPanel);
+        themeManager.registerComponent(journalsPane.getJournalsPane());
+        themeManager.registerComponent(clockPanel);
+    }
 
     /**
      * Toggles the visibility of the AI Assistant panel

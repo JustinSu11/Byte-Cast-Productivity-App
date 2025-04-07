@@ -40,15 +40,15 @@ public class NotesPane extends JournalsPane
         // set the default font
         tabbedPane.setFont(DEFAULT_FONT);
         
-        // Add change listener to update AI Assistant when tab changes
-        tabbedPane.addChangeListener(e -> {
-            if (AppFrame.aiAssistantPanel != null) {
-                NoteEditor currentNoteEditor = getCurrentNoteEditor();
-                if (currentNoteEditor != null) {
-                    AppFrame.aiAssistantPanel.setNoteEditor(currentNoteEditor);
-                }
-            }
-        });
+//        // Add change listener to update AI Assistant when tab changes
+//        tabbedPane.addChangeListener(e -> {
+//            if (AppFrame.aiAssistantPanel != null) {
+//                NoteEditor currentNoteEditor = getCurrentNoteEditor();
+//                if (currentNoteEditor != null) {
+//                    AppFrame.aiAssistantPanel.setNoteEditor(currentNoteEditor);
+//                }
+//            }
+//        });
     }
 
 

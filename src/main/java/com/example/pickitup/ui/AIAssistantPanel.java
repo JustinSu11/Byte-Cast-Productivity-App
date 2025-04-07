@@ -31,17 +31,17 @@ public class AIAssistantPanel extends JPanel {
     private JButton createKnowledgeBaseButton;
     private JButton detailsButton;
     private JFileChooser fileChooser;
-    private ScrollPane noteEditor;
+    private NoteEditor noteEditor;
     private JLabel statusLabel;
 
     /**
      * Constructor initializes the AI Assistant panel
      */
-    public AIAssistantPanel(ScrollPane noteEditor) {
+    public AIAssistantPanel(JournalsPane journalsPane) {
         // Initialize RAG Agent
         ragAgent = new RagAgent();
         // Set note editor
-        this.noteEditor = noteEditor;
+        this.noteEditor = journalsPane.getSelectedNotesPane().getCurrentNoteEditor();
         // Set up layout
         setLayout(new BorderLayout());
 

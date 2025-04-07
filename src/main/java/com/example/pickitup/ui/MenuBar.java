@@ -39,7 +39,7 @@ public class MenuBar extends JMenuBar
     private JMenuItem darkModeItem = null;
     private JMenuItem clockTimerItem = null; // New menu item for clock/timer
     private final Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 16); // constant
-    private final ThemeManager themeManager;
+    private ThemeManager themeManager;
 
     // menu item buttons for fileMenu
     private JMenuItem newPage = null;
@@ -52,6 +52,7 @@ public class MenuBar extends JMenuBar
     // constructor
     public MenuBar(JournalsPane journalsPane)
     {
+        themeManager = ThemeManager.getInstance();
         menuBar = new JMenuBar();
         this.journalsPane = journalsPane; // reference to the main frame's journal pane
 
@@ -62,6 +63,7 @@ public class MenuBar extends JMenuBar
         fontSizeMenu = new JMenu("Font Size");
         viewMenu = new JMenu("View"); // Initialize new view menu
         calendarMenu = new JMenu("Calendar");
+        themeMenu = new JMenu("Theme");
 
         // menu items for fileMenu
         newPage = new JMenuItem("New Page");
@@ -81,6 +83,7 @@ public class MenuBar extends JMenuBar
         JMenuItem todoItem = new JMenuItem("To-Do List");
         JMenuItem calendarItem = new JMenuItem("Calendar");
         calendarMenu.setFont(DEFAULT_FONT);
+        clockTimerItem = new JMenuItem("Clock Timer");
 
         // Set up the calendar menu
         setupCalendarMenu();
@@ -127,6 +130,7 @@ public class MenuBar extends JMenuBar
         revalidate();
         repaint();
     }
+
 
     /**
      * Set up actions for view menu items
@@ -176,7 +180,7 @@ public class MenuBar extends JMenuBar
         openCalendarItem.setFont(DEFAULT_FONT);
         openCalendarItem.addActionListener(e ->
         {
-            new CalendarApp();
+            new CalendarPanel();
         });
         calendarMenu.add(openCalendarItem);
     }
