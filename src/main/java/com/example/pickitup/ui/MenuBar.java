@@ -4,7 +4,8 @@
     Updated 04/03/2025
 
 
-    This class creates the menu bar for the app with various options.
+    This class creates the menu bar and sets some menus.
+    Each menu has its own menu items.
 
 
     Please remember to update the version date if any changes
@@ -46,6 +47,8 @@ public class MenuBar extends JMenuBar
     private JMenuItem newJournal = null;
     private JMenuItem deleteJournal = null;
 
+
+
     // constructor
     public MenuBar(JournalsPane journalsPane)
     {
@@ -77,6 +80,12 @@ public class MenuBar extends JMenuBar
         JMenuItem notesItem = new JMenuItem("Notes");
         JMenuItem todoItem = new JMenuItem("To-Do List");
         JMenuItem calendarItem = new JMenuItem("Calendar");
+        calendarMenu.setFont(DEFAULT_FONT);
+
+        // Set up the calendar menu
+        setupCalendarMenu();
+        revalidate();
+        repaint();
 
         // for menu items
         newPage.setFont(DEFAULT_FONT);

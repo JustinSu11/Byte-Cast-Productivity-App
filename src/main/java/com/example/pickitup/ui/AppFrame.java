@@ -48,12 +48,14 @@ public class AppFrame extends JFrame
         }
     }
 
-    // This method initializes the main frame attributes
-    public void makeMainAppFrame() {
+    // This method sets basic attributes of the main app frame
+    public void makeMainAppFrame()
+    {
         // Force revalidation and repainting
         revalidate();
         repaint();
 
+        // set some attributes of the frame
         setTitle(TITLE);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // close app when X is clicked
         setExtendedState(JFrame.MAXIMIZED_BOTH); // open in fullscreen
@@ -63,5 +65,6 @@ public class AppFrame extends JFrame
         // border layout is used for the main panel
         mainPanel.setLayout(new BorderLayout());
         add(mainPanel);
-    }
-}
+    } // end makeMainAppFrame()
+
+} // end Frame class
