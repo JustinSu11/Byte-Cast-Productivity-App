@@ -34,6 +34,10 @@ public class JournalsPane extends JTabbedPane
     public JournalsPane()
     {
         journalsPane = new JTabbedPane();
+        title = "Journal " + (journalsPane.getTabCount() + 1);
+        NotesPane newNotesPane = new NotesPane();
+        journalsPane.addTab(title, newNotesPane.getTabbedPane());
+        notesPanes.add(newNotesPane); // Add the new NotesPane
     }
 
 

@@ -17,6 +17,7 @@ public class NotesDAO {
     //method to insert note into SQLite database
     public static void insertNoteAtCreation(Note note) {
         String insertStatement = "INSERT INTO notes (title, content) VALUES (?, ?)";
+        String getIDStatement = "SELECT notes_id FROM notes WHERE title = ? AND journal_id=?";
 
         try (
                 Connection connection = DatabaseConnection.connect();
@@ -30,6 +31,16 @@ public class NotesDAO {
         } catch (SQLException error){
             System.out.println("Error inserting note: " + error.getMessage());
         }
+
+        try (
+                Connection connection = DatabaseConnection.connect();
+                PreparedStatement preparedStatement = connection.prepareStatement(getIDStatement);
+                ResultSet resultSet = preparedStatement.executeQuery()
+        ){
+            note.setNoteId(resultSet.getLong("notes_id"));
+        } catch (SQLException error){
+            System.out.println("Error retrieving note id: " + error.getMessage());
+        }
     }
 
     //READ methods
@@ -42,15 +53,12 @@ public class NotesDAO {
                 PreparedStatement preparedStatement = connection.prepareStatement(selectStatement);
                 ResultSet resultSet = preparedStatement.executeQuery()
                 ){
-            while (resultSet.next()) {
-                //retrieve the columns and store into variables
-                long note_id = resultSet.getLong("id");
-                long journal_id = resultSet.getLong("journal_id");
-                String noteTitle = resultSet.getString("title");
-                String noteContent = resultSet.getString("content");
-
-                Note note = new Note(note_id, journal_id, noteTitle, noteContent);
-            }
+            //retrieve the columns and store into variables
+            long note_id = resultSet.getLong("id");
+            long journal_id = resultSet.getLong("journal_id");
+            String noteTitle = resultSet.getString("title");
+            String noteContent = resultSet.getString("content");
+            Note note = new Note(note_id, journal_id, noteTitle, noteContent);
         } catch (SQLException error) {
             System.out.println("Error getting note: " + error.getMessage());
         }
@@ -82,7 +90,7 @@ public class NotesDAO {
     //UPDATE methods
     //method to save an existing note
     public static void saveNote(Note note) {
-        String updateStatement = "UPDATE notes SET title = ?, content = ? WHERE notes_id = ?";
+        String updateStatement = "UPDATE notes SET title = ?, content = ? WHERE notes_id = ? AND journal_id = ?";
 
         try (
                 Connection connection = DatabaseConnection.connect();
@@ -90,7 +98,8 @@ public class NotesDAO {
                 ){
             preparedStatement.setString(1, note.getTitle());
             preparedStatement.setString(2, note.getContent());
-            preparedStatement.setLong(3, note.getId());
+            preparedStatement.setLong(3, note.getNoteId());
+            preparedStatement.setLong(4, note.getJournalId());
             preparedStatement.executeUpdate();
         } catch (SQLException error) {
             System.out.println("Error saving note: " + error.getMessage());
@@ -106,7 +115,7 @@ public class NotesDAO {
                 Connection connection = DatabaseConnection.connect();
                 PreparedStatement preparedStatement = connection.prepareStatement(deleteStatement)
                 ){
-            preparedStatement.setLong(1, note.getId());
+            preparedStatement.setLong(1, note.getNoteId());
             preparedStatement.executeUpdate();
         } catch (SQLException error) {
             System.out.println("Error deleting note: " + error.getMessage());

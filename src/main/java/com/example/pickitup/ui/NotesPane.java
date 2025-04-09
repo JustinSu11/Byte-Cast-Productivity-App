@@ -16,8 +16,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import com.example.pickitup.services.dao.NotesDAO;
-import com.example.pickitup.services.models.Note;
+import com.example.pickitup.services.models.Journal;
 
 public class NotesPane extends JournalsPane
 {
@@ -28,14 +27,16 @@ public class NotesPane extends JournalsPane
     private int selectedIndex = 0;
     private final Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 16); // constant
     private List<NoteEditor> noteEditors = new ArrayList<>();
+    private Journal journal = null;
 
 
     // constructor
     public NotesPane()
     {
         // initialize the variables
+        title = "Page " + (tabbedPane.getTabCount() + 1);
         tabbedPane = new JTabbedPane();
-        noteEditor = new NoteEditor();
+        noteEditor = new NoteEditor(title);
 
         // set the default font
         tabbedPane.setFont(DEFAULT_FONT);
@@ -50,10 +51,18 @@ public class NotesPane extends JournalsPane
 //            }
 //        });
 
-        title = "Page " + (tabbedPane.getTabCount() + 1);
         noteEditor.makeScrollPane();
         // adds the scroll pane to the new tab
         tabbedPane.addTab(title, noteEditor.getScrollPane());
+
+        //Create a data object for interaction with database
+        journal = new Journal(title);
+
+        //add noteEditor to array list
+        noteEditors.add(noteEditor);
+
+        //add noteEditor to journal's Note array list
+        journal.addNote(noteEditor.getNoteItem());
     }
 
 
@@ -71,7 +80,7 @@ public class NotesPane extends JournalsPane
                     JOptionPane.ERROR_MESSAGE
             );
         }
-        NoteEditor newNoteEditor = new NoteEditor();
+        NoteEditor newNoteEditor = new NoteEditor(title);
         newNoteEditor.makeScrollPane();
         //inserts blank note into database (commented out due to missing journal tabs)
 //        Note currentNote = new Note(title, newNoteEditor.getTextInTextEditor());
@@ -81,6 +90,9 @@ public class NotesPane extends JournalsPane
         
         // Store reference to the NoteEditor
         noteEditors.add(newNoteEditor);
+
+        //add note to database for journal
+        journal.addNote(newNoteEditor.getNoteItem());
     }
 
 
@@ -156,7 +168,10 @@ public class NotesPane extends JournalsPane
     }
 
     public void setNewPageName(String newName){
-        tabbedPane.setTitleAt(tabbedPane.getSelectedIndex(), newName);
+        selectedIndex = tabbedPane.getSelectedIndex();
+        tabbedPane.setTitleAt(selectedIndex, newName);
+        //invoke method to rename note in database here
+        noteEditors.get(selectedIndex).getNoteItem().setTitle(newName);
     }
 
     public void setFontColor(Color color){

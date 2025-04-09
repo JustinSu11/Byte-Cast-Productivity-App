@@ -64,7 +64,6 @@ public class App
 
         // make and add the tabbed pane
         // adds a single tab by default
-        journalsPane.journalConstructor();
         centerPanel.add(journalsPane.getJournalsPane());
 
         //Make as assistant panel after journal tab is created

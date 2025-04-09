@@ -21,6 +21,7 @@ public class Note {
     public Note(String title, String content){
         this.title = title;
         this.content = content;
+        NotesDAO.insertNoteAtCreation(this);
     }
 
     //Parameterized constructor for retrieving note from the database
@@ -32,9 +33,10 @@ public class Note {
     }
 
     //Getters
-    public long getId() {
+    public long getNoteId() {
         return note_id;
     }
+    public long getJournalId() {return journal_id;}
     public String getTitle() {
         return title;
     }
@@ -45,8 +47,14 @@ public class Note {
     //Setters
     public void setTitle(String title) {
         this.title = title;
+        //updates existing note in database
+        NotesDAO.saveNote(this);
     }
     public void setContent(String content) {
         this.content = content;
+        //updates existing note in database
+        NotesDAO.saveNote(this);
     }
+    public void setNoteId(long note_id) {this.note_id = note_id;}
+    public void setJournalId(long journal_id) {this.journal_id = journal_id;}
 }

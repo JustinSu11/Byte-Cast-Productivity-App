@@ -16,21 +16,33 @@ public class JournalDAO {
 
     //CREATE
     //method to insert journal into database
-    public static void insertJournal(Journal journal) throws SQLException {
-        String insertStatement = "INSERT INTO journals (journal_id, title) VALUES (?, ?)";
+    public static void insertJournal(Journal journal) {
+        String insertStatement = "INSERT INTO journals (title) VALUES (?)";
+        String getIDStatement = "SELECT journal_id FROM journals WHERE title = ?";
         try (
                 Connection connection = DatabaseConnection.connect();
                 PreparedStatement preparedStatement = connection.prepareStatement(insertStatement)
                 ) {
-            preparedStatement.setInt(1, journal.getId());
             preparedStatement.setString(2, journal.getTitle());
             preparedStatement.executeUpdate();
+        } catch (SQLException error) {
+            System.out.println("Error inserting journal: " + error.getMessage());
+        }
+
+        try (
+                Connection connection = DatabaseConnection.connect();
+                PreparedStatement preparedStatement = connection.prepareStatement(getIDStatement);
+                ResultSet resultSet = preparedStatement.executeQuery()
+                ){
+            journal.setJournalID(resultSet.getInt("journal_id"));
+        } catch (SQLException error) {
+            System.out.println("Error inserting journal: " + error.getMessage());
         }
     }
 
     //READ
     //method to retrieve all journals from database along with the notes associated with the journal
-    public static List<Journal> getAllJournals() throws SQLException {
+    public static List<Journal> getAllJournals() {
         List<Journal> journals = new ArrayList<>();
         String selectStatement = "SELECT journal_id, title FROM journals";
         try (
@@ -39,41 +51,50 @@ public class JournalDAO {
                 ResultSet resultSet = statement.executeQuery(selectStatement)
                 ) {
             while (resultSet.next()) {
-                int id = resultSet.getInt("journal_id");
                 String title = resultSet.getString("title");
-                Journal journal = new Journal(id, title);
+//                Journal journal = new Journal(title);
                 //Load journals
-                journal.loadNotes();
-                journals.add(journal);
+//                journal.loadNotes();
+//                journals.add(journal);
             }
+        } catch (SQLException error) {
+            System.out.println("Error retrieving journals: " + error.getMessage());
         }
         return journals;
     }
 
     //UPDATE
     //method to update journal title
-    public static void updateJournal(Journal journal) throws SQLException {
+    public static void updateJournal(Journal journal) {
         String updateStatement = "UPDATE journals SET title = ? WHERE journal_id = ?";
         try (
                 Connection connection = DatabaseConnection.connect();
                 PreparedStatement preparedStatement = connection.prepareStatement(updateStatement)
                 ) {
             preparedStatement.setString(1, journal.getTitle());
-            preparedStatement.setInt(2, journal.getId());
+            preparedStatement.setInt(2, journal.getJournalID());
             preparedStatement.executeUpdate();
+        } catch (SQLException error) {
+            System.out.println("Error updating journal: " + error.getMessage());
         }
     }
 
     //DELETE
     //method to delete journal from database
-    public static void deleteJournal(int journalId) throws SQLException {
-        String deleteStatement = "DELETE FROM journals WHERE journal_id = ?";
+    public static void deleteJournal(int journalId) {
+        String deleteJournalStatement = "DELETE FROM journals WHERE journal_id = ?";
+        String deleteNotesBelongingToJournalStatement = "DELETE FROM notes WHERE journal_id = ?";
         try (
                 Connection connection = DatabaseConnection.connect();
-                PreparedStatement preparedStatement = connection.prepareStatement(deleteStatement)
+                PreparedStatement preparedStatement = connection.prepareStatement(deleteJournalStatement);
+                PreparedStatement preparedStatement2 = connection.prepareStatement(deleteNotesBelongingToJournalStatement)
                 ) {
             preparedStatement.setInt(1, journalId);
             preparedStatement.executeUpdate();
+            preparedStatement2.setInt(1, journalId);
+            preparedStatement2.executeUpdate();
+        } catch (SQLException error) {
+            System.out.println("Error deleting journal: " + error.getMessage());
         }
     }
 }

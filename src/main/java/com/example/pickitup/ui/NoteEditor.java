@@ -27,10 +27,12 @@ public class NoteEditor
 
 
     // constructor
-    public NoteEditor()
+    public NoteEditor(String title)
     {
         textArea = new JTextArea();
         scrollPane = new JScrollPane(textArea);
+        //creates a data object for storing the note into the database
+        noteItem = new Note(title, getTextInTextEditor());
     }
 
 
@@ -68,6 +70,11 @@ public class NoteEditor
     //Get text area itself
     public JTextArea getTextArea() {
         return textArea;
+    }
+
+    //get noteItem
+    public Note getNoteItem() {
+        return noteItem;
     }
 
 } // end Notepad class
