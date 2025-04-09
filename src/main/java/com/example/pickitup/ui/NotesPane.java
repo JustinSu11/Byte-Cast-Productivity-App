@@ -56,6 +56,7 @@ public class NotesPane extends JournalsPane
         tabbedPane.addTab(title, noteEditor.getScrollPane());
     }
 
+
     // method to add a new tab to the tabbed pane
     public void addPageTab()
     {
