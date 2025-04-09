@@ -15,7 +15,7 @@ import java.util.List;
 public class NotesDAO {
     //CREATE methods
     //method to insert note into SQLite database
-    public static void insertNote(Note note) {
+    public static void insertNoteAtCreation(Note note) {
         String insertStatement = "INSERT INTO notes (title, content) VALUES (?, ?)";
 
         try (

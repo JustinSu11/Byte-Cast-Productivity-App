@@ -49,6 +49,11 @@ public class NotesPane extends JournalsPane
 //                }
 //            }
 //        });
+
+        title = "Page " + (tabbedPane.getTabCount() + 1);
+        noteEditor.makeScrollPane();
+        // adds the scroll pane to the new tab
+        tabbedPane.addTab(title, noteEditor.getScrollPane());
     }
 
 
@@ -58,9 +63,6 @@ public class NotesPane extends JournalsPane
         title = "Page " + (tabbedPane.getTabCount() + 1);
         NoteEditor newNoteEditor = new NoteEditor();
         newNoteEditor.makeScrollPane();
-        //inserts blank note into database (commented out due to missing journal tabs)
-//        Note currentNote = new Note(title, newNoteEditor.getTextInTextEditor());
-//        NotesDAO.insertNote(currentNote);
         // adds the scroll pane to the new tab
         tabbedPane.addTab(title, newNoteEditor.getScrollPane());
     }

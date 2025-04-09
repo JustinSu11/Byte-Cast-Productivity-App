@@ -15,6 +15,7 @@ package com.example.pickitup.ui;
 
 
 import javax.swing.*;
+import com.example.pickitup.services.models.Note;
 
 
 public class NoteEditor
@@ -22,6 +23,7 @@ public class NoteEditor
     // fields
     private JTextArea textArea = null;
     private JScrollPane scrollPane = null;
+    private Note noteItem = null;
 
 
     // constructor
@@ -29,7 +31,6 @@ public class NoteEditor
     {
         textArea = new JTextArea();
         scrollPane = new JScrollPane(textArea);
-
     }
 
 
@@ -64,7 +65,7 @@ public class NoteEditor
         return textArea.getText();
     } // end getText
 
-    //Get tesxt area itself
+    //Get text area itself
     public JTextArea getTextArea() {
         return textArea;
     }
