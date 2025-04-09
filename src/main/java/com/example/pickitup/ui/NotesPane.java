@@ -49,22 +49,12 @@ public class NotesPane extends JournalsPane
 //                }
 //            }
 //        });
-    }
 
-
-    //Replace with save loading if possible
-    public void notesPaneConstuctor()
-    {
         title = "Page " + (tabbedPane.getTabCount() + 1);
-        NoteEditor newNoteEditor = new NoteEditor();
-        newNoteEditor.makeScrollPane();
-        //inserts blank note into database (commented out due to missing journal tabs)
-//        Note currentNote = new Note(title, newNoteEditor.getTextInTextEditor());
-//        NotesDAO.insertNote(currentNote);
+        noteEditor.makeScrollPane();
         // adds the scroll pane to the new tab
-        tabbedPane.addTab(title, newNoteEditor.getScrollPane());
+        tabbedPane.addTab(title, noteEditor.getScrollPane());
     }
-
 
     // method to add a new tab to the tabbed pane
     public void addPageTab()

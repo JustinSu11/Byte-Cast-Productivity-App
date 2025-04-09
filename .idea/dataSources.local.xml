@@ -13,9 +13,5 @@
         </introspection-scope>
       </schema-mapping>
     </data-source>
-    <data-source name="pickitup [2]" uuid="324d06aa-2b94-497f-9b82-7b440c3716d4">
-      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="SQLITE" />
-      <schema-mapping />
-    </data-source>
   </component>
 </project>
