@@ -18,7 +18,7 @@ public class DatabaseSetup {
 
         //Create a calendar events table
         String calendarEventsTable = "CREATE TABLE IF NOT EXISTS calendar_events (" +
-                "event_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "title TEXT NOT NULL, " +
                 "event_description TEXT NOT NULL, " +
                 "start_time TIMESTAMP NOT NULL, " +
