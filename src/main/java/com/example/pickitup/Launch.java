@@ -23,10 +23,10 @@ public class Launch
 {
     public static void main(String[] args)
     {
-       App launchApp = new App();
-       //creates tables for database
-       DatabaseSetup.createTables();
-       launchApp.runApp();
+        //creates tables for database
+        DatabaseSetup.createTables();
+        App launchApp = new App();
+        launchApp.runApp();
     } // end main
 
 } // end Launch class

@@ -27,12 +27,12 @@ public class NoteEditor
 
 
     // constructor
-    public NoteEditor(String title)
+    public NoteEditor(String title, int journal_id)
     {
         textArea = new JTextArea();
         scrollPane = new JScrollPane(textArea);
         //creates a data object for storing the note into the database
-        noteItem = new Note(title, getTextInTextEditor());
+        noteItem = new Note(title, getTextInTextEditor(), journal_id);
     }
 
 

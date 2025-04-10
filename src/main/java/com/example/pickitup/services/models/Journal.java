@@ -34,9 +34,9 @@ public class Journal {
         return notes;
     }
 
-    public void addNote(Note note) {
-        notes.add(note);
-    }
+//    public void addNote(Note note) {
+//        notes.add(note);
+//    }
 
     //Setters
     public void setJournalID(int journalID){
@@ -44,7 +44,7 @@ public class Journal {
     }
 
     //Load notes for this journal using NoteDAO
-    public void loadNotes() {
-        this.notes = NotesDAO.getNotesByJournalId(this.journalID);
-    }
+//    public void loadNotes() {
+//        this.notes = NotesDAO.getNotesByJournalId(this.journalID);
+//    }
 }
