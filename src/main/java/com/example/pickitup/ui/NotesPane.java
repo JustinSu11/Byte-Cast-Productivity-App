@@ -1,7 +1,7 @@
 /*
     *******************************************************************************
     TabbedPane Class
-    Last Updated 04/02/2025
+    Last Updated 04/10/2025
     Developer CJ Quintero
 
     This class makes the tabbed pane and has methods to add or delete tabs.
@@ -39,7 +39,7 @@ public class NotesPane extends JournalsPane
 
         // set the default font
         tabbedPane.setFont(DEFAULT_FONT);
-        
+
 //        // Add change listener to update AI Assistant when tab changes
 //        tabbedPane.addChangeListener(e -> {
 //            if (AppFrame.aiAssistantPanel != null) {
@@ -87,7 +87,7 @@ public class NotesPane extends JournalsPane
 //        NotesDAO.insertNote(currentNote);
         // adds the scroll pane to the new tab
         tabbedPane.addTab(title, newNoteEditor.getScrollPane());
-        
+
         // Store reference to the NoteEditor
         noteEditors.add(newNoteEditor);
     }
@@ -103,7 +103,7 @@ public class NotesPane extends JournalsPane
         if(tabbedPane.getTabCount() > 0)
         {
             tabbedPane.removeTabAt(tabbedPane.getSelectedIndex());
-            
+
             // Remove the NoteEditor reference
             if (selectedIndex >= 0 && selectedIndex < noteEditors.size()) {
                 noteEditors.remove(selectedIndex);
@@ -168,23 +168,27 @@ public class NotesPane extends JournalsPane
         tabbedPane.setTitleAt(tabbedPane.getSelectedIndex(), newName);
     }
 
-    public void setFontColor(Color color){
-        int selectedTabIndex = tabbedPane.getSelectedIndex();
-        if (selectedTabIndex != -1) {
-            Component selectedComponent = tabbedPane.getComponentAt(selectedTabIndex);
-            if (selectedComponent instanceof JScrollPane) {
-                JScrollPane scrollPane = (JScrollPane) selectedComponent;
-                JViewport viewport = scrollPane.getViewport();
-                Component view = viewport.getView();
-                if (view instanceof JTextArea) {
-                    JTextArea textArea = (JTextArea) view;
-                    textArea.setForeground(color);
-                }
-            }
+    public void setFontColor(Color color) {
+        JTextArea currentTextArea = getCurrentTextArea();
+        if (currentTextArea != null) {
+            currentTextArea.setForeground(color);
+
+            // Register this as a custom color with ThemeManager
+            ThemeManager.getInstance().setCustomForegroundColor(currentTextArea, color);
         }
     }
 
-    public void setBackgroundColor(Color color){
+    public void setBackgroundColor(Color color) {
+        JTextArea currentTextArea = getCurrentTextArea();
+        if (currentTextArea != null) {
+            currentTextArea.setBackground(color);
+
+            // Register this as a custom color with ThemeManager
+            ThemeManager.getInstance().setCustomBackgroundColor(currentTextArea, color);
+        }
+    }
+
+    private JTextArea getCurrentTextArea() {
         int selectedTabIndex = tabbedPane.getSelectedIndex();
         if (selectedTabIndex != -1) {
             Component selectedComponent = tabbedPane.getComponentAt(selectedTabIndex);
@@ -193,11 +197,11 @@ public class NotesPane extends JournalsPane
                 JViewport viewport = scrollPane.getViewport();
                 Component view = viewport.getView();
                 if (view instanceof JTextArea) {
-                    JTextArea textArea = (JTextArea) view;
-                    textArea.setBackground(color);
+                    return (JTextArea) view;
                 }
             }
         }
+        return null;
     }
 
     // returns the notes pane to the JournalsPane class
@@ -205,10 +209,10 @@ public class NotesPane extends JournalsPane
     {
         return tabbedPane;
     } // end getTabbedPane
-    
+
     /**
      * Gets the current NoteEditor based on the selected tab
-     * 
+     *
      * @return The current NoteEditor or null if no tab is selected
      */
     public NoteEditor getCurrentNoteEditor() {

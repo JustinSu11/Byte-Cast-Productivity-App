@@ -17,8 +17,8 @@ import java.util.Vector;
 
 /**
  * Panel for To-Do List functionality in the UI
- * Updated with theme support and simplified date picker
- * @version 1.2
+ * Updated to work as a popup window similar to Calendar
+ * @version 1.3
  */
 public class ToDoListPanel extends JPanel {
 
@@ -32,11 +32,21 @@ public class ToDoListPanel extends JPanel {
     private ToDoItemDAO todoItemDAO;
     private ThemeManager themeManager;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private JFrame frame; // Main frame for the popup
 
     /**
      * Constructor initializes the To-Do List panel
      */
     public ToDoListPanel() {
+        this(false);
+    }
+
+    /**
+     * Constructor with option to create as a popup
+     *
+     * @param asPopup Whether to create as a popup window
+     */
+    public ToDoListPanel(boolean asPopup) {
         // Initialize the DAO
         todoItemDAO = new ToDoItemDAO();
 
@@ -135,6 +145,23 @@ public class ToDoListPanel extends JPanel {
         // Apply custom button styling AFTER registering with theme manager
         // This ensures our custom styling takes precedence
         styleButtonsForCurrentTheme();
+
+        // If creating as a popup, set up the frame
+        if (asPopup) {
+            frame = new JFrame("To-Do List");
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frame.setSize(600, 500);
+            frame.add(this);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        }
+    }
+
+    /**
+     * Static method to create and show a ToDoList as a popup
+     */
+    public static void showAsPopup() {
+        SwingUtilities.invokeLater(() -> new ToDoListPanel(true));
     }
 
     /**
@@ -213,9 +240,6 @@ public class ToDoListPanel extends JPanel {
 
         // Do NOT register the buttons with the theme manager
         // This ensures they keep their original colors
-        // themeManager.registerComponent(addButton);
-        // themeManager.registerComponent(completeButton);
-        // themeManager.registerComponent(deleteButton);
     }
 
     /**
