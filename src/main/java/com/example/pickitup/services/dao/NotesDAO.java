@@ -36,7 +36,7 @@ public class NotesDAO {
                 Connection connection = DatabaseConnection.connect();
                 PreparedStatement preparedStatement = connection.prepareStatement(getIDStatement);
                 ResultSet resultSet = preparedStatement.executeQuery()
-        ){ 
+        ){
             note.setNoteId(resultSet.getLong("notes_id"));
         } catch (SQLException error){
             System.out.println("Error retrieving note id: " + error.getMessage());

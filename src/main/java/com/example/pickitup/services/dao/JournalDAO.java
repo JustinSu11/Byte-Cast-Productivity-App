@@ -14,7 +14,6 @@ import com.example.pickitup.services.models.Journal;
 import com.example.pickitup.ui.NotesPane;
 
 public class JournalDAO {
-
     //CREATE
     //method to insert journal into database
     public static void insertJournal(Journal journal) {
@@ -24,7 +23,7 @@ public class JournalDAO {
                 Connection connection = DatabaseConnection.connect();
                 PreparedStatement preparedStatement = connection.prepareStatement(insertStatement)
                 ) {
-            preparedStatement.setString(2, journal.getTitle());
+            preparedStatement.setString(1, journal.getTitle());
             preparedStatement.executeUpdate();
         } catch (SQLException error) {
             System.out.println("Error inserting journal: " + error.getMessage());

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.example.pickitup.services.models.Journal;
 
-public class NotesPane extends JournalsPane
+public class NotesPane
 {
     // fields
     private JTabbedPane tabbedPane = null;
@@ -34,35 +34,23 @@ public class NotesPane extends JournalsPane
     public NotesPane()
     {
         // initialize the variables
-        title = "Page " + (tabbedPane.getTabCount() + 1);
         tabbedPane = new JTabbedPane();
-        noteEditor = new NoteEditor(title);
+        title = "Page " + (tabbedPane.getTabCount() + 1);
+        journal = new Journal(title);
+        noteEditor = new NoteEditor(title, journal.getJournalID());
 
         // set the default font
         tabbedPane.setFont(DEFAULT_FONT);
-        
-//        // Add change listener to update AI Assistant when tab changes
-//        tabbedPane.addChangeListener(e -> {
-//            if (AppFrame.aiAssistantPanel != null) {
-//                NoteEditor currentNoteEditor = getCurrentNoteEditor();
-//                if (currentNoteEditor != null) {
-//                    AppFrame.aiAssistantPanel.setNoteEditor(currentNoteEditor);
-//                }
-//            }
-//        });
 
         noteEditor.makeScrollPane();
         // adds the scroll pane to the new tab
         tabbedPane.addTab(title, noteEditor.getScrollPane());
 
-        //Create a data object for interaction with database
-        journal = new Journal(title);
-
         //add noteEditor to array list
         noteEditors.add(noteEditor);
 
         //add noteEditor to journal's Note array list
-        journal.addNote(noteEditor.getNoteItem());
+        //journal.addNote(noteEditor.getNoteItem());
     }
 
 
@@ -80,11 +68,9 @@ public class NotesPane extends JournalsPane
                     JOptionPane.ERROR_MESSAGE
             );
         }
-        NoteEditor newNoteEditor = new NoteEditor(title);
+        NoteEditor newNoteEditor = new NoteEditor(title, journal.getJournalID());
         newNoteEditor.makeScrollPane();
-        //inserts blank note into database (commented out due to missing journal tabs)
-//        Note currentNote = new Note(title, newNoteEditor.getTextInTextEditor());
-//        NotesDAO.insertNote(currentNote);
+
         // adds the scroll pane to the new tab
         tabbedPane.addTab(title, newNoteEditor.getScrollPane());
         
@@ -92,7 +78,7 @@ public class NotesPane extends JournalsPane
         noteEditors.add(newNoteEditor);
 
         //add note to database for journal
-        journal.addNote(newNoteEditor.getNoteItem());
+        //journal.addNote(newNoteEditor.getNoteItem());
     }
 
 
@@ -171,7 +157,7 @@ public class NotesPane extends JournalsPane
         selectedIndex = tabbedPane.getSelectedIndex();
         tabbedPane.setTitleAt(selectedIndex, newName);
         //invoke method to rename note in database here
-        noteEditors.get(selectedIndex).getNoteItem().setTitle(newName);
+        //noteEditors.get(selectedIndex).getNoteItem().setTitle(newName);
     }
 
     public void setFontColor(Color color){

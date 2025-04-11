@@ -23,7 +23,6 @@ import java.util.List;
 public class JournalsPane extends JTabbedPane
 {
     private JTabbedPane journalsPane = null;
-
     // store a list of different notesPanes for the different journals
     private List<NotesPane> notesPanes = new ArrayList<>();
     private String title = null;
