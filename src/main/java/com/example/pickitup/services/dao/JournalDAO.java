@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.example.pickitup.services.database.DatabaseConnection;
 import com.example.pickitup.services.models.Journal;
+import com.example.pickitup.ui.NotesPane;
 
 public class JournalDAO {
 
@@ -42,8 +43,8 @@ public class JournalDAO {
 
     //READ
     //method to retrieve all journals from database along with the notes associated with the journal
-    public static List<Journal> getAllJournals() {
-        List<Journal> journals = new ArrayList<>();
+    public static List<NotesPane> getAllJournals() {
+        List<NotesPane> journals = new ArrayList<>();
         String selectStatement = "SELECT journal_id, title FROM journals";
         try (
                 Connection connection = DatabaseConnection.connect();

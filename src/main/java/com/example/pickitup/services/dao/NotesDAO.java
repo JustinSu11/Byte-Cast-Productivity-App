@@ -36,7 +36,7 @@ public class NotesDAO {
                 Connection connection = DatabaseConnection.connect();
                 PreparedStatement preparedStatement = connection.prepareStatement(getIDStatement);
                 ResultSet resultSet = preparedStatement.executeQuery()
-        ){
+        ){ 
             note.setNoteId(resultSet.getLong("notes_id"));
         } catch (SQLException error){
             System.out.println("Error retrieving note id: " + error.getMessage());
@@ -54,11 +54,13 @@ public class NotesDAO {
                 ResultSet resultSet = preparedStatement.executeQuery()
                 ){
             //retrieve the columns and store into variables
-            long note_id = resultSet.getLong("id");
-            long journal_id = resultSet.getLong("journal_id");
-            String noteTitle = resultSet.getString("title");
-            String noteContent = resultSet.getString("content");
-            Note note = new Note(note_id, journal_id, noteTitle, noteContent);
+            while (resultSet.next()) {
+                long note_id = resultSet.getLong("id");
+                long journal_id = resultSet.getLong("journal_id");
+                String noteTitle = resultSet.getString("title");
+                String noteContent = resultSet.getString("content");
+                Note note = new Note(note_id, journal_id, noteTitle, noteContent);
+            }
         } catch (SQLException error) {
             System.out.println("Error getting note: " + error.getMessage());
         }
