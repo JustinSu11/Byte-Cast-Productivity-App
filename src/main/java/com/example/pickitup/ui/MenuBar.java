@@ -1,7 +1,7 @@
 /*
     *******************************************************************************
     MenuBar Class
-    Updated 04/03/2025
+    Updated 04/10/2025
 
 
     This class creates the menu bar and sets some menus.
@@ -34,10 +34,9 @@ public class MenuBar extends JMenuBar
     // menu bar buttons
     private JMenu fileMenu = null;
     private JMenu fontMenu = null;
-    private JMenu fontSizeMenu = null;
-    private JMenu viewMenu = null; // Menu for view options
     private JMenu themeMenu = null; // Menu for theme options
     private JMenu calendarMenu = null;
+    private JMenu todoMenu = null; // New menu for todo list
     private JMenuItem lightModeItem = null;
     private JMenuItem darkModeItem = null;
     private JMenuItem clockTimerItem = null; // New menu item for clock/timer
@@ -84,9 +83,8 @@ public class MenuBar extends JMenuBar
         fileMenu = new JMenu("File");
         saveMenu = new JMenu("Save");
         fontMenu = new JMenu("Font");
-        fontSizeMenu = new JMenu("Font Size");
-        viewMenu = new JMenu("View"); // Initialize new view menu
         calendarMenu = new JMenu("Calendar");
+        todoMenu = new JMenu("To-Do List"); // New menu for todo list
         themeMenu = new JMenu("Theme");
 
         // menu items for fileMenu
@@ -125,8 +123,7 @@ public class MenuBar extends JMenuBar
         fileMenu.setFont(DEFAULT_FONT);
         saveMenu.setFont(DEFAULT_FONT);
         fontMenu.setFont(DEFAULT_FONT);
-        fontSizeMenu.setFont(DEFAULT_FONT);
-        viewMenu.setFont(DEFAULT_FONT);
+        todoMenu.setFont(DEFAULT_FONT); // Set font for todo menu
 
         // Add view menu items
         JMenuItem notesItem = new JMenuItem("Notes");
@@ -150,10 +147,6 @@ public class MenuBar extends JMenuBar
         EXIT.setFont(DEFAULT_FONT);
         saveNotes.setFont(DEFAULT_FONT);
         saveAnExit.setFont(DEFAULT_FONT);
-
-        viewMenu.add(notesItem);
-        viewMenu.add(todoItem);
-        viewMenu.add(clockTimerItem);
 
         // for font menu items
         fontTypeMenu.setFont(DEFAULT_FONT);
@@ -185,6 +178,10 @@ public class MenuBar extends JMenuBar
 
         // Set up the calendar menu
         setupCalendarMenu();
+
+        // Set up the todo list menu
+        setupToDoListMenu();
+
         revalidate();
         repaint();
     }
@@ -241,6 +238,18 @@ public class MenuBar extends JMenuBar
             new CalendarPanel();
         });
         calendarMenu.add(openCalendarItem);
+    }
+
+    // Method to set up the ToDo list menu with actions
+    private void setupToDoListMenu()
+    {
+        JMenuItem openToDoListItem = new JMenuItem("Open To-Do List");
+        openToDoListItem.setFont(DEFAULT_FONT);
+        openToDoListItem.addActionListener(e ->
+        {
+            ToDoListPanel.showAsPopup(); // Call the static method to show as popup
+        });
+        todoMenu.add(openToDoListItem);
     }
 
     /**
@@ -403,10 +412,9 @@ public class MenuBar extends JMenuBar
         // keep these at the bottom of this method
         menuBar.add(fileMenu);
         menuBar.add(saveMenu);
-        menuBar.add(viewMenu); // Add the view menu
         menuBar.add(fontMenu);
-        menuBar.add(fontSizeMenu);
         menuBar.add(calendarMenu);
+        menuBar.add(todoMenu); // Add the todo menu
         menuBar.add(themeMenu); // Add the theme menu
     }
 

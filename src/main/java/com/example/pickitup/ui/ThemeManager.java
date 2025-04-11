@@ -1,16 +1,19 @@
 package com.example.pickitup.ui;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.prefs.Preferences;
 
 /**
  * ThemeManager handles the application's theme (dark/light mode)
  * It provides methods to switch themes and stores the user's preference
  *
- * @version 1.0
+ * @version 1.1
  */
 public class ThemeManager {
     // Theme constants
@@ -46,6 +49,10 @@ public class ThemeManager {
 
     // List of components to update when theme changes
     private final List<JComponent> registeredComponents;
+
+    // Map to track components with custom colors that should be preserved
+    private final Map<JComponent, Color> customBackgroundColors = new HashMap<>();
+    private final Map<JComponent, Color> customForegroundColors = new HashMap<>();
 
     /**
      * Private constructor for singleton pattern
@@ -117,6 +124,50 @@ public class ThemeManager {
     }
 
     /**
+     * Sets a custom background color for a component that should be preserved
+     * This color won't be overridden by theme changes
+     *
+     * @param component The component
+     * @param color The custom color to preserve
+     */
+    public void setCustomBackgroundColor(JComponent component, Color color) {
+        customBackgroundColors.put(component, color);
+        component.setBackground(color);
+    }
+
+    /**
+     * Sets a custom foreground color for a component that should be preserved
+     * This color won't be overridden by theme changes
+     *
+     * @param component The component
+     * @param color The custom color to preserve
+     */
+    public void setCustomForegroundColor(JComponent component, Color color) {
+        customForegroundColors.put(component, color);
+        component.setForeground(color);
+    }
+
+    /**
+     * Checks if a component has a custom background color
+     *
+     * @param component The component to check
+     * @return true if the component has a custom background color
+     */
+    public boolean hasCustomBackgroundColor(JComponent component) {
+        return customBackgroundColors.containsKey(component);
+    }
+
+    /**
+     * Checks if a component has a custom foreground color
+     *
+     * @param component The component to check
+     * @return true if the component has a custom foreground color
+     */
+    public boolean hasCustomForegroundColor(JComponent component) {
+        return customForegroundColors.containsKey(component);
+    }
+
+    /**
      * Applies the current theme to all registered components
      */
     private void applyThemeToRegisteredComponents() {
@@ -141,16 +192,50 @@ public class ThemeManager {
             }
         }
 
+        // Check if this component has custom colors that should be preserved
+        boolean hasCustomBg = hasCustomBackgroundColor(component);
+        boolean hasCustomFg = hasCustomForegroundColor(component);
+
+        // If the component is a text area in NotesPane, preserve its colors
+        if (component instanceof JTextArea && component.getParent() != null &&
+                component.getParent().getParent() instanceof NotesPane) {
+            // This is likely a text area in NotesPane, don't theme it
+            return;
+        }
+
+        // Apply theme colors to components without custom colors
         if (currentTheme == LIGHT_MODE) {
-            applyLightTheme(component);
+            if (!hasCustomBg) {
+                applyLightThemeBackground(component);
+            }
+            if (!hasCustomFg) {
+                applyLightThemeForeground(component);
+            }
         } else {
-            applyDarkTheme(component);
+            if (!hasCustomBg) {
+                applyDarkThemeBackground(component);
+            }
+            if (!hasCustomFg) {
+                applyDarkThemeForeground(component);
+            }
         }
 
         // Recursively apply theme to child components
         for (Component child : component.getComponents()) {
             if (child instanceof JComponent) {
-                applyThemeToComponent((JComponent) child);
+                JComponent childComponent = (JComponent) child;
+
+                // Check if this component has custom colors that should be preserved
+                boolean childHasCustomBg = hasCustomBackgroundColor(childComponent);
+                boolean childHasCustomFg = hasCustomForegroundColor(childComponent);
+
+                // Special handling for text components in NotesPane
+                boolean isNotesPaneTextComponent = childComponent instanceof JTextComponent &&
+                        component instanceof NotesPane;
+
+                if (!isNotesPaneTextComponent) {
+                    applyThemeToComponent(childComponent);
+                }
             }
         }
 
@@ -158,27 +243,173 @@ public class ThemeManager {
     }
 
     /**
-     * Applies light theme to a component
-     *
-     * @param component The component to apply the theme to
+     * Applies light theme background to a component
      */
-    private void applyLightTheme(JComponent component) {
-        component.setBackground(LIGHT_PANEL_BACKGROUND);
-        component.setForeground(LIGHT_FOREGROUND);
-
+    private void applyLightThemeBackground(JComponent component) {
         if (component instanceof JPanel) {
             component.setBackground(LIGHT_PANEL_BACKGROUND);
         } else if (component instanceof JTextArea || component instanceof JTextField) {
             component.setBackground(LIGHT_PANEL_BACKGROUND);
-            component.setForeground(LIGHT_FOREGROUND);
-            component.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
         } else if (component instanceof JButton) {
             component.setBackground(LIGHT_BUTTON_BACKGROUND);
-            component.setForeground(LIGHT_FOREGROUND);
         } else if (component instanceof JTable) {
             JTable table = (JTable) component;
             table.setBackground(LIGHT_PANEL_BACKGROUND);
+            table.setGridColor(LIGHT_TABLE_GRID);
+            table.getTableHeader().setBackground(LIGHT_TABLE_HEADER);
+        } else if (component instanceof JScrollPane) {
+            JScrollPane scrollPane = (JScrollPane) component;
+            scrollPane.getViewport().setBackground(LIGHT_PANEL_BACKGROUND);
+            scrollPane.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
+        } else if (component instanceof JMenuBar || component instanceof JMenu) {
+            component.setBackground(LIGHT_PANEL_BACKGROUND);
+
+            // Apply to menu items
+            if (component instanceof JMenu) {
+                JMenu menu = (JMenu) component;
+                for (int i = 0; i < menu.getItemCount(); i++) {
+                    JMenuItem item = menu.getItem(i);
+                    if (item != null) {
+                        item.setBackground(LIGHT_PANEL_BACKGROUND);
+                    }
+                }
+            }
+        } else {
+            component.setBackground(LIGHT_PANEL_BACKGROUND);
+        }
+    }
+
+    /**
+     * Applies light theme foreground to a component
+     */
+    private void applyLightThemeForeground(JComponent component) {
+        if (component instanceof JTable) {
+            JTable table = (JTable) component;
             table.setForeground(LIGHT_FOREGROUND);
+            table.getTableHeader().setForeground(LIGHT_FOREGROUND);
+        } else if (component instanceof JMenuBar || component instanceof JMenu) {
+            component.setForeground(LIGHT_FOREGROUND);
+
+            // Apply to menu items
+            if (component instanceof JMenu) {
+                JMenu menu = (JMenu) component;
+                for (int i = 0; i < menu.getItemCount(); i++) {
+                    JMenuItem item = menu.getItem(i);
+                    if (item != null) {
+                        item.setForeground(LIGHT_FOREGROUND);
+                    }
+                }
+            }
+        } else {
+            component.setForeground(LIGHT_FOREGROUND);
+        }
+    }
+
+    /**
+     * Applies dark theme background to a component
+     */
+    private void applyDarkThemeBackground(JComponent component) {
+        if (component instanceof JPanel) {
+            component.setBackground(DARK_PANEL_BACKGROUND);
+        } else if (component instanceof JTextArea || component instanceof JTextField) {
+            component.setBackground(DARK_PANEL_BACKGROUND);
+        } else if (component instanceof JButton) {
+            component.setBackground(DARK_BUTTON_BACKGROUND);
+        } else if (component instanceof JTable) {
+            JTable table = (JTable) component;
+            table.setBackground(DARK_PANEL_BACKGROUND);
+            table.setGridColor(DARK_TABLE_GRID);
+            table.getTableHeader().setBackground(DARK_TABLE_HEADER);
+        } else if (component instanceof JScrollPane) {
+            JScrollPane scrollPane = (JScrollPane) component;
+            scrollPane.getViewport().setBackground(DARK_PANEL_BACKGROUND);
+            scrollPane.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 100)));
+        } else if (component instanceof JMenuBar || component instanceof JMenu) {
+            component.setBackground(DARK_PANEL_BACKGROUND);
+
+            // Apply to menu items
+            if (component instanceof JMenu) {
+                JMenu menu = (JMenu) component;
+                for (int i = 0; i < menu.getItemCount(); i++) {
+                    JMenuItem item = menu.getItem(i);
+                    if (item != null) {
+                        item.setBackground(DARK_PANEL_BACKGROUND);
+                    }
+                }
+            }
+        } else {
+            component.setBackground(DARK_PANEL_BACKGROUND);
+        }
+    }
+
+    /**
+     * Applies dark theme foreground to a component
+     */
+    private void applyDarkThemeForeground(JComponent component) {
+        if (component instanceof JTable) {
+            JTable table = (JTable) component;
+            table.setForeground(DARK_FOREGROUND);
+            table.getTableHeader().setForeground(DARK_FOREGROUND);
+        } else if (component instanceof JMenuBar || component instanceof JMenu) {
+            component.setForeground(DARK_FOREGROUND);
+
+            // Apply to menu items
+            if (component instanceof JMenu) {
+                JMenu menu = (JMenu) component;
+                for (int i = 0; i < menu.getItemCount(); i++) {
+                    JMenuItem item = menu.getItem(i);
+                    if (item != null) {
+                        item.setForeground(DARK_FOREGROUND);
+                    }
+                }
+            }
+        } else {
+            component.setForeground(DARK_FOREGROUND);
+        }
+    }
+
+    /**
+     * Applies light theme to a component
+     *
+     * @param component The component to apply the theme to
+     * @deprecated Use separate background and foreground methods instead
+     */
+    @Deprecated
+    private void applyLightTheme(JComponent component) {
+        if (!hasCustomBackgroundColor(component)) {
+            component.setBackground(LIGHT_PANEL_BACKGROUND);
+        }
+        if (!hasCustomForegroundColor(component)) {
+            component.setForeground(LIGHT_FOREGROUND);
+        }
+
+        if (component instanceof JPanel) {
+            if (!hasCustomBackgroundColor(component)) {
+                component.setBackground(LIGHT_PANEL_BACKGROUND);
+            }
+        } else if (component instanceof JTextArea || component instanceof JTextField) {
+            if (!hasCustomBackgroundColor(component)) {
+                component.setBackground(LIGHT_PANEL_BACKGROUND);
+            }
+            if (!hasCustomForegroundColor(component)) {
+                component.setForeground(LIGHT_FOREGROUND);
+            }
+            component.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
+        } else if (component instanceof JButton) {
+            if (!hasCustomBackgroundColor(component)) {
+                component.setBackground(LIGHT_BUTTON_BACKGROUND);
+            }
+            if (!hasCustomForegroundColor(component)) {
+                component.setForeground(LIGHT_FOREGROUND);
+            }
+        } else if (component instanceof JTable) {
+            JTable table = (JTable) component;
+            if (!hasCustomBackgroundColor(component)) {
+                table.setBackground(LIGHT_PANEL_BACKGROUND);
+            }
+            if (!hasCustomForegroundColor(component)) {
+                table.setForeground(LIGHT_FOREGROUND);
+            }
             table.setGridColor(LIGHT_TABLE_GRID);
             table.getTableHeader().setBackground(LIGHT_TABLE_HEADER);
             table.getTableHeader().setForeground(LIGHT_FOREGROUND);
@@ -187,8 +418,12 @@ public class ThemeManager {
             scrollPane.getViewport().setBackground(LIGHT_PANEL_BACKGROUND);
             scrollPane.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
         } else if (component instanceof JMenuBar || component instanceof JMenu) {
-            component.setBackground(LIGHT_PANEL_BACKGROUND);
-            component.setForeground(LIGHT_FOREGROUND);
+            if (!hasCustomBackgroundColor(component)) {
+                component.setBackground(LIGHT_PANEL_BACKGROUND);
+            }
+            if (!hasCustomForegroundColor(component)) {
+                component.setForeground(LIGHT_FOREGROUND);
+            }
 
             // Apply to menu items
             if (component instanceof JMenu) {
@@ -208,24 +443,44 @@ public class ThemeManager {
      * Applies dark theme to a component
      *
      * @param component The component to apply the theme to
+     * @deprecated Use separate background and foreground methods instead
      */
+    @Deprecated
     private void applyDarkTheme(JComponent component) {
-        component.setBackground(DARK_PANEL_BACKGROUND);
-        component.setForeground(DARK_FOREGROUND);
+        if (!hasCustomBackgroundColor(component)) {
+            component.setBackground(DARK_PANEL_BACKGROUND);
+        }
+        if (!hasCustomForegroundColor(component)) {
+            component.setForeground(DARK_FOREGROUND);
+        }
 
         if (component instanceof JPanel) {
-            component.setBackground(DARK_PANEL_BACKGROUND);
+            if (!hasCustomBackgroundColor(component)) {
+                component.setBackground(DARK_PANEL_BACKGROUND);
+            }
         } else if (component instanceof JTextArea || component instanceof JTextField) {
-            component.setBackground(DARK_PANEL_BACKGROUND);
-            component.setForeground(DARK_FOREGROUND);
+            if (!hasCustomBackgroundColor(component)) {
+                component.setBackground(DARK_PANEL_BACKGROUND);
+            }
+            if (!hasCustomForegroundColor(component)) {
+                component.setForeground(DARK_FOREGROUND);
+            }
             component.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 100)));
         } else if (component instanceof JButton) {
-            component.setBackground(DARK_BUTTON_BACKGROUND);
-            component.setForeground(DARK_FOREGROUND);
+            if (!hasCustomBackgroundColor(component)) {
+                component.setBackground(DARK_BUTTON_BACKGROUND);
+            }
+            if (!hasCustomForegroundColor(component)) {
+                component.setForeground(DARK_FOREGROUND);
+            }
         } else if (component instanceof JTable) {
             JTable table = (JTable) component;
-            table.setBackground(DARK_PANEL_BACKGROUND);
-            table.setForeground(DARK_FOREGROUND);
+            if (!hasCustomBackgroundColor(component)) {
+                table.setBackground(DARK_PANEL_BACKGROUND);
+            }
+            if (!hasCustomForegroundColor(component)) {
+                table.setForeground(DARK_FOREGROUND);
+            }
             table.setGridColor(DARK_TABLE_GRID);
             table.getTableHeader().setBackground(DARK_TABLE_HEADER);
             table.getTableHeader().setForeground(DARK_FOREGROUND);
@@ -234,8 +489,12 @@ public class ThemeManager {
             scrollPane.getViewport().setBackground(DARK_PANEL_BACKGROUND);
             scrollPane.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 100)));
         } else if (component instanceof JMenuBar || component instanceof JMenu) {
-            component.setBackground(DARK_PANEL_BACKGROUND);
-            component.setForeground(DARK_FOREGROUND);
+            if (!hasCustomBackgroundColor(component)) {
+                component.setBackground(DARK_PANEL_BACKGROUND);
+            }
+            if (!hasCustomForegroundColor(component)) {
+                component.setForeground(DARK_FOREGROUND);
+            }
 
             // Apply to menu items
             if (component instanceof JMenu) {

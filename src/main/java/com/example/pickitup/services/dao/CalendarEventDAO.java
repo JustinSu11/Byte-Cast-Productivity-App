@@ -42,7 +42,7 @@ public class CalendarEventDAO {
     public static List<String> getEvents(String date) {
         List<String> events = new ArrayList<>();
         String datePart = date.split(" ")[0];
-        String sql = "SELECT event_id, title, event_description, start_time FROM calendar_events WHERE DATE(start_time) = ?";
+        String sql = "SELECT id, title, event_description, start_time FROM calendar_events WHERE DATE(start_time) = ?";
 
         try (Connection connection = DatabaseConnection.connect();
              PreparedStatement pstmt = connection.prepareStatement(sql))
@@ -52,7 +52,7 @@ public class CalendarEventDAO {
 
             while (rs.next())
             {
-                int eventId = rs.getInt("event_id");
+                int eventId = rs.getInt("id");
                 String title = rs.getString("title");
                 String description = rs.getString("event_description");
                 String startTime = rs.getString("start_time");
@@ -68,7 +68,7 @@ public class CalendarEventDAO {
     // Method to delete an event by its event_id
     public static boolean deleteEvent(int eventId)
     {
-        String sql = "DELETE FROM calendar_events WHERE event_id = ?";
+        String sql = "DELETE FROM calendar_events WHERE id = ?";
         try (Connection connection = DatabaseConnection.connect();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, eventId);
