@@ -17,24 +17,20 @@ public class JournalDAO {
     //CREATE
     //method to insert journal into database
     public static void insertJournal(Journal journal) {
-        String insertStatement = "INSERT INTO journals (title) VALUES (?)";
-        String getIDStatement = "SELECT journal_id FROM journals WHERE title = ?";
+        String insertStatement = "INSERT INTO journals (title) VALUES (?) RETURNING journal_id";
         try (
                 Connection connection = DatabaseConnection.connect();
                 PreparedStatement preparedStatement = connection.prepareStatement(insertStatement)
                 ) {
             preparedStatement.setString(1, journal.getTitle());
-            preparedStatement.executeUpdate();
-        } catch (SQLException error) {
-            System.out.println("Error inserting journal: " + error.getMessage());
-        }
 
-        try (
-                Connection connection = DatabaseConnection.connect();
-                PreparedStatement preparedStatement = connection.prepareStatement(getIDStatement);
-                ResultSet resultSet = preparedStatement.executeQuery()
-                ){
-            journal.setJournalID(resultSet.getInt("journal_id"));
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    journal.setJournalID(resultSet.getInt("journal_id"));
+                }
+            }
+
+            System.out.println("Successfully inserted journal");
         } catch (SQLException error) {
             System.out.println("Error inserting journal: " + error.getMessage());
         }

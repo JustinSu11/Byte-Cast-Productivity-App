@@ -53,6 +53,28 @@ public class NotesPane
         //journal.addNote(noteEditor.getNoteItem());
     }
 
+    // constructor for creating journal with title
+    public NotesPane(String title)
+    {
+        // initialize the variables
+        tabbedPane = new JTabbedPane();
+        journal = new Journal(title);
+        noteEditor = new NoteEditor(title, journal.getJournalID());
+
+        // set the default font
+        tabbedPane.setFont(DEFAULT_FONT);
+
+        noteEditor.makeScrollPane();
+        // adds the scroll pane to the new tab
+        tabbedPane.addTab(title, noteEditor.getScrollPane());
+
+        //add noteEditor to array list
+        noteEditors.add(noteEditor);
+
+        //add noteEditor to journal's Note array list
+        //journal.addNote(noteEditor.getNoteItem());
+    }
+
 
     // method to add a new tab to the tabbed pane
     public void addPageTab()

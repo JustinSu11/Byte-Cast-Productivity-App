@@ -40,16 +40,6 @@ public class JournalsPane extends JTabbedPane
     }
 
 
-    //Replace with save loading if possible
-    public void journalConstructor()
-    {
-        title = "Journal " + (journalsPane.getTabCount() + 1);
-        NotesPane newNotesPane = new NotesPane();
-        journalsPane.addTab(title, newNotesPane.getTabbedPane());
-        notesPanes.add(newNotesPane); // Add the new NotesPane
-    }
-
-
     // this method is used by the file menu to add a journal tab
     public void addJournalTab()
     {
@@ -64,8 +54,7 @@ public class JournalsPane extends JTabbedPane
                     JOptionPane.ERROR_MESSAGE
             );
         }
-        NotesPane newNotesPane = new NotesPane();
-        newNotesPane.addPageTab();
+        NotesPane newNotesPane = new NotesPane(title);
         journalsPane.addTab(title, newNotesPane.getTabbedPane());
         notesPanes.add(newNotesPane); // Add the new NotesPane
     }

@@ -16,30 +16,26 @@ public class NotesDAO {
     //CREATE methods
     //method to insert note into SQLite database
     public static void insertNoteAtCreation(Note note) {
-        String insertStatement = "INSERT INTO notes (title, content) VALUES (?, ?)";
-        String getIDStatement = "SELECT notes_id FROM notes WHERE title = ? AND journal_id=?";
+        int newNoteID = 0;
+        String insertStatement = "INSERT INTO notes (title, content, journal_id) VALUES (?, ?, ?) RETURNING notes_id";
 
         try (
                 Connection connection = DatabaseConnection.connect();
-                PreparedStatement preparedStatement = connection.prepareStatement(insertStatement)
+                PreparedStatement preparedStatement = connection.prepareStatement(insertStatement);
         ){
-
             preparedStatement.setString(1, note.getTitle());
             preparedStatement.setString(2, note.getContent());
-            preparedStatement.executeUpdate();
+            preparedStatement.setInt(3, note.getJournalID());
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    note.setNoteID(resultSet.getInt("notes_id"));
+                }
+            }
+
             System.out.println("Successfully inserted note");
         } catch (SQLException error){
             System.out.println("Error inserting note: " + error.getMessage());
-        }
-
-        try (
-                Connection connection = DatabaseConnection.connect();
-                PreparedStatement preparedStatement = connection.prepareStatement(getIDStatement);
-                ResultSet resultSet = preparedStatement.executeQuery()
-        ){
-            note.setNoteId(resultSet.getLong("notes_id"));
-        } catch (SQLException error){
-            System.out.println("Error retrieving note id: " + error.getMessage());
         }
     }
 
@@ -55,8 +51,8 @@ public class NotesDAO {
                 ){
             //retrieve the columns and store into variables
             while (resultSet.next()) {
-                long note_id = resultSet.getLong("id");
-                long journal_id = resultSet.getLong("journal_id");
+                int note_id = resultSet.getInt("id");
+                int journal_id = resultSet.getInt("journal_id");
                 String noteTitle = resultSet.getString("title");
                 String noteContent = resultSet.getString("content");
                 Note note = new Note(note_id, journal_id, noteTitle, noteContent);
@@ -100,8 +96,8 @@ public class NotesDAO {
                 ){
             preparedStatement.setString(1, note.getTitle());
             preparedStatement.setString(2, note.getContent());
-            preparedStatement.setLong(3, note.getNoteId());
-            preparedStatement.setLong(4, note.getJournalId());
+            preparedStatement.setLong(3, note.getNoteID());
+            preparedStatement.setLong(4, note.getJournalID());
             preparedStatement.executeUpdate();
         } catch (SQLException error) {
             System.out.println("Error saving note: " + error.getMessage());
@@ -117,7 +113,7 @@ public class NotesDAO {
                 Connection connection = DatabaseConnection.connect();
                 PreparedStatement preparedStatement = connection.prepareStatement(deleteStatement)
                 ){
-            preparedStatement.setLong(1, note.getNoteId());
+            preparedStatement.setLong(1, note.getNoteID());
             preparedStatement.executeUpdate();
         } catch (SQLException error) {
             System.out.println("Error deleting note: " + error.getMessage());

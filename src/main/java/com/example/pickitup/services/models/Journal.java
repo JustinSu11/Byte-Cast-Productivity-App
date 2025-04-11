@@ -25,7 +25,7 @@ public class Journal {
 
     //Getters
     public int getJournalID() {
-        return journalID;
+        return this.journalID;
     }
     public String getTitle() {
         return title;

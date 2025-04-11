@@ -34,10 +34,10 @@ public class Note {
     }
 
     //Getters
-    public long getNoteId() {
+    public int getNoteID() {
         return note_id;
     }
-    public long getJournalId() {return journal_id;}
+    public int getJournalID() {return journal_id;}
     public String getTitle() {
         return title;
     }
@@ -56,6 +56,6 @@ public class Note {
         //updates existing note in database
         //NotesDAO.saveNote(this);
     }
-    public void setNoteId(int note_id) {this.note_id = note_id;}
+    public void setNoteID(int note_id) {this.note_id = note_id;}
     public void setJournalId(int journal_id) {this.journal_id = journal_id;}
 }

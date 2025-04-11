@@ -29,8 +29,7 @@ public class DatabaseSetup {
 
         String journalsTable = "CREATE TABLE IF NOT EXISTS journals (" +
                 "journal_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "title TEXT NOT NULL, " +
-                "FOREIGN KEY (workspace_id) REFERENCES workspaces(workspace_id) " +
+                "title TEXT NOT NULL " +
                 ");";
 
         String journalNotesTable = "CREATE TABLE IF NOT EXISTS journal_notes (" +
