@@ -1,15 +1,17 @@
 /*
     *******************************************************************************
-    TabbedPane Class
-    Last Updated 04/10/2025
-    Developer CJ Quintero
+    NotesPane Class
+    Last Updated 04/12/2025
+    Developers: Michael Tajchman, CJ Quintero
 
-    This class makes the tabbed pane and has methods to add or delete tabs.
+    For making the tabs with the note editor class.
+    Contains the object to hold inner tabs for making pages in
+    journals.
 
     Please remember to update the version date if any changes
     are made to this file.
     *******************************************************************************
-*/
+ */
 package com.example.pickitup.ui;
 
 import javax.swing.*;

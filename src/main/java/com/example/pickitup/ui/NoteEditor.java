@@ -1,16 +1,16 @@
 /*
     *******************************************************************************
-    ScrollPane Class
-    Last Updated 04/02/2025
-    Developer CJ Quintero
+    NoteEditor Class
+    Last Updated 04/12/2025
+    Developers: CJ Quintero
 
-    This class is for making the scroll pane which holds the
-    text area.
+    The notes pane uses this class to make the pages. Pages are made
+    of a scroll pane and a text area.
 
     Please remember to update the version date if any changes
     are made to this file.
     *******************************************************************************
-*/
+ */
 package com.example.pickitup.ui;
 
 

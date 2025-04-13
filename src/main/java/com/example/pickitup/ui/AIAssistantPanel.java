@@ -1,3 +1,15 @@
+/*
+    *******************************************************************************
+    AIAssistantPanel Class
+    Last Updated 04/12/2025
+    Developers: Maaz Haque
+
+    This class sets up the AI panel and chat box.
+
+    Please remember to update the version date if any changes
+    are made to this file.
+    *******************************************************************************
+ */
 package com.example.pickitup.ui;
 
 import com.example.pickitup.ai.RagAgent;

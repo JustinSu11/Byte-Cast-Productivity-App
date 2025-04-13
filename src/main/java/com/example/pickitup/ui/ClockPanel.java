@@ -1,3 +1,17 @@
+/*
+    *******************************************************************************
+    ClockPanel Class
+    Last Updated 04/12/2025
+    Developers: Matthew Tomme
+
+    This class has time related features such as: Current time display
+    * 12/24 hour toggle, countdown timer with notifications,
+    * and stopwatch functionality.
+
+    Please remember to update the version date if any changes
+    are made to this file.
+    *******************************************************************************
+ */
 package com.example.pickitup.ui;
 
 import javax.swing.*;
@@ -12,15 +26,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import com.example.pickitup.services.models.TimerHandler;
 
-/**
- * ClockPanel provides time-related features including:
- * - Current time display with 12/24 hour format toggle
- * - Countdown timer with notifications
- * - Stopwatch functionality
- *
- * @version 1.1
- * @author [Your Name]
- */
+
 public class ClockPanel extends JPanel {
 
     // UI Components

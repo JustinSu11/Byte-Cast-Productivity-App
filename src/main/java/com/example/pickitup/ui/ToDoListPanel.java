@@ -1,3 +1,16 @@
+/*
+    *******************************************************************************
+    ToDoListPanel Class
+    Last Updated 04/12/2025
+    Developers: Matthew Tome
+
+    This class includes the entire panel and all methods to make
+    and add functionality to the to do list.
+
+    Please remember to update the version date if any changes
+    are made to this file.
+    *******************************************************************************
+ */
 package com.example.pickitup.ui;
 
 import com.example.pickitup.services.models.ToDoItem;
@@ -15,11 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
-/**
- * Panel for To-Do List functionality in the UI
- * Updated to work as a popup window similar to Calendar
- * @version 1.3
- */
+
 public class ToDoListPanel extends JPanel {
 
     private JTable todoTable;

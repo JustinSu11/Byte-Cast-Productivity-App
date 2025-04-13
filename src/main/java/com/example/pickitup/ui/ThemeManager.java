@@ -1,3 +1,15 @@
+/*
+    *******************************************************************************
+    ThemeManager Class
+    Last Updated 04/12/2025
+    Developers: Matthew Tomme
+
+    For making the dark/light mode. Provides methods to switch between themes.
+
+    Please remember to update the version date if any changes
+    are made to this file.
+    *******************************************************************************
+ */
 package com.example.pickitup.ui;
 
 import javax.swing.*;
@@ -9,12 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.prefs.Preferences;
 
-/**
- * ThemeManager handles the application's theme (dark/light mode)
- * It provides methods to switch themes and stores the user's preference
- *
- * @version 1.1
- */
+
 public class ThemeManager {
     // Theme constants
     public static final int LIGHT_MODE = 0;

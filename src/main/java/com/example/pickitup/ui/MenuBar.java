@@ -1,12 +1,11 @@
 /*
     *******************************************************************************
     MenuBar Class
-    Updated 04/10/2025
+    Last Updated 04/12/2025
+    Developers: Michael Tajchman
 
-
-    This class creates the menu bar and sets some menus.
-    Each menu has its own menu items.
-
+    For making the menu bar and related features such as changing fonts, colors
+    names for the journals and pages.
 
     Please remember to update the version date if any changes
     are made to this file.

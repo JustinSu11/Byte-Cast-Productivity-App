@@ -1,14 +1,10 @@
 /*
     *******************************************************************************
     JournalsPane Class
-    Updated 04/02/2025
-    Developer CJ Quintero
+    Last Updated 04/12/2025
+    Developers: CJ Quintero
 
-
-    This class creates the outer tabbed pane for users to make journals.
-    Each journal has its own instance of notesPane to allow multiple pages
-    inside a single journal to be made.
-
+    This class is for making the journals and for the journals tab itself.
 
     Please remember to update the version date if any changes
     are made to this file.
