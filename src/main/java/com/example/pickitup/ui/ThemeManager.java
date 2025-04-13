@@ -1,14 +1,8 @@
-/*
-    *******************************************************************************
-    ThemeManager Class
-    Last Updated 04/12/2025
-    Developers: Matthew Tomme
-
-    For making the dark/light mode. Provides methods to switch between themes.
-
-    Please remember to update the version date if any changes
-    are made to this file.
-    *******************************************************************************
+/**
+ * Makes the methods to change the theme from light/dark
+ *
+ * @author Matthew Tomme
+ * @date 04/12/2025
  */
 package com.example.pickitup.ui;
 

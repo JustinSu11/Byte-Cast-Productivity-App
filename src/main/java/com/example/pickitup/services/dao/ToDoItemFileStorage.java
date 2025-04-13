@@ -1,3 +1,10 @@
+/**
+ * File based storage implementation for ToDoItems
+ * Provides methods to save and load to do items from a file
+ *
+ * @author Matthew Tomme
+ * @date 04/12/2025
+ */
 package com.example.pickitup.services.dao;
 
 import com.example.pickitup.services.models.ToDoItem;
@@ -9,12 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * File-based storage implementation for ToDoItems
- * Provides methods to save and load to-do items from a file
- *
- * @version 1.0
- */
+
 public class ToDoItemFileStorage {
     // The file where to-do items will be stored
     private static final String STORAGE_FILE = "todoitems.dat";

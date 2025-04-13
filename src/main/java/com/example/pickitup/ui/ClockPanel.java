@@ -1,16 +1,8 @@
-/*
-    *******************************************************************************
-    ClockPanel Class
-    Last Updated 04/12/2025
-    Developers: Matthew Tomme
-
-    This class has time related features such as: Current time display
-    * 12/24 hour toggle, countdown timer with notifications,
-    * and stopwatch functionality.
-
-    Please remember to update the version date if any changes
-    are made to this file.
-    *******************************************************************************
+/**
+ * Makes the clock panel and clock features
+ *
+ * @author Matthew Tomme
+ * @date 04/12/2025
  */
 package com.example.pickitup.ui;
 

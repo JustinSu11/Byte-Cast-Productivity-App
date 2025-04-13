@@ -1,15 +1,9 @@
-/*
-    *******************************************************************************
-    AppFrame Class
-    Last Updated 04/12/2025
-    Developers: CJ Quintero, Aron Rios
-
-    This class creates the main frame for the app and
-    sets some basic attributes for the frame.
-
-    Please remember to update the version date if any changes
-    are made to this file.
-    *******************************************************************************
+/**
+ * Makes the app frame and sets attributes for it
+ *
+ * @author CJ Quintero
+ * @author Aron Rios
+ * @date 04/12/2025
  */
 package com.example.pickitup.ui;
 

@@ -1,14 +1,16 @@
+/**
+ * Model class representing a knowledge base containing multiple documents
+ *
+ * @author Maaz Haque
+ * @date 04/12/2025
+ */
 package com.example.pickitup.services.models;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
 
-/**
- * Model class representing a knowledge base containing multiple documents
- * @author Maaz Haque
- * @version 1.0
- */
+
 public class KnowledgeBase {
     // Member variables for knowledge base
     private String id;

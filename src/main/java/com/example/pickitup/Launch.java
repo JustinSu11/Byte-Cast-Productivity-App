@@ -1,15 +1,8 @@
-/*
-    *******************************************************************************
-    Launch Class
-    Last Updated 04/12/2025
-    Developers: Byte Cast
-
-    This class contains the main method for running the app and
-    setting up the database.
-
-    Please remember to update the version date if any changes
-    are made to this file.
-    *******************************************************************************
+/**
+ * Contains the main method
+ *
+ * @author Byte Cast
+ * @date 04/12/2025
  */
 package com.example.pickitup;
 

@@ -1,11 +1,14 @@
+/**
+ * Represents a single to do item with task details, due date, and status
+ *
+ * @author Matthew Tomme
+ * @date 04/12/2025
+ */
 package com.example.pickitup.services.models;
 
 import java.util.Date;
 
-/**
- * Represents a single To-Do item with task details, due date, and status
- * @version 1.0
- */
+
 public class ToDoItem {
     private String task;
     private Date dueDate;

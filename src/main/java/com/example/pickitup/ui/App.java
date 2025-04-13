@@ -1,15 +1,8 @@
-/*
-    *******************************************************************************
-    App Class
-    Last Updated 04/12/2025
-    Developers: CJ Quintero, Maaz Haque, Matthew Tomme
-
-    This class creates the App object which adds everything
-    together to make the app run.
-
-    Please remember to update the version date if any changes
-    are made to this file.
-    *******************************************************************************
+/**
+ * Makes the app object and adds the other major panels
+ *
+ * @author CJ Quintero
+ * @date 04/12/2025
  */
 package com.example.pickitup.ui;
 

@@ -1,14 +1,8 @@
-/*
-    *******************************************************************************
-    JournalsPane Class
-    Last Updated 04/12/2025
-    Developers: CJ Quintero
-
-    This class is for making the journals and for the journals tab itself.
-
-    Please remember to update the version date if any changes
-    are made to this file.
-    *******************************************************************************
+/**
+ * Makes the panel and methods for the to do list
+ *
+ * @author CJ Quintero
+ * @date 04/12/2025
  */
 package com.example.pickitup.ui;
 

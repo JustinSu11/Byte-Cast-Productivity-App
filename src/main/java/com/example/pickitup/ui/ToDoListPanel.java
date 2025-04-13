@@ -1,15 +1,8 @@
-/*
-    *******************************************************************************
-    ToDoListPanel Class
-    Last Updated 04/12/2025
-    Developers: Matthew Tome
-
-    This class includes the entire panel and all methods to make
-    and add functionality to the to do list.
-
-    Please remember to update the version date if any changes
-    are made to this file.
-    *******************************************************************************
+/**
+ * Makes the panel and methods for the to do list
+ *
+ * @author Matthew Tomme
+ * @date 04/12/2025
  */
 package com.example.pickitup.ui;
 

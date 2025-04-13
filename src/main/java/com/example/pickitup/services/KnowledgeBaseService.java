@@ -1,3 +1,9 @@
+/**
+ * Service for managing knowledge base
+ *
+ * @author Maaz Haque
+ * @date 04/12/2025
+ */
 package com.example.pickitup.services;
 
 import com.example.pickitup.services.models.KnowledgeBase;
@@ -10,11 +16,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.UUID;
 
-/**
- * Service for managing knowledge bases
- * @author Maaz Haque
- * @version 1.0
- */
+
 public class KnowledgeBaseService {
     
     // Constants for default knowledge base

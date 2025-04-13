@@ -1,3 +1,10 @@
+/**
+ * RAG (Retrieval Augmented Generation) Agent that uses langchain4j to retrieve relevant information
+ * and augment LLM responses with support for multiple knowledge bases
+ *
+ * @author Maaz Haque
+ * @date 04/12/2025
+ */
 package com.example.pickitup.ai;
 
 import com.example.pickitup.services.ChatMemoryService;
@@ -27,13 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * RAG (Retrieval Augmented Generation) Agent that uses langchain4j to retrieve relevant information
- * and augment LLM responses with support for multiple knowledge bases
- * 
- * @author Maaz Haque
- * @version 2.0
- */
+
 public class RagAgent {
     
     // Constants for embedding model configuration

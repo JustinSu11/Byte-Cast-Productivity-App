@@ -1,3 +1,9 @@
+/**
+ * Service for managing chat memory and persistence
+ *
+ * @author Maaz Haque
+ * @date 04/12/2025
+ */
 package com.example.pickitup.services;
 
 import com.example.pickitup.services.dao.ChatMemoryDAO;
@@ -9,11 +15,7 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Service for managing chat memory and persistence
- * @author Maaz Haque
- * @version 1.0
- */
+
 public class ChatMemoryService {
     
     // Constants for roles

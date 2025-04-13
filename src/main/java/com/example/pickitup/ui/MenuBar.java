@@ -1,15 +1,8 @@
-/*
-    *******************************************************************************
-    MenuBar Class
-    Last Updated 04/12/2025
-    Developers: Michael Tajchman
-
-    For making the menu bar and related features such as changing fonts, colors
-    names for the journals and pages.
-
-    Please remember to update the version date if any changes
-    are made to this file.
-    *******************************************************************************
+/**
+ * Makes the menu bar and implements the nested menus
+ *
+ * @author Michael Tajchman
+ * @date 04/12/2025
  */
 package com.example.pickitup.ui;
 

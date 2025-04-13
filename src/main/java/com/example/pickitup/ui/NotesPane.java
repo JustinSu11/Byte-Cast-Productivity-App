@@ -1,16 +1,8 @@
-/*
-    *******************************************************************************
-    NotesPane Class
-    Last Updated 04/12/2025
-    Developers: Michael Tajchman, CJ Quintero
-
-    For making the tabs with the note editor class.
-    Contains the object to hold inner tabs for making pages in
-    journals.
-
-    Please remember to update the version date if any changes
-    are made to this file.
-    *******************************************************************************
+/**
+ * Makes the notes pane to make pages inside of journals
+ *
+ * @author Michael Tajchman
+ * @date 04/12/2025
  */
 package com.example.pickitup.ui;
 

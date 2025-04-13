@@ -1,9 +1,9 @@
-/*
+/**
+ * DAO for notes in database
+ *
  * @author Justin Nguyen
- * @version 0.1
- * @updated 03/24/2025
- * */
-
+ * @date 04/12/2025
+ */
 package com.example.pickitup.services.dao;
 
 import com.example.pickitup.services.models.Note;

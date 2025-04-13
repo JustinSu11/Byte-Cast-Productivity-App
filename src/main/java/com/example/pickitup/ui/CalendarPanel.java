@@ -1,16 +1,9 @@
-/*
-    *******************************************************************************
-    CalendarPanel Class
-    Last Updated 04/12/2025
-    Developers: Aron Rios, Afrin Alam Anney
-
-    CalendarApp is a simple Swing-based calendar application.
-    It allows users to navigate through months, view existing events, and add new events.
-    The current day is highlighted for better visibility.
-
-    Please remember to update the version date if any changes
-    are made to this file.
-    *******************************************************************************
+/**
+ * Makes calendar panel and UI
+ *
+ * @author Aron Rios
+ * @author Afrin Alam Anney
+ * @date 04/12/2025
  */
 package com.example.pickitup.ui;
 

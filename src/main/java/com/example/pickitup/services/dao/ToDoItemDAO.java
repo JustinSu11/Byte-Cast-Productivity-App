@@ -1,3 +1,11 @@
+/**
+ * DAO for managing to do items
+ * This implementation uses both in memory storage and file based
+ * persistence
+ *
+ * @author Matthew Tomme
+ * @date 04/12/2025
+ */
 package com.example.pickitup.services.dao;
 
 import com.example.pickitup.services.models.ToDoItem;
@@ -7,12 +15,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Data Access Object for managing To-Do items
- * This implementation uses both in-memory storage and file-based persistence
- *
- * @version 1.1
- */
 public class ToDoItemDAO {
     private List<ToDoItem> todoItems;
     private ToDoItemFileStorage fileStorage;

@@ -1,15 +1,9 @@
-/*
-    *******************************************************************************
-    NoteEditor Class
-    Last Updated 04/12/2025
-    Developers: CJ Quintero
-
-    The notes pane uses this class to make the pages. Pages are made
-    of a scroll pane and a text area.
-
-    Please remember to update the version date if any changes
-    are made to this file.
-    *******************************************************************************
+/**
+ * Used by NotesPane to make scroll panes and text areas
+ * inside pages
+ *
+ * @author CJ Quintero
+ * @date 04/12/2025
  */
 package com.example.pickitup.ui;
 
