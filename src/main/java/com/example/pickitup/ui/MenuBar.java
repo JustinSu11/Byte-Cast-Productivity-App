@@ -399,7 +399,7 @@ public class MenuBar extends JMenuBar
                 {
                     int yesNo = JOptionPane.showConfirmDialog(
                             null,
-                            "Are you sure you want to delete this page!?",
+                            "Are you sure you want to delete this page?",
                             "Delete Page?",
                             JOptionPane.YES_NO_OPTION
                     );

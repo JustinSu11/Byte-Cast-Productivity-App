@@ -66,8 +66,8 @@ public class JournalsPane extends JTabbedPane
         {
             int yesNo = JOptionPane.showConfirmDialog(
                     null,
-                    "Are you sure you want to delete this journal!?",
-                    "Delete Page?",
+                    "Are you sure you want to delete this journal?",  // Updated message
+                    "Delete Journal?",  // Updated title
                     JOptionPane.YES_NO_OPTION
             );
             if (yesNo == JOptionPane.YES_OPTION){
@@ -80,12 +80,11 @@ public class JournalsPane extends JTabbedPane
         }
         else
         {
-            // show a message if the user tries to delete a journal when no journals exist
+            // Show a message if the user tries to delete a journal when no journals exist
             JOptionPane.showMessageDialog(null,
                     "Cannot delete journal: No journals exist.",
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-
     }
 
 

@@ -94,6 +94,7 @@ public class NotesPane extends JournalsPane
         selectedIndex = tabbedPane.getSelectedIndex();
 
         // delete the selected tab
+
         if(tabbedPane.getTabCount() > 0)
         {
             tabbedPane.removeTabAt(tabbedPane.getSelectedIndex());
