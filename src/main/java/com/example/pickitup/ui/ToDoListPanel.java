@@ -314,6 +314,18 @@ public class ToDoListPanel extends JPanel {
                 // Parse the date
                 Date dueDate = dateFormat.parse(dateString);
 
+                // Get today's date
+                Date today = new Date();
+
+                // Check if the due date is before today
+                if (dueDate.before(today) && !dateString.equals(dateFormat.format(today))) {
+                    JOptionPane.showMessageDialog(this,
+                            "The due date cannot be in the past. Please choose today's date or later.",
+                            "Invalid Date",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;  // Don't proceed if the date is invalid
+                }
+
                 // Add to the DAO (which handles persistence)
                 todoItemDAO.addItem(task, dueDate);
 
