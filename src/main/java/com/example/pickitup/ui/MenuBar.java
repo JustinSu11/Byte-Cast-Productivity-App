@@ -488,6 +488,16 @@ public class MenuBar extends JMenuBar
             if (yesNo == JOptionPane.YES_OPTION){System.exit(0);}
         });
         saveNotes.addActionListener(e ->{
+
+            /**
+             * need to add a try catch block to save notes,
+             * if successful give this message, else
+             * say Error occurred...
+             */
+            JOptionPane.showMessageDialog(null, "Notes Saved!",
+                    "Save Successful", JOptionPane.PLAIN_MESSAGE);
+
+
             System.out.println("Notes Saved!");
         });
         saveAndExit.addActionListener(e ->{
