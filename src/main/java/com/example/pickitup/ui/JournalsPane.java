@@ -62,19 +62,30 @@ public class JournalsPane extends JTabbedPane
     // used by file menu to delete a journal
     public void deleteJournalTab()
     {
-        int yesNo = JOptionPane.showConfirmDialog(
-                null,
-                "Are you sure you want to delete this page!?",
-                "Delete Page?",
-                JOptionPane.YES_NO_OPTION
-        );
-        if (yesNo == JOptionPane.YES_OPTION){
-            selectedJournalIndex = journalsPane.getSelectedIndex();
-            if (selectedJournalIndex >= 0)
-            {
-                journalsPane.removeTabAt(selectedJournalIndex);
-                notesPanes.remove(selectedJournalIndex); // Remove the NotesPane
-            }}
+        if(this.getSelectedNotesPane() != null)
+        {
+            int yesNo = JOptionPane.showConfirmDialog(
+                    null,
+                    "Are you sure you want to delete this journal!?",
+                    "Delete Page?",
+                    JOptionPane.YES_NO_OPTION
+            );
+            if (yesNo == JOptionPane.YES_OPTION){
+                selectedJournalIndex = journalsPane.getSelectedIndex();
+                if (selectedJournalIndex >= 0)
+                {
+                    journalsPane.removeTabAt(selectedJournalIndex);
+                    notesPanes.remove(selectedJournalIndex); // Remove the NotesPane
+                }}
+        }
+        else
+        {
+            // show a message if the user tries to delete a journal when no journals exist
+            JOptionPane.showMessageDialog(null,
+                    "Cannot delete journal: No journals exist.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
     }
 
 

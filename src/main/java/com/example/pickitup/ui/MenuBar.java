@@ -50,7 +50,7 @@ public class MenuBar extends JMenuBar
     // menu item buttons for saveMenu
     private JMenu saveMenu = null;
     private JMenuItem saveNotes = null;
-    private JMenuItem saveAnExit = null;
+    private JMenuItem saveAndExit = null;
     private JMenuItem EXIT = null;
     //----------End - File Menu Options----------//
 
@@ -97,7 +97,7 @@ public class MenuBar extends JMenuBar
         // menu items for saveMenu
         EXIT = new JMenuItem("Exit");
         saveNotes = new JMenuItem("Save Notes");
-        saveAnExit = new JMenuItem("Save An Exit");
+        saveAndExit = new JMenuItem("Save and Exit");
 
         // menu items for journalsMenu
         newJournal = new JMenuItem("New Journal");
@@ -138,7 +138,7 @@ public class MenuBar extends JMenuBar
         journalsMenu.setFont(DEFAULT_FONT);
         EXIT.setFont(DEFAULT_FONT);
         saveNotes.setFont(DEFAULT_FONT);
-        saveAnExit.setFont(DEFAULT_FONT);
+        saveAndExit.setFont(DEFAULT_FONT);
 
         // for font menu items
         fontTypeMenu.setFont(DEFAULT_FONT);
@@ -263,13 +263,19 @@ public class MenuBar extends JMenuBar
 
             //if user doesn't input
             if(input == null){
+                // set the font to 16 if no input is entered
+                number = DEFAULT_FONT.getSize();
                 return;
             }
 
             try {
                 number = Integer.parseInt(input);
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Input: " + ex.getMessage() + " is not a number", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Input: " + ex.getMessage()
+                        + " is not a number", "Error", JOptionPane.ERROR_MESSAGE);
+
+                // sets font to 16 if invalid input is entered
+                number = DEFAULT_FONT.getSize();
             }
 
             NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
@@ -313,17 +319,38 @@ public class MenuBar extends JMenuBar
         newJournal.addActionListener(e -> journalsPane.addJournalTab());
         deleteJournal.addActionListener(e -> journalsPane.deleteJournalTab());
         renameJournal.addActionListener(e ->{
-            String input = JOptionPane.showInputDialog("Enter New Journal Name:");
-            if(input == null || input.isEmpty() || input.equals("")){
-                JOptionPane.showMessageDialog(
-                        null,
-                        "No name was provided!",
-                        "ERROR",
-                        JOptionPane.ERROR_MESSAGE
-                );
-                return;
+
+
+            if(journalsPane.getSelectedNotesPane() != null)
+            {
+
+                String input = JOptionPane.showInputDialog("Enter New Journal Name:");
+                // trim white space
+                input = input.trim();
+
+                if(input.isEmpty())
+                {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "No name was provided!",
+                            "ERROR",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+
+                    // if the journal name is empty, set a default name
+                    journalsPane.setNewJournalName("Untitled Journal");
+                    return;
+                }
+                journalsPane.setNewJournalName(input);
             }
-            journalsPane.setNewJournalName(input);
+            else
+            {
+                // show a message if the user tries to rename a journal when no journals exist
+                JOptionPane.showMessageDialog(null,
+                        "Cannot rename journal: No journals exist.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
         });
         journalsMenu.add(renameJournal);
         journalsMenu.add(newJournal);
@@ -336,35 +363,74 @@ public class MenuBar extends JMenuBar
             {
                 selectedNotesPane.addPageTab();
             }
+            else
+            {
+                // show a message if the user tries to make a new page if no journals exist
+                JOptionPane.showMessageDialog(null,
+                        "Cannot create new page: No journals exist.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
         });
         deletePage.addActionListener(e -> {
-            int yesNo = JOptionPane.showConfirmDialog(
-                    null,
-                    "Are you sure you want to delete this page!?",
-                    "Delete Page?",
-                    JOptionPane.YES_NO_OPTION
-            );
-            if (yesNo == JOptionPane.YES_OPTION){
-                NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
-                if (selectedNotesPane != null)
+            // get the selected page
+            NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
+
+            // check if a valid page is selected
+            if(selectedNotesPane != null)
+            {
+                int yesNo = JOptionPane.showConfirmDialog(
+                        null,
+                        "Are you sure you want to delete this page!?",
+                        "Delete Page?",
+                        JOptionPane.YES_NO_OPTION
+                );
+                // if yes is selected, delete the page
+                if (yesNo == JOptionPane.YES_OPTION)
                 {
                     selectedNotesPane.deletePageTab();
                 }
             }
+            else
+            {
+                // show a message if the user tries to delete a page when no journals exist
+                JOptionPane.showMessageDialog(null,
+                        "Cannot delete page: No pages exist.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
         renamePage.addActionListener(e -> {
             NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
-            String input = JOptionPane.showInputDialog("Enter New Name:");
-            if(input == null || input.isEmpty() || input.equals("")){
-                JOptionPane.showMessageDialog(
-                        null,
-                        "No name was provided!",
-                        "ERROR",
-                        JOptionPane.ERROR_MESSAGE
-                );
-                return;
+
+
+            if(selectedNotesPane != null)
+            {
+                String input = JOptionPane.showInputDialog("Enter New Name:");
+                // trim white space
+                input = input.trim();
+
+                // if an empty name is entered, the default name is added
+                if(input.isEmpty())
+                {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "No name was provided!",
+                            "ERROR",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                    selectedNotesPane.setNewPageName("Untitled Page");
+                    return;
+                }
+                selectedNotesPane.setNewPageName(input);
             }
-            selectedNotesPane.setNewPageName(input);
+            else
+            {
+                // show a message if the user tries to rename a page if no journals exist
+                JOptionPane.showMessageDialog(null,
+                        "Cannot rename page: No pages exist.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
         });
         pagesMenu.add(renamePage);
         pagesMenu.add(newPage);
@@ -384,12 +450,12 @@ public class MenuBar extends JMenuBar
         saveNotes.addActionListener(e ->{
             System.out.println("Notes Saved!");
         });
-        saveAnExit.addActionListener(e ->{
+        saveAndExit.addActionListener(e ->{
             System.out.println("Notes Saved!");
             System.exit(0);
         });
         saveMenu.add(saveNotes);
-        saveMenu.add(saveAnExit);
+        saveMenu.add(saveAndExit);
         saveMenu.add(EXIT);
 
 
