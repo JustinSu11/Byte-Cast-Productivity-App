@@ -9,4 +9,5 @@ CJ Quintero
 - invalid font size no longer removes text from appearing and now is set to size 16 by default
 - if no journals exist, errors show when trying to rename, create, or delete pages
 - if a journal does exist but has no pages, error shows when trying to rename page or delete page
+- added more validation for changing font size. Font size must now be an integer >= 1
 
