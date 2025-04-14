@@ -261,18 +261,30 @@ public class MenuBar extends JMenuBar
             int number = 0;
             String input = JOptionPane.showInputDialog("Enter font size:");
 
-            //if user doesn't input
-            if(input == null){
-                // set the font to 16 if no input is entered
-                number = DEFAULT_FONT.getSize();
-                return;
-            }
 
-            try {
+            try
+            {
+                // try to get a number, if NaN, go to the catch block
                 number = Integer.parseInt(input);
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Input: " + ex.getMessage()
-                        + " is not a number", "Error", JOptionPane.ERROR_MESSAGE);
+
+                // number must be at least 1
+                // change any values less than or equal to 0 -> 16
+                if(number <= 0)
+                {
+                    JOptionPane.showMessageDialog(null,
+                            "Font size must be an integer greater than 1.\n" +
+                                    "Setting the font size to 16.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+
+                    number = DEFAULT_FONT.getSize();
+                }
+            }
+            catch (NumberFormatException ex)
+            {
+                JOptionPane.showMessageDialog(null,
+                        "Not an integer: Font size must be an integer greater than 1.\n" +
+                                "Setting the font size to 16.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
 
                 // sets font to 16 if invalid input is entered
                 number = DEFAULT_FONT.getSize();
