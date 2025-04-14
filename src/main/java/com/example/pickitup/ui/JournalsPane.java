@@ -17,7 +17,7 @@
 package com.example.pickitup.ui;
 
 import com.example.pickitup.services.dao.JournalDAO;
-
+import com.example.pickitup.services.models.Journal;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,16 +28,20 @@ public class JournalsPane extends JTabbedPane
     // store a list of different notesPanes for the different journals
     private static List<NotesPane> notesPanes = new ArrayList<>();
     private String title = null;
-    private int selectedJournalIndex = 0;
+    private static int selectedJournalIndex = 0;
 
 
     // constructor
     public JournalsPane()
     {
-        title = "Journal " + (journalsPane.getTabCount() + 1);
-        NotesPane newNotesPane = new NotesPane();
-        journalsPane.addTab(title, newNotesPane.getTabbedPane());
-        notesPanes.add(newNotesPane); // Add the new NotesPane
+        AppFrame.loadApplicationState();
+        if (journalsPane.getTabCount() == 0) {
+            title = "Journal " + (journalsPane.getTabCount() + 1);
+            Journal journal = new Journal(title);
+            NotesPane newNotesPane = new NotesPane(journal.getJournalID());
+            journalsPane.addTab(title, newNotesPane.getTabbedPane());
+            notesPanes.add(newNotesPane); // Add the new NotesPane if no tabs are present
+        }
     }
 
 
@@ -55,7 +59,8 @@ public class JournalsPane extends JTabbedPane
                     JOptionPane.ERROR_MESSAGE
             );
         }
-        NotesPane newNotesPane = new NotesPane(title);
+        Journal journal = new Journal(title);
+        NotesPane newNotesPane = new NotesPane(journal.getJournalID());
         journalsPane.addTab(title, newNotesPane.getTabbedPane());
         notesPanes.add(newNotesPane); // Add the new NotesPane
     }
@@ -76,7 +81,7 @@ public class JournalsPane extends JTabbedPane
             {
                 journalsPane.removeTabAt(selectedJournalIndex);
                 notesPanes.remove(selectedJournalIndex); // Remove the NotesPane
-                JournalDAO.deleteJournal(notesPanes.get(selectedJournalIndex).getCurrentJournal().getJournalID());
+                JournalDAO.deleteJournal(notesPanes.get(selectedJournalIndex).getJournalIDFromNotesPane());
             }}
     }
 
@@ -87,6 +92,10 @@ public class JournalsPane extends JTabbedPane
         return journalsPane;
     }
 
+    //Get the notesPanes array list
+    public static List<NotesPane> getNotesPanes() {
+        return notesPanes;
+    }
 
     // method for updating the current notesPane variable stored in MenuBar
     // This tells the menu bar what journal you want to add or delete pages from
@@ -100,7 +109,7 @@ public class JournalsPane extends JTabbedPane
     } // end getSelectedNotesPane
 
     public String getTitleAt(int index) {
-        return notesPanes.get(index).getCurrentJournal().getTitle();
+        return notesPanes.get(index).getTitle();
     }
 
     public void setNewJournalName(String newName) {

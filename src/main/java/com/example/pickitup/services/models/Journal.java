@@ -16,11 +16,18 @@ public class Journal {
     private int journalID = 0;
     private String title = null;
     List<Note> notes = null;
+    private int selectedNoteIndex = 0;
 
     //Constructor for journal for an ID and initial title
     public Journal(String title) {
         this.title = title;
         JournalDAO.insertJournal(this);
+    }
+
+    public Journal(int journalID, String title, int selectedNoteIndex) {
+        this.journalID = journalID;
+        this.title = title;
+        this.selectedNoteIndex = selectedNoteIndex;
     }
 
     //Getters

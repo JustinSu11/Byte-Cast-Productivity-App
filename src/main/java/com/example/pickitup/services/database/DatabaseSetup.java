@@ -34,13 +34,6 @@ public class DatabaseSetup {
                 "selected_note_index INTEGER NOT NULL " +
                 ");";
 
-        String journalNotesTable = "CREATE TABLE IF NOT EXISTS journal_notes (" +
-                "journal_id INTEGER NOT NULL, " +
-                "note_id INTEGER NOT NULL, " +
-                "PRIMARY KEY (journal_id, note_id), " +
-                "FOREIGN KEY (note_id) REFERENCES notes(notes_id), " +
-                "FOREIGN KEY (journal_id) REFERENCES journals(journals_id) " +
-                ");";
 
         String chatMemoryTable = "CREATE TABLE IF NOT EXISTS chat_messages (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -67,8 +60,6 @@ public class DatabaseSetup {
             System.out.println("Calendar events table created");
             statement.execute(journalsTable);
             System.out.println("Journal table created");
-            statement.execute(journalNotesTable);
-            System.out.println("Journal notes table created");
             statement.execute(chatMemoryTable);
             System.out.println("Chat memory table created");
             statement.execute(toDoItemsTable);

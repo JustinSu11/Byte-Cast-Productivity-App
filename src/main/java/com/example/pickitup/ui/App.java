@@ -42,7 +42,6 @@ public class App
 
         // make the objects
         appFrame = new AppFrame();
-        journalsPane = new JournalsPane();
         toDoListPanel = new ToDoListPanel();
         clockPanel = new ClockPanel();
         toggleAiPanelButton = new JButton("Hide AI Assistant");
@@ -56,15 +55,14 @@ public class App
         // make the Main App Frame
         appFrame.makeMainAppFrame();
 
+        //make the journal tabbedpane
+        journalsPane = new JournalsPane();
+
         // Create a center panel to hold the note editor and to-do list
         JPanel centerPanel = new JPanel(new GridLayout(1, 2, 10, 0));
 
         // Register with theme manager
         themeManager.registerComponent(centerPanel);
-
-
-        //Load the last save before user exited
-        appFrame.loadApplicationState();
 
         // make and add the tabbed pane
         // adds a single tab by default

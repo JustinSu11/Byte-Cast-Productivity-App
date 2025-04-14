@@ -330,7 +330,7 @@ public class MenuBar extends JMenuBar
 
         //pagesMenu
         newPage.addActionListener(e -> {
-            NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
+            NotesPane selectedNotesPane = JournalsPane.getSelectedNotesPane();
             if (selectedNotesPane != null)
             {
                 selectedNotesPane.addPageTab();
@@ -344,7 +344,7 @@ public class MenuBar extends JMenuBar
                     JOptionPane.YES_NO_OPTION
             );
             if (yesNo == JOptionPane.YES_OPTION){
-                NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
+                NotesPane selectedNotesPane = JournalsPane.getSelectedNotesPane();
                 if (selectedNotesPane != null)
                 {
                     selectedNotesPane.deletePageTab();
@@ -352,7 +352,7 @@ public class MenuBar extends JMenuBar
             }
         });
         renamePage.addActionListener(e -> {
-            NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
+            NotesPane selectedNotesPane = JournalsPane.getSelectedNotesPane();
             String input = JOptionPane.showInputDialog("Enter New Name:");
             if(input == null || input.isEmpty() || input.equals("")){
                 JOptionPane.showMessageDialog(

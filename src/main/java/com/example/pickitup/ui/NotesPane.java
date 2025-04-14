@@ -14,7 +14,6 @@ package com.example.pickitup.ui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import com.example.pickitup.services.models.Journal;
@@ -28,17 +27,17 @@ public class NotesPane extends JTabbedPane
     private int selectedIndex = 0;
     private final Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 16); // constant
     private List<NoteEditor> noteEditors = new ArrayList<>();
-    private Journal journal = null;
-
+    private int journalID = 0;
 
     // constructor
-    public NotesPane()
+    public NotesPane(int journalID)
     {
         // initialize the variables
         tabbedPane = new JTabbedPane();
+        this.journalID = journalID;
         title = "Page " + (tabbedPane.getTabCount() + 1);
-        journal = new Journal(title);
-        noteEditor = new NoteEditor(title, journal.getJournalID());
+
+        noteEditor = new NoteEditor(title, journalID);
 
         // set the default font
         tabbedPane.setFont(DEFAULT_FONT);
@@ -53,29 +52,6 @@ public class NotesPane extends JTabbedPane
         //add noteEditor to journal's Note array list
         //journal.addNote(noteEditor.getNoteItem());
     }
-
-    // constructor for creating journal with title
-    public NotesPane(String title)
-    {
-        // initialize the variables
-        tabbedPane = new JTabbedPane();
-        journal = new Journal(title);
-        noteEditor = new NoteEditor(title, journal.getJournalID());
-
-        // set the default font
-        tabbedPane.setFont(DEFAULT_FONT);
-
-        noteEditor.makeScrollPane();
-        // adds the scroll pane to the new tab
-        tabbedPane.addTab(title, noteEditor.getScrollPane());
-
-        //add noteEditor to array list
-        noteEditors.add(noteEditor);
-
-        //add noteEditor to journal's Note array list
-        //journal.addNote(noteEditor.getNoteItem());
-    }
-
 
     // method to add a new tab to the tabbed pane
     public void addPageTab()
@@ -91,7 +67,7 @@ public class NotesPane extends JTabbedPane
                     JOptionPane.ERROR_MESSAGE
             );
         }
-        NoteEditor newNoteEditor = new NoteEditor(title, journal.getJournalID());
+        NoteEditor newNoteEditor = new NoteEditor(title, journalID);
         newNoteEditor.makeScrollPane();
 
         // adds the scroll pane to the new tab
@@ -106,10 +82,13 @@ public class NotesPane extends JTabbedPane
 
     public void addPageTabForLoad(NoteEditor newNoteEditor, String content)
     {
-        // adds the scroll pane to the new tab
-        tabbedPane.addTab(title, newNoteEditor.getScrollPane());
+        //Make the scroll pane
+        newNoteEditor.makeScrollPane();
 
         newNoteEditor.setNoteContent(content);
+
+        // adds the scroll pane to the new tab
+        tabbedPane.addTab(newNoteEditor.getNoteItem().getTitle(), newNoteEditor.getScrollPane());
 
         // Store reference to the NoteEditor
         noteEditors.add(newNoteEditor);
@@ -252,8 +231,16 @@ public class NotesPane extends JTabbedPane
         return null;
     }
 
-    public Journal getCurrentJournal() {
-        return journal;
+    public int getJournalIDFromNotesPane() {
+        return journalID;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public List<NoteEditor> getNoteEditors() {
+        return noteEditors;
     }
 
 } // end class

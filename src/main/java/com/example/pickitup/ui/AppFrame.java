@@ -90,14 +90,12 @@ public class AppFrame extends JFrame
             PreparedStatement saveJournal = connection.prepareStatement(saveJournalStatement);
             PreparedStatement saveNote = connection.prepareStatement(saveNoteStatement);
 
-
-
+            JTabbedPane journalsPane = JournalsPane.getJournalsPane();
             for (int i = 0; i < JournalsPane.getJournalsPane().getTabCount(); i++) {
-                JTabbedPane journalsPane = JournalsPane.getJournalsPane();
 
-                String journalTitle = JournalsPane.getJournalsPane().getTitleAt(i);
-                int journalID = JournalsPane.getSelectedNotesPane().getCurrentJournal().getJournalID();
-                int selectedNoteIndex = JournalsPane.getSelectedNotesPane().getSelectedNoteIndex();
+                String journalTitle = journalsPane.getTitleAt(i);
+                int journalID = JournalsPane.getNotesPanes().get(i).getJournalIDFromNotesPane();
+                int selectedNoteIndex = JournalsPane.getNotesPanes().get(i).getSelectedNoteIndex();
 
                 saveJournal.setInt(1, journalID);
                 saveJournal.setString(2, journalTitle);
@@ -105,11 +103,11 @@ public class AppFrame extends JFrame
                 saveJournal.executeUpdate();
 
                 //For each note in this journal
-                for (int j = 0; j < journalsPane.getTabCount(); j++) {
-                    JTextArea noteTextArea = JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getTextArea();
+                for (int j = 0; j < JournalsPane.getNotesPanes().size(); j++) {
+                    JTextArea noteTextArea = JournalsPane.getNotesPanes().get(i).getNoteEditors().get(j).getTextArea();
                     String noteContent = noteTextArea.getText();
-                    String noteTitle = JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().getTitle();
-                    int noteID = JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().getNoteID();
+                    String noteTitle = JournalsPane.getNotesPanes().get(i).getNoteEditors().get(j).getNoteItem().getTitle();
+                    int noteID = JournalsPane.getNotesPanes().get(i).getNoteEditors().get(j).getNoteItem().getNoteID();
 
                     saveNote.setInt(1, noteID);
                     saveNote.setInt(2, journalID);
@@ -126,7 +124,7 @@ public class AppFrame extends JFrame
     }
 
     //load application from the last save
-    public void loadApplicationState() {
+    public static void loadApplicationState() {
         try (Connection connection = DatabaseConnection.connect()) {
             String loadJournalStatement = "SELECT journal_id, title, selected_note_index FROM journals";
             Statement loadJournal = connection.createStatement();
@@ -137,7 +135,9 @@ public class AppFrame extends JFrame
                 String journalTitle = journalResultSet.getString("title");
                 int selectedNoteIndex = journalResultSet.getInt("selected_note_index");
 
-                NotesPane journalPane = new NotesPane();
+                NotesPane journalPane = new NotesPane(journalID);
+                journalPane.deletePageTab();
+                JournalsPane.getNotesPanes().add(journalPane);
 
                 String loadNoteStatement = "SELECT notes_id, content, title, note_order FROM notes WHERE journal_id = " + journalID + " ORDER BY note_order";
                 Statement loadNote = connection.createStatement();
@@ -151,11 +151,12 @@ public class AppFrame extends JFrame
                     journalPane.addPageTabForLoad(newNoteEditor, noteContent);
                 }
 
-                //select the selected note before the last exit
-                //journalPane.setSelectedIndex(selectedNoteIndex);
-
                 //Add journal to journal pane
-                JournalsPane.getJournalsPane().addTab(journalTitle, journalPane);
+                JournalsPane.getJournalsPane().addTab(journalTitle, journalPane.getTabbedPane());
+
+                //select the selected note before the last exit
+                System.out.println(journalPane.getTabCount());
+//                journalPane.setSelectedIndex(selectedNoteIndex);
             }
         } catch (SQLException error) {
             System.out.println("Error loading last save: " + error.getMessage());
