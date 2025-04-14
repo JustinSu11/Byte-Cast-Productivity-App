@@ -6,6 +6,7 @@ CJ Quintero
 
 04/14/2025 CJ Quintero
 - Fixed naming issues in some popup menus
-- can no longer rename page, create new page, or delete a page if no journals exist
 - invalid font size no longer removes text from appearing and now is set to size 16 by default
-- can no longer rename journal or delete journal if no journals exist
+- if no journals exist, errors show when trying to rename, create, or delete pages
+- if a journal does exist but has no pages, error shows when trying to rename page or delete page
+
