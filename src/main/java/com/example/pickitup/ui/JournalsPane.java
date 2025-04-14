@@ -97,6 +97,10 @@ public class JournalsPane extends JTabbedPane
         return notesPanes;
     }
 
+    public static int getSelectedJournalIndex() {
+        return selectedJournalIndex;
+    }
+
     // method for updating the current notesPane variable stored in MenuBar
     // This tells the menu bar what journal you want to add or delete pages from
     public static NotesPane getSelectedNotesPane()
