@@ -209,7 +209,8 @@ public class NotesPane extends JournalsPane
      *
      * @return The current NoteEditor or null if no tab is selected
      */
-    public NoteEditor getCurrentNoteEditor() {
+    public NoteEditor getCurrentNoteEditor()
+    {
         int selectedIndex = tabbedPane.getSelectedIndex();
         if (selectedIndex >= 0 && selectedIndex < noteEditors.size()) {
             return noteEditors.get(selectedIndex);

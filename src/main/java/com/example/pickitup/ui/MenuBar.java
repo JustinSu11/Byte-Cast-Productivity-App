@@ -358,7 +358,10 @@ public class MenuBar extends JMenuBar
 
         //pagesMenu
         newPage.addActionListener(e -> {
+            // get the selected JOURNAL
             NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
+
+            // if a journal is selected
             if (selectedNotesPane != null)
             {
                 selectedNotesPane.addPageTab();
@@ -373,61 +376,86 @@ public class MenuBar extends JMenuBar
 
         });
         deletePage.addActionListener(e -> {
-            // get the selected page
+            // get the selected JOURNAL
             NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
 
-            // check if a valid page is selected
+            // check if a journal exists
             if(selectedNotesPane != null)
             {
-                int yesNo = JOptionPane.showConfirmDialog(
-                        null,
-                        "Are you sure you want to delete this page!?",
-                        "Delete Page?",
-                        JOptionPane.YES_NO_OPTION
-                );
-                // if yes is selected, delete the page
-                if (yesNo == JOptionPane.YES_OPTION)
+                // check if a page exists in the current journal
+                if(selectedNotesPane.getTabbedPane().getSelectedIndex() != -1)
                 {
-                    selectedNotesPane.deletePageTab();
+                    int yesNo = JOptionPane.showConfirmDialog(
+                            null,
+                            "Are you sure you want to delete this page!?",
+                            "Delete Page?",
+                            JOptionPane.YES_NO_OPTION
+                    );
+                    // if yes is selected, delete the page
+                    if (yesNo == JOptionPane.YES_OPTION)
+                    {
+                        selectedNotesPane.deletePageTab();
+                    }
                 }
+                else
+                {
+                    // shows when no pages exist in the current journal
+                    JOptionPane.showMessageDialog(null,
+                            "Cannot delete page: No pages exist in the current journal.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+
             }
             else
             {
                 // show a message if the user tries to delete a page when no journals exist
                 JOptionPane.showMessageDialog(null,
-                        "Cannot delete page: No pages exist.",
+                        "Cannot delete page: No journals exist.",
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         renamePage.addActionListener(e -> {
+
+            // get the selected JOURNAL
             NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
 
-
+            // check if a journal exists
             if(selectedNotesPane != null)
             {
-                String input = JOptionPane.showInputDialog("Enter New Name:");
-                // trim white space
-                input = input.trim();
-
-                // if an empty name is entered, the default name is added
-                if(input.isEmpty())
+                if(selectedNotesPane.getTabbedPane().getSelectedIndex() != -1)
                 {
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "No name was provided!",
-                            "ERROR",
-                            JOptionPane.ERROR_MESSAGE
-                    );
-                    selectedNotesPane.setNewPageName("Untitled Page");
-                    return;
+                    String input = JOptionPane.showInputDialog("Enter New Name:");
+                    // trim white space
+                    input = input.trim();
+
+                    // if an empty name is entered, the default name is added
+                    if(input.isEmpty())
+                    {
+                        JOptionPane.showMessageDialog(
+                                null,
+                                "No name was provided!",
+                                "ERROR",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                        selectedNotesPane.setNewPageName("Untitled Page");
+                        return;
+                    }
+                    selectedNotesPane.setNewPageName(input);
                 }
-                selectedNotesPane.setNewPageName(input);
+                else
+                {
+                    // show a message if the user tries to rename a page if no pages exist
+                    // in the current journal
+                    JOptionPane.showMessageDialog(null,
+                            "Cannot rename page: No pages exist in the current journal.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
             else
             {
                 // show a message if the user tries to rename a page if no journals exist
                 JOptionPane.showMessageDialog(null,
-                        "Cannot rename page: No pages exist.",
+                        "Cannot rename page: No journals exist.",
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
 
