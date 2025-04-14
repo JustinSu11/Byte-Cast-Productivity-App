@@ -8,8 +8,6 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 
@@ -31,8 +29,8 @@ public class AIAssistantPanel extends JPanel {
     private JButton createKnowledgeBaseButton;
     private JButton detailsButton;
     private JFileChooser fileChooser;
-    private NoteEditor noteEditor;
     private JLabel statusLabel;
+    private JournalsPane journalsPane;
 
     /**
      * Constructor initializes the AI Assistant panel
@@ -41,7 +39,7 @@ public class AIAssistantPanel extends JPanel {
         // Initialize RAG Agent
         ragAgent = new RagAgent();
         // Set note editor
-        this.noteEditor = journalsPane.getSelectedNotesPane().getCurrentNoteEditor();
+        this.journalsPane = journalsPane;
         // Set up layout
         setLayout(new BorderLayout());
 
@@ -430,6 +428,7 @@ public class AIAssistantPanel extends JPanel {
                         // Re-enable input
                         userInputField.setEnabled(true);
                         sendButton.setEnabled(true);
+                        statusLabel.setText("");
                         updateKnowledgeBaseInfo();
 
                         // Request focus back to the input field
@@ -464,11 +463,13 @@ public class AIAssistantPanel extends JPanel {
      *
      */
     public void addNoteAsDocument() {
-        String noteContent = noteEditor.getTextInTextEditor();
+
+        String noteContent = getTextInTextEditor();
+
         if (noteContent != null && !noteContent.trim().isEmpty()) {
             // Get the active knowledge base
-            KnowledgeBase activeKB = ragAgent.getActiveKnowledgeBase();
-            if (activeKB == null) {
+            KnowledgeBase activeKnowledgeBase = ragAgent.getActiveKnowledgeBase();
+            if (activeKnowledgeBase == null) {
                 JOptionPane.showMessageDialog(this,
                         "No active knowledge base found",
                         "Error",
@@ -479,7 +480,7 @@ public class AIAssistantPanel extends JPanel {
             // Show processing indicator
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             shareWithAIButton.setEnabled(false);
-            statusLabel.setText("Processing note for " + activeKB.getName() + "...");
+//            statusLabel.setText("Processing note for " + activeKnowledgeBase.getName() + "...");
 
             SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
                 @Override
@@ -495,13 +496,33 @@ public class AIAssistantPanel extends JPanel {
                     shareWithAIButton.setEnabled(true);
                     updateKnowledgeBaseInfo();
                     JOptionPane.showMessageDialog(AIAssistantPanel.this,
-                            "Note added to " + activeKB.getName() + ".",
+                            "Note added to " + activeKnowledgeBase.getName() + ".",
                             "Document Added",
                             JOptionPane.INFORMATION_MESSAGE);
                 }
             };
             worker.execute();
         }
+    }
+
+    /**
+     * Gets the text from the current note editor
+     * @return The text in the text editor as string
+     *
+     */
+    private String getTextInTextEditor()
+    {
+        // Get the currently selected notes pane
+        NotesPane currentNotesPane = journalsPane.getSelectedNotesPane();
+        //get the text editor object
+        JTextArea currentTextArea = currentNotesPane.getCurrentTextArea();
+        // Check if text area is not null
+        if (currentTextArea != null) {
+            // Get the text from the current text area and return it
+            return currentTextArea.getText();
+        }
+        //return nothing if tab is not found or selected to run program
+        return "";
     }
 
     /**

@@ -188,7 +188,7 @@ public class NotesPane extends JournalsPane
         }
     }
 
-    private JTextArea getCurrentTextArea() {
+    public JTextArea getCurrentTextArea() {
         int selectedTabIndex = tabbedPane.getSelectedIndex();
         if (selectedTabIndex != -1) {
             Component selectedComponent = tabbedPane.getComponentAt(selectedTabIndex);
