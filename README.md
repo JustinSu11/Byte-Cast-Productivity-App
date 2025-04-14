@@ -10,4 +10,5 @@ CJ Quintero
 - if no journals exist, errors show when trying to rename, create, or delete pages
 - if a journal does exist but has no pages, error shows when trying to rename page or delete page
 - added more validation for changing font size. Font size must now be an integer >= 1
+- added a message box saying save successful when pressing "Save Notes" from menu bar. // Need to add a try/catch block here
 
