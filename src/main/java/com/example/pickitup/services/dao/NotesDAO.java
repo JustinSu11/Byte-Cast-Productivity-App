@@ -17,7 +17,7 @@ public class NotesDAO {
     //method to insert note into SQLite database
     public static void insertNoteAtCreation(Note note) {
         int newNoteID = 0;
-        String insertStatement = "INSERT INTO notes (title, content, journal_id) VALUES (?, ?, ?) RETURNING notes_id";
+        String insertStatement = "INSERT INTO notes (title, content, journal_id, note_order) VALUES (?, ?, ?, 0) RETURNING notes_id";
 
         try (
                 Connection connection = DatabaseConnection.connect();

@@ -18,7 +18,7 @@ import javax.swing.*;
 import com.example.pickitup.services.models.Note;
 
 
-public class NoteEditor
+public class NoteEditor extends JTabbedPane
 {
     // fields
     private JTextArea textArea = null;
@@ -75,6 +75,12 @@ public class NoteEditor
     //get noteItem
     public Note getNoteItem() {
         return noteItem;
+    }
+
+    //set Content of note editor
+    public void setNoteContent(String content) {
+        textArea.setText(content);
+        noteItem.setContent(content);
     }
 
 } // end Notepad class

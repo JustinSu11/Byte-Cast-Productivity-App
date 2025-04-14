@@ -14,11 +14,12 @@ package com.example.pickitup.ui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import com.example.pickitup.services.models.Journal;
 
-public class NotesPane
+public class NotesPane extends JTabbedPane
 {
     // fields
     private JTabbedPane tabbedPane = null;
@@ -96,6 +97,20 @@ public class NotesPane
         // adds the scroll pane to the new tab
         tabbedPane.addTab(title, newNoteEditor.getScrollPane());
         
+        // Store reference to the NoteEditor
+        noteEditors.add(newNoteEditor);
+
+        //add note to database for journal
+        //journal.addNote(newNoteEditor.getNoteItem());
+    }
+
+    public void addPageTabForLoad(NoteEditor newNoteEditor, String content)
+    {
+        // adds the scroll pane to the new tab
+        tabbedPane.addTab(title, newNoteEditor.getScrollPane());
+
+        newNoteEditor.setNoteContent(content);
+
         // Store reference to the NoteEditor
         noteEditors.add(newNoteEditor);
 
@@ -214,6 +229,10 @@ public class NotesPane
         }
     }
 
+    public int getSelectedNoteIndex() {
+        return tabbedPane.getSelectedIndex();
+    }
+
     // returns the notes pane to the JournalsPane class
     public JTabbedPane getTabbedPane()
     {
@@ -231,6 +250,10 @@ public class NotesPane
             return noteEditors.get(selectedIndex);
         }
         return null;
+    }
+
+    public Journal getCurrentJournal() {
+        return journal;
     }
 
 } // end class

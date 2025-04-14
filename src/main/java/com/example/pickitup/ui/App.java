@@ -62,9 +62,13 @@ public class App
         // Register with theme manager
         themeManager.registerComponent(centerPanel);
 
+
+        //Load the last save before user exited
+        appFrame.loadApplicationState();
+
         // make and add the tabbed pane
         // adds a single tab by default
-        centerPanel.add(journalsPane.getJournalsPane());
+        centerPanel.add(JournalsPane.getJournalsPane());
 
         //Make as assistant panel after journal tab is created
         aiAssistantPanel = new AIAssistantPanel(journalsPane);

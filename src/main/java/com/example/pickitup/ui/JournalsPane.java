@@ -16,15 +16,17 @@
  */
 package com.example.pickitup.ui;
 
+import com.example.pickitup.services.dao.JournalDAO;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class JournalsPane extends JTabbedPane
 {
-    private JTabbedPane journalsPane = null;
+    private static JTabbedPane journalsPane = new JTabbedPane();
     // store a list of different notesPanes for the different journals
-    private List<NotesPane> notesPanes = new ArrayList<>();
+    private static List<NotesPane> notesPanes = new ArrayList<>();
     private String title = null;
     private int selectedJournalIndex = 0;
 
@@ -32,7 +34,6 @@ public class JournalsPane extends JTabbedPane
     // constructor
     public JournalsPane()
     {
-        journalsPane = new JTabbedPane();
         title = "Journal " + (journalsPane.getTabCount() + 1);
         NotesPane newNotesPane = new NotesPane();
         journalsPane.addTab(title, newNotesPane.getTabbedPane());
@@ -75,12 +76,13 @@ public class JournalsPane extends JTabbedPane
             {
                 journalsPane.removeTabAt(selectedJournalIndex);
                 notesPanes.remove(selectedJournalIndex); // Remove the NotesPane
+                JournalDAO.deleteJournal(notesPanes.get(selectedJournalIndex).getCurrentJournal().getJournalID());
             }}
     }
 
 
     // return a JTabbedPane object to App class to use on main panel
-    public JTabbedPane getJournalsPane()
+    public static JTabbedPane getJournalsPane()
     {
         return journalsPane;
     }
@@ -88,15 +90,18 @@ public class JournalsPane extends JTabbedPane
 
     // method for updating the current notesPane variable stored in MenuBar
     // This tells the menu bar what journal you want to add or delete pages from
-    public NotesPane getSelectedNotesPane()
+    public static NotesPane getSelectedNotesPane()
     {
         int selectedIndex = journalsPane.getSelectedIndex();
         if (selectedIndex >= 0 && selectedIndex < notesPanes.size())
         {
             return notesPanes.get(selectedIndex);
-        }
-        return null; // Return null if no journal is selected or list is empty
+        } else return null; // Return null if no journal is selected or list is empty
     } // end getSelectedNotesPane
+
+    public String getTitleAt(int index) {
+        return notesPanes.get(index).getCurrentJournal().getTitle();
+    }
 
     public void setNewJournalName(String newName) {
         journalsPane.setTitleAt(journalsPane.getSelectedIndex(), newName);
