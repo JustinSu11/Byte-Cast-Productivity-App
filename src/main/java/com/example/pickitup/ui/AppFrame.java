@@ -84,8 +84,9 @@ public class AppFrame extends JFrame
         try (Connection connection = DatabaseConnection.connect()) {
             //Disable auto commit
             connection.setAutoCommit(false);
-            String saveJournalStatement = "REPLACE INTO journals (journal_id, title, selected_note_index) VALUES (?, ?, ?)";
-            String saveNoteStatement = "REPLACE INTO notes (notes_id, journal_id, title, content, note_order) VALUES (?, ?, ?, ?, ?)";
+            //sql statements for saving
+            String saveJournalStatement = "UPDATE journals SET title = ?, selected_note_index = ? WHERE journal_id = ?";
+            String saveNoteStatement = "UPDATE notes SET title = ?, content = ?, note_order = ? WHERE journal_id = ? AND notes_id = ?";
 
             PreparedStatement saveJournal = connection.prepareStatement(saveJournalStatement);
             PreparedStatement saveNote = connection.prepareStatement(saveNoteStatement);
@@ -97,23 +98,23 @@ public class AppFrame extends JFrame
                 int journalID = JournalsPane.getNotesPanes().get(i).getJournalIDFromNotesPane();
                 int selectedNoteIndex = JournalsPane.getNotesPanes().get(i).getSelectedNoteIndex();
 
-                saveJournal.setInt(1, journalID);
-                saveJournal.setString(2, journalTitle);
-                saveJournal.setInt(3, selectedNoteIndex);
+                saveJournal.setString(1, journalTitle);
+                saveJournal.setInt(2, selectedNoteIndex);
+                saveJournal.setInt(3, journalID);
                 saveJournal.executeUpdate();
 
                 //For each note in this journal
-                for (int j = 0; j < JournalsPane.getNotesPanes().size(); j++) {
+                for (int j = 0; j < JournalsPane.getNotesPanes().get(i).getNoteEditors().size(); j++) {
                     JTextArea noteTextArea = JournalsPane.getNotesPanes().get(i).getNoteEditors().get(j).getTextArea();
                     String noteContent = noteTextArea.getText();
                     String noteTitle = JournalsPane.getNotesPanes().get(i).getNoteEditors().get(j).getNoteItem().getTitle();
                     int noteID = JournalsPane.getNotesPanes().get(i).getNoteEditors().get(j).getNoteItem().getNoteID();
 
-                    saveNote.setInt(1, noteID);
-                    saveNote.setInt(2, journalID);
-                    saveNote.setString(3, noteTitle);
-                    saveNote.setString(4, noteContent);
-                    saveNote.setInt(5, j);
+                    saveNote.setString(1, noteTitle);
+                    saveNote.setString(2, noteContent);
+                    saveNote.setInt(3, j);
+                    saveNote.setInt(4, journalID);
+                    saveNote.setInt(5, noteID);
                     saveNote.executeUpdate();
                 }
             }
@@ -155,8 +156,8 @@ public class AppFrame extends JFrame
                 JournalsPane.getJournalsPane().addTab(journalTitle, journalPane.getTabbedPane());
 
                 //select the selected note before the last exit
-                System.out.println(journalPane.getTabCount());
-//                journalPane.setSelectedIndex(selectedNoteIndex);
+                System.out.println(journalPane.getTabbedPane().getTabCount());
+                journalPane.getTabbedPane().setSelectedIndex(selectedNoteIndex);
             }
         } catch (SQLException error) {
             System.out.println("Error loading last save: " + error.getMessage());
