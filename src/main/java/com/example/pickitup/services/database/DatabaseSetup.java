@@ -13,7 +13,7 @@ public class DatabaseSetup {
                 "title TEXT NOT NULL, " +
                 "content TEXT NOT NULL, " +
                 "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
-                "note_order INTEGER NOT NULL, " +
+                "note_order INTEGER, " +
                 "FOREIGN KEY (journal_id) REFERENCES journal(journal_id) " +
                 ");";
 
@@ -31,6 +31,7 @@ public class DatabaseSetup {
         String journalsTable = "CREATE TABLE IF NOT EXISTS journals (" +
                 "journal_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "title TEXT NOT NULL, " +
+                "selected_flag BOOLEAN NOT NULL, " +
                 "selected_note_index INTEGER NOT NULL " +
                 ");";
 

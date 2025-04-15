@@ -80,13 +80,8 @@ public class NotesPane extends JTabbedPane
         //journal.addNote(newNoteEditor.getNoteItem());
     }
 
-    public void addPageTabForLoad(NoteEditor newNoteEditor, String content)
+    public void addPageTabForLoad(NoteEditor newNoteEditor)
     {
-        //Make the scroll pane
-        newNoteEditor.makeScrollPane();
-
-        newNoteEditor.setNoteContent(content);
-
         // adds the scroll pane to the new tab
         tabbedPane.addTab(newNoteEditor.getNoteItem().getTitle(), newNoteEditor.getScrollPane());
 

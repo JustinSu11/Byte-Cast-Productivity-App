@@ -16,6 +16,7 @@
  */
 package com.example.pickitup.ui;
 
+import com.example.pickitup.services.ApplicationStateServices;
 import com.example.pickitup.services.dao.JournalDAO;
 import com.example.pickitup.services.models.Journal;
 import javax.swing.*;
@@ -34,7 +35,7 @@ public class JournalsPane extends JTabbedPane
     // constructor
     public JournalsPane()
     {
-        AppFrame.loadApplicationState();
+        ApplicationStateServices.loadApplicationState();
         if (journalsPane.getTabCount() == 0) {
             title = "Journal " + (journalsPane.getTabCount() + 1);
             Journal journal = new Journal(title);

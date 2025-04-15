@@ -15,6 +15,8 @@
 package com.example.pickitup.ui;
 
 
+import com.example.pickitup.services.dao.NotesDAO;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -381,7 +383,8 @@ public class MenuBar extends JMenuBar
             if (yesNo == JOptionPane.YES_OPTION){System.exit(0);}
         });
         saveNotes.addActionListener(e ->{
-            System.out.println("Notes Saved!");
+            NotesDAO.saveNote();
+            System.out.println("Note Saved!");
         });
         saveAnExit.addActionListener(e ->{
             System.out.println("Notes Saved!");

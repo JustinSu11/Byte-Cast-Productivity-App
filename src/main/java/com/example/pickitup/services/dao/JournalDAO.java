@@ -11,13 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 import com.example.pickitup.services.database.DatabaseConnection;
 import com.example.pickitup.services.models.Journal;
+import com.example.pickitup.ui.JournalsPane;
 import com.example.pickitup.ui.NotesPane;
 
 public class JournalDAO {
     //CREATE
     //method to insert journal into database
     public static void insertJournal(Journal journal) {
-        String insertStatement = "INSERT INTO journals (title, selected_note_index) VALUES (?, 0) RETURNING journal_id";
+        String insertStatement = "INSERT INTO journals (title, selected_note_index, selected_flag) VALUES (?, 0, 0) RETURNING journal_id";
         try (
                 Connection connection = DatabaseConnection.connect();
                 PreparedStatement preparedStatement = connection.prepareStatement(insertStatement)
