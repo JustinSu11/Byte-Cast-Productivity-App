@@ -60,9 +60,7 @@ public class MenuBar extends JMenuBar
 
     // menu item buttons for saveMenu
     private JMenu saveMenu = null;
-    private JMenuItem saveNotes = null;
-    private JMenuItem saveAnExit = null;
-    private JMenuItem EXIT = null;
+    private JMenuItem saveNote = null;
     //----------End - File Menu Options----------//
 
     // menu item buttons for fontMenu
@@ -107,9 +105,7 @@ public class MenuBar extends JMenuBar
         backgroundColor = new JMenuItem("Background Color");
 
         // menu items for saveMenu
-        EXIT = new JMenuItem("Exit");
-        saveNotes = new JMenuItem("Save Notes");
-        saveAnExit = new JMenuItem("Save An Exit");
+        saveNote = new JMenuItem("Save Note");
 
         // menu items for journalsMenu
         newJournal = new JMenuItem("New Journal");
@@ -149,9 +145,7 @@ public class MenuBar extends JMenuBar
         renamePage.setFont(DEFAULT_FONT);
         pagesMenu.setFont(DEFAULT_FONT);
         journalsMenu.setFont(DEFAULT_FONT);
-        EXIT.setFont(DEFAULT_FONT);
-        saveNotes.setFont(DEFAULT_FONT);
-        saveAnExit.setFont(DEFAULT_FONT);
+        saveNote.setFont(DEFAULT_FONT);
 
         viewMenu.add(notesItem);
         viewMenu.add(todoItem);
@@ -372,27 +366,11 @@ public class MenuBar extends JMenuBar
         pagesMenu.add(deletePage);
 
         //saveMenu Creation
-        EXIT.addActionListener(e ->{
-            int yesNo = JOptionPane.showConfirmDialog(
-                    null,
-                    "Are you sure you want to exit?\n"+
-                            "Any unsaved work may be lost!!!",
-                    "Exit?",
-                    JOptionPane.YES_NO_OPTION
-            );
-            if (yesNo == JOptionPane.YES_OPTION){System.exit(0);}
-        });
-        saveNotes.addActionListener(e ->{
+        saveNote.addActionListener(e ->{
             NotesDAO.saveNote();
             System.out.println("Note Saved!");
         });
-        saveAnExit.addActionListener(e ->{
-            System.out.println("Notes Saved!");
-            System.exit(0);
-        });
-        saveMenu.add(saveNotes);
-        saveMenu.add(saveAnExit);
-        saveMenu.add(EXIT);
+        saveMenu.add(saveNote);
 
 
         //fileMenu creation
