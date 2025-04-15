@@ -81,8 +81,8 @@ public class JournalsPane extends JTabbedPane
             if (selectedJournalIndex > 0)
             {
                 journalsPane.removeTabAt(selectedJournalIndex);
-                notesPanes.remove(selectedJournalIndex); // Remove the NotesPane
                 JournalDAO.deleteJournal(notesPanes.get(selectedJournalIndex).getJournalIDFromNotesPane());
+                notesPanes.remove(selectedJournalIndex); // Remove the NotesPane
             } else System.out.println("Must have at least one journal.");
         }
     }
