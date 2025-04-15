@@ -91,7 +91,7 @@ public class NotesDAO {
     //UPDATE methods
     //method to save an existing note
     public static void saveNote() {
-        String saveNoteStatement = "UPDATE notes SET title = ?, content = ?, note_order = 0 WHERE journal_id = ? AND notes_id = ?";
+        String saveNoteStatement = "UPDATE notes SET title = ?, content = ? WHERE journal_id = ? AND notes_id = ?";
 
         try (
                 Connection connection = DatabaseConnection.connect();
@@ -114,16 +114,39 @@ public class NotesDAO {
         }
     }
 
+    //method to rename note
+    public static void renameNote(String newName) {
+        String renameNoteStatement = "UPDATE notes SET title = ? WHERE journal_id = ? AND notes_id = ?";
+
+        try (
+                Connection connection = DatabaseConnection.connect();
+                PreparedStatement preparedStatement = connection.prepareStatement(renameNoteStatement)
+        ){
+            int noteID = JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().getNoteID();
+            int journalID = JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().getJournalID();
+
+            preparedStatement.setString(1, newName);
+            preparedStatement.setInt(2, journalID);
+            preparedStatement.setInt(3, noteID);
+            preparedStatement.executeUpdate();
+            System.out.println("Successfully renamed note");
+        } catch (SQLException error) {
+            System.out.println("Error saving note: " + error.getMessage());
+        }
+    }
+
+
     //DELETE methods
     //method to delete a note
     public static void deleteNote(Note note) {
-        String deleteStatement = "DELETE FROM notes WHERE notes_id = ?";
+        String deleteStatement = "DELETE FROM notes WHERE notes_id = ? AND journal_id = ?";
 
         try (
                 Connection connection = DatabaseConnection.connect();
                 PreparedStatement preparedStatement = connection.prepareStatement(deleteStatement)
                 ){
-            preparedStatement.setLong(1, note.getNoteID());
+            preparedStatement.setInt(1, note.getNoteID());
+            preparedStatement.setInt(2, note.getJournalID());
             preparedStatement.executeUpdate();
         } catch (SQLException error) {
             System.out.println("Error deleting note: " + error.getMessage());

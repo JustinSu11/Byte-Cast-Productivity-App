@@ -15,6 +15,7 @@
 package com.example.pickitup.ui;
 
 
+import com.example.pickitup.services.dao.JournalDAO;
 import com.example.pickitup.services.dao.NotesDAO;
 
 import javax.swing.*;
@@ -317,8 +318,9 @@ public class MenuBar extends JMenuBar
                         JOptionPane.ERROR_MESSAGE
                 );
                 return;
-            }
-            journalsPane.setNewJournalName(input);
+            } else {
+                journalsPane.setNewJournalName(input);
+            };
         });
         journalsMenu.add(renameJournal);
         journalsMenu.add(newJournal);

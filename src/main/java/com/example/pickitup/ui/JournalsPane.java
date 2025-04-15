@@ -119,6 +119,7 @@ public class JournalsPane extends JTabbedPane
 
     public void setNewJournalName(String newName) {
         journalsPane.setTitleAt(journalsPane.getSelectedIndex(), newName);
+        JournalDAO.updateJournal(JournalsPane.getNotesPanes().get(journalsPane.getSelectedIndex()).getJournalIDFromNotesPane(), newName);
     }
 
 } // end class

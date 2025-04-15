@@ -18,7 +18,7 @@ public class JournalDAO {
     //CREATE
     //method to insert journal into database
     public static void insertJournal(Journal journal) {
-        String insertStatement = "INSERT INTO journals (title, selected_note_index, selected_flag) VALUES (?, 0, 0) RETURNING journal_id";
+        String insertStatement = "INSERT INTO journals (title, selected_note_index, selected_flag, journal_order) VALUES (?, 0, 0, 0) RETURNING journal_id";
         try (
                 Connection connection = DatabaseConnection.connect();
                 PreparedStatement preparedStatement = connection.prepareStatement(insertStatement)
@@ -62,14 +62,14 @@ public class JournalDAO {
 
     //UPDATE
     //method to update journal title
-    public static void updateJournal(Journal journal) {
+    public static void updateJournal(int journalID, String title) {
         String updateStatement = "UPDATE journals SET title = ? WHERE journal_id = ?";
         try (
                 Connection connection = DatabaseConnection.connect();
                 PreparedStatement preparedStatement = connection.prepareStatement(updateStatement)
                 ) {
-            preparedStatement.setString(1, journal.getTitle());
-            preparedStatement.setInt(2, journal.getJournalID());
+            preparedStatement.setString(1, title);
+            preparedStatement.setInt(2, journalID);
             preparedStatement.executeUpdate();
         } catch (SQLException error) {
             System.out.println("Error updating journal: " + error.getMessage());

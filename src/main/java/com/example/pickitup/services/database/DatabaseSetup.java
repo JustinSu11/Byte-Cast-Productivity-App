@@ -32,6 +32,7 @@ public class DatabaseSetup {
                 "journal_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "title TEXT NOT NULL, " +
                 "selected_flag BOOLEAN NOT NULL, " +
+                "journal_order INTEGER NOT NULL, " +
                 "selected_note_index INTEGER NOT NULL " +
                 ");";
 

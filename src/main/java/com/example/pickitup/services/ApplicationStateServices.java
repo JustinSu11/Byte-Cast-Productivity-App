@@ -16,7 +16,7 @@ public class ApplicationStateServices {
             //Disable auto commit
             connection.setAutoCommit(false);
             //sql statements for saving
-            String saveJournalStatement = "UPDATE journals SET title = ?, selected_note_index = ?, selected_flag = ? WHERE journal_id = ?";
+            String saveJournalStatement = "UPDATE journals SET title = ?, selected_note_index = ?, selected_flag = ?, journal_order = ? WHERE journal_id = ?";
             String saveNoteStatement = "UPDATE notes SET title = ?, content = ?, note_order = ? WHERE journal_id = ? AND notes_id = ?";
             //prepare statements for execution
             PreparedStatement saveJournal = connection.prepareStatement(saveJournalStatement);
@@ -33,7 +33,8 @@ public class ApplicationStateServices {
                 saveJournal.setString(1, journalTitle);
                 saveJournal.setInt(2, selectedNoteIndex);
                 saveJournal.setBoolean(3, isSelected);
-                saveJournal.setInt(4, journalID);
+                saveJournal.setInt(4, i);
+                saveJournal.setInt(5, journalID);
                 saveJournal.executeUpdate();
 
 
@@ -42,7 +43,6 @@ public class ApplicationStateServices {
                 for (int j = 0; j < JournalsPane.getNotesPanes().get(i).getNoteEditors().size(); j++) {
                     NoteEditor noteTextArea = JournalsPane.getNotesPanes().get(i).getNoteEditors().get(j);
                     String noteContent = noteTextArea.getTextInTextEditor();
-                    System.out.println(noteContent);
                     String noteTitle = JournalsPane.getNotesPanes().get(i).getNoteEditors().get(j).getNoteItem().getTitle();
                     int noteID = JournalsPane.getNotesPanes().get(i).getNoteEditors().get(j).getNoteItem().getNoteID();
 
@@ -64,7 +64,7 @@ public class ApplicationStateServices {
     //load application from the last save
     public static void loadApplicationState() {
         try (Connection connection = DatabaseConnection.connect()) {
-            String loadJournalStatement = "SELECT journal_id, title, selected_note_index, selected_flag FROM journals";
+            String loadJournalStatement = "SELECT journal_id, title, selected_note_index, selected_flag FROM journals ORDER BY journal_order";
             Statement loadJournal = connection.createStatement();
             ResultSet journalResultSet = loadJournal.executeQuery(loadJournalStatement);
 
@@ -78,8 +78,7 @@ public class ApplicationStateServices {
                 int selectedNoteIndex = journalResultSet.getInt("selected_note_index");
                 boolean isSelectedJournal = journalResultSet.getBoolean("selected_flag");
 
-                NotesPane journalPane = new NotesPane(journalID);
-                journalPane.deletePageTab();
+                NotesPane journalPane = new NotesPane(journalID, journalTitle);
                 JournalsPane.getNotesPanes().add(journalPane);
 
                 String loadNoteStatement = "SELECT notes_id, content, title FROM notes WHERE journal_id = " + journalID + " ORDER BY note_order";
