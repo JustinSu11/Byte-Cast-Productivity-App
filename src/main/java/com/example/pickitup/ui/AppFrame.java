@@ -76,9 +76,6 @@ public class AppFrame extends JFrame
         setExtendedState(JFrame.MAXIMIZED_BOTH); // open in fullscreen
         setLocationRelativeTo(null); // open in the center of the screen
 
-        Image icon = Toolkit.getDefaultToolkit().getImage("coconut.jpg");
-        setIconImage(icon);
-
         // border layout is used for the main panel
         mainPanel.setLayout(new BorderLayout());
         add(mainPanel);
