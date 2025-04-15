@@ -77,12 +77,13 @@ public class JournalsPane extends JTabbedPane
         );
         if (yesNo == JOptionPane.YES_OPTION){
             selectedJournalIndex = journalsPane.getSelectedIndex();
-            if (selectedJournalIndex >= 0)
+            if (selectedJournalIndex > 0)
             {
                 journalsPane.removeTabAt(selectedJournalIndex);
                 notesPanes.remove(selectedJournalIndex); // Remove the NotesPane
                 JournalDAO.deleteJournal(notesPanes.get(selectedJournalIndex).getJournalIDFromNotesPane());
-            }}
+            } else System.out.println("Must have at least one journal.");
+        }
     }
 
 

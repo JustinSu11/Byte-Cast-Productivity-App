@@ -345,10 +345,10 @@ public class MenuBar extends JMenuBar
             );
             if (yesNo == JOptionPane.YES_OPTION){
                 NotesPane selectedNotesPane = JournalsPane.getSelectedNotesPane();
-                if (selectedNotesPane != null)
+                if ((selectedNotesPane != null) && (selectedNotesPane.getTabCount() > 0))
                 {
                     selectedNotesPane.deletePageTab();
-                }
+                } else System.out.println("Must have at least one page.");
             }
         });
         renamePage.addActionListener(e -> {
