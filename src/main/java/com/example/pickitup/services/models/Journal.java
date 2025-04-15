@@ -17,6 +17,7 @@ public class Journal {
     private String title = null;
     List<Note> notes = null;
     private int selectedNoteIndex = 0;
+    private int selectedJournalIndex = 0;
 
     //Constructor for journal for an ID and initial title
     public Journal(String title) {

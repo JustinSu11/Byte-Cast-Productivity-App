@@ -35,6 +35,11 @@ public class NoteEditor extends JTabbedPane
         noteItem = new Note(title, getTextInTextEditor(), journal_id);
     }
 
+    public NoteEditor(int noteID, int journalID, String title, String content) {
+        textArea = new JTextArea();
+        scrollPane = new JScrollPane(textArea);
+        noteItem = new Note(noteID, journalID, title, content);
+    }
 
     // makes the scroll pane
     // the text area is part of the scroll pane
@@ -75,12 +80,6 @@ public class NoteEditor extends JTabbedPane
     //get noteItem
     public Note getNoteItem() {
         return noteItem;
-    }
-
-    //set Content of note editor
-    public void setNoteContent(String content) {
-        textArea.setText(content);
-        noteItem.setContent(content);
     }
 
 } // end Notepad class

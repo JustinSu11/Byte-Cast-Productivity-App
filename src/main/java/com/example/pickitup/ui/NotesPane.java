@@ -16,6 +16,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.example.pickitup.services.dao.NotesDAO;
 import com.example.pickitup.services.models.Journal;
 
 public class NotesPane extends JTabbedPane
@@ -48,9 +50,12 @@ public class NotesPane extends JTabbedPane
 
         //add noteEditor to array list
         noteEditors.add(noteEditor);
+    }
 
-        //add noteEditor to journal's Note array list
-        //journal.addNote(noteEditor.getNoteItem());
+    public NotesPane(int journalID, String journalTitle) {
+        tabbedPane = new JTabbedPane();
+        this.journalID = journalID;
+        title = journalTitle;
     }
 
     // method to add a new tab to the tabbed pane
@@ -75,18 +80,10 @@ public class NotesPane extends JTabbedPane
         
         // Store reference to the NoteEditor
         noteEditors.add(newNoteEditor);
-
-        //add note to database for journal
-        //journal.addNote(newNoteEditor.getNoteItem());
     }
 
-    public void addPageTabForLoad(NoteEditor newNoteEditor, String content)
+    public void addPageTabForLoad(NoteEditor newNoteEditor)
     {
-        //Make the scroll pane
-        newNoteEditor.makeScrollPane();
-
-        newNoteEditor.setNoteContent(content);
-
         // adds the scroll pane to the new tab
         tabbedPane.addTab(newNoteEditor.getNoteItem().getTitle(), newNoteEditor.getScrollPane());
 
@@ -107,10 +104,11 @@ public class NotesPane extends JTabbedPane
         // delete the selected tab
         if(tabbedPane.getTabCount() > 0)
         {
-            tabbedPane.removeTabAt(tabbedPane.getSelectedIndex());
+            tabbedPane.removeTabAt(selectedIndex);
             
             // Remove the NoteEditor reference
-            if (selectedIndex >= 0 && selectedIndex < noteEditors.size()) {
+            if ((selectedIndex >= 0) && (selectedIndex < noteEditors.size())) {
+                NotesDAO.deleteNote(noteEditors.get(selectedIndex).getNoteItem());
                 noteEditors.remove(selectedIndex);
             }
         }
@@ -172,8 +170,8 @@ public class NotesPane extends JTabbedPane
     public void setNewPageName(String newName){
         selectedIndex = tabbedPane.getSelectedIndex();
         tabbedPane.setTitleAt(selectedIndex, newName);
-        //invoke method to rename note in database here
-        //noteEditors.get(selectedIndex).getNoteItem().setTitle(newName);
+        noteEditors.get(selectedIndex).getNoteItem().setTitle(newName);
+        NotesDAO.renameNote(newName);
     }
 
     public void setFontColor(Color color){
