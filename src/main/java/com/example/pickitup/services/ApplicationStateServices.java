@@ -1,7 +1,13 @@
+/*
+* Author: Justin Nguyen
+* Version 1.0
+* Purpose: Saves the application state before exiting and loads the application state
+* where it was left at before exiting
+* */
+
 package com.example.pickitup.services;
 
 import com.example.pickitup.services.database.DatabaseConnection;
-import com.example.pickitup.services.models.Note;
 import com.example.pickitup.ui.JournalsPane;
 import com.example.pickitup.ui.NoteEditor;
 import com.example.pickitup.ui.NotesPane;
@@ -23,6 +29,8 @@ public class ApplicationStateServices {
             PreparedStatement saveNote = connection.prepareStatement(saveNoteStatement);
 
             JTabbedPane journalsPane = JournalsPane.getJournalsPane();
+
+            //iterate through each journal (NotePane) and save each journal and note
             for (int i = 0; i < JournalsPane.getJournalsPane().getTabCount(); i++) {
 
                 boolean isSelected = (journalsPane.getSelectedComponent() == journalsPane.getComponentAt(i));
@@ -39,7 +47,7 @@ public class ApplicationStateServices {
 
 
 
-                //For each note in this journal
+                //iterate through each note (NoteEditor) in this journal (NotePane) and save into the database
                 for (int j = 0; j < JournalsPane.getNotesPanes().get(i).getNoteEditors().size(); j++) {
                     NoteEditor noteTextArea = JournalsPane.getNotesPanes().get(i).getNoteEditors().get(j);
                     String noteContent = noteTextArea.getTextInTextEditor();
@@ -55,6 +63,7 @@ public class ApplicationStateServices {
                     System.out.println("Saving note content");
                 }
             }
+            //One single commit for each journal instead of each note
             connection.commit();
         } catch (SQLException error) {
             System.out.println("Error with save before exit: " + error.getMessage());
