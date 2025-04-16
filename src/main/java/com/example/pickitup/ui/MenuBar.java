@@ -343,10 +343,10 @@ public class MenuBar extends JMenuBar
             );
             if (yesNo == JOptionPane.YES_OPTION){
                 NotesPane selectedNotesPane = JournalsPane.getSelectedNotesPane();
-                if ((selectedNotesPane != null) && (selectedNotesPane.getTabCount() > 0))
+                if (!selectedNotesPane.getNoteEditors().isEmpty())
                 {
                     selectedNotesPane.deletePageTab();
-                } else System.out.println("Must have at least one page.");
+                } else JOptionPane.showMessageDialog(journalsPane, "Cannot have less than one page", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         renamePage.addActionListener(e -> {

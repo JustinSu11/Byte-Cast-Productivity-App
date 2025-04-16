@@ -83,7 +83,7 @@ public class JournalsPane extends JTabbedPane
                 journalsPane.removeTabAt(selectedJournalIndex);
                 JournalDAO.deleteJournal(notesPanes.get(selectedJournalIndex).getJournalIDFromNotesPane());
                 notesPanes.remove(selectedJournalIndex); // Remove the NotesPane
-            } else System.out.println("Must have at least one journal.");
+            } else JOptionPane.showMessageDialog(journalsPane, "Cannot have less than one page", "Error", JOptionPane.ERROR_MESSAGE);;
         }
     }
 
