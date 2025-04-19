@@ -44,17 +44,6 @@ public class NotesPane extends JTabbedPane
         // set the default font
         tabbedPane.setFont(DEFAULT_FONT);
 
-//        // Add change listener to update AI Assistant when tab changes
-//        tabbedPane.addChangeListener(e -> {
-//            if (AppFrame.aiAssistantPanel != null) {
-//                NoteEditor currentNoteEditor = getCurrentNoteEditor();
-//                if (currentNoteEditor != null) {
-//                    AppFrame.aiAssistantPanel.setNoteEditor(currentNoteEditor);
-//                }
-//            }
-//        });
-    }
-
         noteEditor.makeScrollPane();
         // adds the scroll pane to the new tab
         tabbedPane.addTab(title, noteEditor.getScrollPane());
@@ -88,7 +77,7 @@ public class NotesPane extends JTabbedPane
 
         // adds the scroll pane to the new tab
         tabbedPane.addTab(title, newNoteEditor.getScrollPane());
-        
+
         // Store reference to the NoteEditor
         noteEditors.add(newNoteEditor);
     }
@@ -100,9 +89,6 @@ public class NotesPane extends JTabbedPane
 
         // Store reference to the NoteEditor
         noteEditors.add(newNoteEditor);
-
-        //add note to database for journal
-        //journal.addNote(newNoteEditor.getNoteItem());
     }
 
 
@@ -116,7 +102,7 @@ public class NotesPane extends JTabbedPane
         if(tabbedPane.getTabCount() > 0)
         {
             tabbedPane.removeTabAt(selectedIndex);
-            
+
             // Remove the NoteEditor reference
             if ((selectedIndex >= 0) && (selectedIndex < noteEditors.size())) {
                 NotesDAO.deleteNote(noteEditors.get(selectedIndex).getNoteItem());
@@ -185,27 +171,7 @@ public class NotesPane extends JTabbedPane
         NotesDAO.renameNote(newName);
     }
 
-    public void setFontColor(Color color) {
-        JTextArea currentTextArea = getCurrentTextArea();
-        if (currentTextArea != null) {
-            currentTextArea.setForeground(color);
-
-            // Register this as a custom color with ThemeManager
-            ThemeManager.getInstance().setCustomForegroundColor(currentTextArea, color);
-        }
-    }
-
-    public void setBackgroundColor(Color color) {
-        JTextArea currentTextArea = getCurrentTextArea();
-        if (currentTextArea != null) {
-            currentTextArea.setBackground(color);
-
-            // Register this as a custom color with ThemeManager
-            ThemeManager.getInstance().setCustomBackgroundColor(currentTextArea, color);
-        }
-    }
-
-    private JTextArea getCurrentTextArea() {
+    public void setFontColor(Color color){
         int selectedTabIndex = tabbedPane.getSelectedIndex();
         if (selectedTabIndex != -1) {
             Component selectedComponent = tabbedPane.getComponentAt(selectedTabIndex);
@@ -214,11 +180,27 @@ public class NotesPane extends JTabbedPane
                 JViewport viewport = scrollPane.getViewport();
                 Component view = viewport.getView();
                 if (view instanceof JTextArea) {
-                    return (JTextArea) view;
+                    JTextArea textArea = (JTextArea) view;
+                    textArea.setForeground(color);
                 }
             }
         }
-        return null;
+    }
+
+    public void setBackgroundColor(Color color){
+        int selectedTabIndex = tabbedPane.getSelectedIndex();
+        if (selectedTabIndex != -1) {
+            Component selectedComponent = tabbedPane.getComponentAt(selectedTabIndex);
+            if (selectedComponent instanceof JScrollPane) {
+                JScrollPane scrollPane = (JScrollPane) selectedComponent;
+                JViewport viewport = scrollPane.getViewport();
+                Component view = viewport.getView();
+                if (view instanceof JTextArea) {
+                    JTextArea textArea = (JTextArea) view;
+                    textArea.setBackground(color);
+                }
+            }
+        }
     }
 
     public int getSelectedNoteIndex() {
