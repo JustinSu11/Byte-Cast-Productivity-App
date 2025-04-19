@@ -8,23 +8,32 @@ package com.example.pickitup.services.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.example.pickitup.services.dao.JournalDAO;
 import com.example.pickitup.services.dao.NotesDAO;
+import com.example.pickitup.ui.NoteEditor;
 
 public class Journal {
-    private int id;
-    private String title;
-    private List<Note> notes;
+    private int journalID = 0;
+    private String title = null;
+    List<Note> notes = null;
+    private int selectedNoteIndex = 0;
+    private int selectedJournalIndex = 0;
 
     //Constructor for journal for an ID and initial title
-    public Journal(int id, String title) {
-        this.id = id;
+    public Journal(String title) {
         this.title = title;
-        this.notes = new ArrayList<>();
+        JournalDAO.insertJournal(this);
+    }
+
+    public Journal(int journalID, String title, int selectedNoteIndex) {
+        this.journalID = journalID;
+        this.title = title;
+        this.selectedNoteIndex = selectedNoteIndex;
     }
 
     //Getters
-    public int getId() {
-        return id;
+    public int getJournalID() {
+        return this.journalID;
     }
     public String getTitle() {
         return title;
@@ -33,18 +42,17 @@ public class Journal {
         return notes;
     }
 
-    //Add a note to journal
-    public void addNote(Note note) {
-        notes.add(note);
-    }
+//    public void addNote(Note note) {
+//        notes.add(note);
+//    }
 
-    //Remove a note from journal
-    public void removeNote(Note note) {
-        notes.remove(note);
+    //Setters
+    public void setJournalID(int journalID){
+        this.journalID = journalID;
     }
 
     //Load notes for this journal using NoteDAO
-    public void loadNotes() {
-        this.notes = NotesDAO.getNotesByJournalId(this.id);
-    }
+//    public void loadNotes() {
+//        this.notes = NotesDAO.getNotesByJournalId(this.journalID);
+//    }
 }

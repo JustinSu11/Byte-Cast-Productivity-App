@@ -15,23 +15,31 @@ package com.example.pickitup.ui;
 
 
 import javax.swing.*;
+import com.example.pickitup.services.models.Note;
 
 
-public class NoteEditor
+public class NoteEditor extends JTabbedPane
 {
     // fields
     private JTextArea textArea = null;
     private JScrollPane scrollPane = null;
+    private Note noteItem = null;
 
 
     // constructor
-    public NoteEditor()
+    public NoteEditor(String title, int journal_id)
     {
         textArea = new JTextArea();
         scrollPane = new JScrollPane(textArea);
-
+        //creates a data object for storing the note into the database
+        noteItem = new Note(title, getTextInTextEditor(), journal_id);
     }
 
+    public NoteEditor(int noteID, int journalID, String title, String content) {
+        textArea = new JTextArea();
+        scrollPane = new JScrollPane(textArea);
+        noteItem = new Note(noteID, journalID, title, content);
+    }
 
     // makes the scroll pane
     // the text area is part of the scroll pane
@@ -64,9 +72,14 @@ public class NoteEditor
         return textArea.getText();
     } // end getText
 
-    //Get tesxt area itself
+    //Get text area itself
     public JTextArea getTextArea() {
         return textArea;
+    }
+
+    //get noteItem
+    public Note getNoteItem() {
+        return noteItem;
     }
 
 } // end Notepad class

@@ -16,35 +16,33 @@
  */
 package com.example.pickitup.ui;
 
+import com.example.pickitup.services.ApplicationStateServices;
+import com.example.pickitup.services.dao.JournalDAO;
+import com.example.pickitup.services.models.Journal;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class JournalsPane extends JTabbedPane
 {
-    private JTabbedPane journalsPane = null;
-
+    private static JTabbedPane journalsPane = new JTabbedPane();
     // store a list of different notesPanes for the different journals
-    private List<NotesPane> notesPanes = new ArrayList<>();
+    private static List<NotesPane> notesPanes = new ArrayList<>();
     private String title = null;
-    private int selectedJournalIndex = 0;
+    private static int selectedJournalIndex = 0;
 
 
     // constructor
     public JournalsPane()
     {
-        journalsPane = new JTabbedPane();
-    }
-
-
-    //Replace with save loading if possible
-    public void journalConstructor()
-    {
-        title = "Journal " + (journalsPane.getTabCount() + 1);
-        NotesPane newNotesPane = new NotesPane();
-        newNotesPane.notesPaneConstuctor();
-        journalsPane.addTab(title, newNotesPane.getTabbedPane());
-        notesPanes.add(newNotesPane); // Add the new NotesPane
+        ApplicationStateServices.loadApplicationState();
+        if (journalsPane.getTabCount() == 0) {
+            title = "Journal " + (journalsPane.getTabCount() + 1);
+            Journal journal = new Journal(title);
+            NotesPane newNotesPane = new NotesPane(journal.getJournalID());
+            journalsPane.addTab(title, newNotesPane.getTabbedPane());
+            notesPanes.add(newNotesPane); // Add the new NotesPane if no tabs are present
+        }
     }
 
 
@@ -62,8 +60,8 @@ public class JournalsPane extends JTabbedPane
                     JOptionPane.ERROR_MESSAGE
             );
         }
-        NotesPane newNotesPane = new NotesPane();
-        newNotesPane.addPageTab();
+        Journal journal = new Journal(title);
+        NotesPane newNotesPane = new NotesPane(journal.getJournalID());
         journalsPane.addTab(title, newNotesPane.getTabbedPane());
         notesPanes.add(newNotesPane); // Add the new NotesPane
     }
@@ -80,35 +78,49 @@ public class JournalsPane extends JTabbedPane
         );
         if (yesNo == JOptionPane.YES_OPTION){
             selectedJournalIndex = journalsPane.getSelectedIndex();
-            if (selectedJournalIndex >= 0)
+            if (selectedJournalIndex > 0)
             {
                 journalsPane.removeTabAt(selectedJournalIndex);
+                JournalDAO.deleteJournal(notesPanes.get(selectedJournalIndex).getJournalIDFromNotesPane());
                 notesPanes.remove(selectedJournalIndex); // Remove the NotesPane
-            }}
+            } else JOptionPane.showMessageDialog(journalsPane, "Cannot have less than one page", "Error", JOptionPane.ERROR_MESSAGE);;
+        }
     }
 
 
     // return a JTabbedPane object to App class to use on main panel
-    public JTabbedPane getJournalsPane()
+    public static JTabbedPane getJournalsPane()
     {
         return journalsPane;
     }
 
+    //Get the notesPanes array list
+    public static List<NotesPane> getNotesPanes() {
+        return notesPanes;
+    }
+
+    public static int getSelectedJournalIndex() {
+        return selectedJournalIndex;
+    }
 
     // method for updating the current notesPane variable stored in MenuBar
     // This tells the menu bar what journal you want to add or delete pages from
-    public NotesPane getSelectedNotesPane()
+    public static NotesPane getSelectedNotesPane()
     {
         int selectedIndex = journalsPane.getSelectedIndex();
         if (selectedIndex >= 0 && selectedIndex < notesPanes.size())
         {
             return notesPanes.get(selectedIndex);
-        }
-        return null; // Return null if no journal is selected or list is empty
+        } else return null; // Return null if no journal is selected or list is empty
     } // end getSelectedNotesPane
+
+    public String getTitleAt(int index) {
+        return notesPanes.get(index).getTitle();
+    }
 
     public void setNewJournalName(String newName) {
         journalsPane.setTitleAt(journalsPane.getSelectedIndex(), newName);
+        JournalDAO.updateJournal(JournalsPane.getNotesPanes().get(journalsPane.getSelectedIndex()).getJournalIDFromNotesPane(), newName);
     }
 
 } // end class

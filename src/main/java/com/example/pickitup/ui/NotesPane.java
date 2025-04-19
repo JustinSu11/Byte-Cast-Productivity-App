@@ -1,7 +1,7 @@
 /*
     *******************************************************************************
     TabbedPane Class
-    Last Updated 04/10/2025
+    Last Updated 04/02/2025
     Developer CJ Quintero
 
     This class makes the tabbed pane and has methods to add or delete tabs.
@@ -16,10 +16,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import com.example.pickitup.services.dao.NotesDAO;
-import com.example.pickitup.services.models.Note;
 
-public class NotesPane extends JournalsPane
+import com.example.pickitup.services.dao.NotesDAO;
+import com.example.pickitup.services.models.Journal;
+
+public class NotesPane extends JTabbedPane
 {
     // fields
     private JTabbedPane tabbedPane = null;
@@ -28,14 +29,17 @@ public class NotesPane extends JournalsPane
     private int selectedIndex = 0;
     private final Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 16); // constant
     private List<NoteEditor> noteEditors = new ArrayList<>();
-
+    private int journalID = 0;
 
     // constructor
-    public NotesPane()
+    public NotesPane(int journalID)
     {
         // initialize the variables
         tabbedPane = new JTabbedPane();
-        noteEditor = new NoteEditor();
+        this.journalID = journalID;
+        title = "Page " + (tabbedPane.getTabCount() + 1);
+
+        noteEditor = new NoteEditor(title, journalID);
 
         // set the default font
         tabbedPane.setFont(DEFAULT_FONT);
@@ -51,20 +55,19 @@ public class NotesPane extends JournalsPane
 //        });
     }
 
-
-    //Replace with save loading if possible
-    public void notesPaneConstuctor()
-    {
-        title = "Page " + (tabbedPane.getTabCount() + 1);
-        NoteEditor newNoteEditor = new NoteEditor();
-        newNoteEditor.makeScrollPane();
-        //inserts blank note into database (commented out due to missing journal tabs)
-//        Note currentNote = new Note(title, newNoteEditor.getTextInTextEditor());
-//        NotesDAO.insertNote(currentNote);
+        noteEditor.makeScrollPane();
         // adds the scroll pane to the new tab
-        tabbedPane.addTab(title, newNoteEditor.getScrollPane());
+        tabbedPane.addTab(title, noteEditor.getScrollPane());
+
+        //add noteEditor to array list
+        noteEditors.add(noteEditor);
     }
 
+    public NotesPane(int journalID, String journalTitle) {
+        tabbedPane = new JTabbedPane();
+        this.journalID = journalID;
+        title = journalTitle;
+    }
 
     // method to add a new tab to the tabbed pane
     public void addPageTab()
@@ -80,16 +83,26 @@ public class NotesPane extends JournalsPane
                     JOptionPane.ERROR_MESSAGE
             );
         }
-        NoteEditor newNoteEditor = new NoteEditor();
+        NoteEditor newNoteEditor = new NoteEditor(title, journalID);
         newNoteEditor.makeScrollPane();
-        //inserts blank note into database (commented out due to missing journal tabs)
-//        Note currentNote = new Note(title, newNoteEditor.getTextInTextEditor());
-//        NotesDAO.insertNote(currentNote);
+
         // adds the scroll pane to the new tab
         tabbedPane.addTab(title, newNoteEditor.getScrollPane());
+        
+        // Store reference to the NoteEditor
+        noteEditors.add(newNoteEditor);
+    }
+
+    public void addPageTabForLoad(NoteEditor newNoteEditor)
+    {
+        // adds the scroll pane to the new tab
+        tabbedPane.addTab(newNoteEditor.getNoteItem().getTitle(), newNoteEditor.getScrollPane());
 
         // Store reference to the NoteEditor
         noteEditors.add(newNoteEditor);
+
+        //add note to database for journal
+        //journal.addNote(newNoteEditor.getNoteItem());
     }
 
 
@@ -102,10 +115,11 @@ public class NotesPane extends JournalsPane
         // delete the selected tab
         if(tabbedPane.getTabCount() > 0)
         {
-            tabbedPane.removeTabAt(tabbedPane.getSelectedIndex());
-
+            tabbedPane.removeTabAt(selectedIndex);
+            
             // Remove the NoteEditor reference
-            if (selectedIndex >= 0 && selectedIndex < noteEditors.size()) {
+            if ((selectedIndex >= 0) && (selectedIndex < noteEditors.size())) {
+                NotesDAO.deleteNote(noteEditors.get(selectedIndex).getNoteItem());
                 noteEditors.remove(selectedIndex);
             }
         }
@@ -165,7 +179,10 @@ public class NotesPane extends JournalsPane
     }
 
     public void setNewPageName(String newName){
-        tabbedPane.setTitleAt(tabbedPane.getSelectedIndex(), newName);
+        selectedIndex = tabbedPane.getSelectedIndex();
+        tabbedPane.setTitleAt(selectedIndex, newName);
+        noteEditors.get(selectedIndex).getNoteItem().setTitle(newName);
+        NotesDAO.renameNote(newName);
     }
 
     public void setFontColor(Color color) {
@@ -204,6 +221,10 @@ public class NotesPane extends JournalsPane
         return null;
     }
 
+    public int getSelectedNoteIndex() {
+        return tabbedPane.getSelectedIndex();
+    }
+
     // returns the notes pane to the JournalsPane class
     public JTabbedPane getTabbedPane()
     {
@@ -221,6 +242,18 @@ public class NotesPane extends JournalsPane
             return noteEditors.get(selectedIndex);
         }
         return null;
+    }
+
+    public int getJournalIDFromNotesPane() {
+        return journalID;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public List<NoteEditor> getNoteEditors() {
+        return noteEditors;
     }
 
 } // end class
