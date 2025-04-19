@@ -1,6 +1,8 @@
 package com.example.pickitup.ui;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.plaf.ColorUIResource;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.util.ArrayList;
@@ -13,7 +15,7 @@ import java.util.prefs.Preferences;
  * ThemeManager handles the application's theme (dark/light mode)
  * It provides methods to switch themes and stores the user's preference
  *
- * @version 1.1
+ * @version 1.2
  */
 public class ThemeManager {
     // Theme constants
@@ -28,6 +30,11 @@ public class ThemeManager {
     public static final Color LIGHT_BUTTON_BACKGROUND = new Color(225, 225, 225);
     public static final Color LIGHT_TABLE_GRID = new Color(180, 180, 180);
     public static final Color LIGHT_TABLE_HEADER = new Color(230, 230, 230);
+    public static final Color LIGHT_MENU_HOVER_BACKGROUND = new Color(210, 210, 210);
+    public static final Color LIGHT_MENU_HOVER_FOREGROUND = new Color(0, 0, 0);
+    public static final Color LIGHT_DIALOG_BACKGROUND = new Color(240, 240, 240);
+    public static final Color LIGHT_DIALOG_FOREGROUND = new Color(33, 33, 33);
+    public static final Color LIGHT_BORDER = new Color(200, 200, 200);
 
     // Dark mode colors
     public static final Color DARK_BACKGROUND = new Color(43, 43, 43);
@@ -37,6 +44,11 @@ public class ThemeManager {
     public static final Color DARK_BUTTON_BACKGROUND = new Color(80, 80, 80);
     public static final Color DARK_TABLE_GRID = new Color(100, 100, 100);
     public static final Color DARK_TABLE_HEADER = new Color(70, 70, 70);
+    public static final Color DARK_MENU_HOVER_BACKGROUND = new Color(90, 90, 90);
+    public static final Color DARK_MENU_HOVER_FOREGROUND = new Color(255, 255, 255);
+    public static final Color DARK_DIALOG_BACKGROUND = new Color(60, 63, 65);
+    public static final Color DARK_DIALOG_FOREGROUND = new Color(220, 220, 220);
+    public static final Color DARK_BORDER = new Color(100, 100, 100);
 
     // Singleton instance
     private static ThemeManager instance;
@@ -97,11 +109,68 @@ public class ThemeManager {
         currentTheme = theme;
         prefs.putInt("theme", theme);
 
+        // Configure the popup menu and option pane settings
+        configureDialogAndMenuSettings();
+
         // Apply theme to all registered components
         applyThemeToRegisteredComponents();
 
         // Apply theme to future Swing components
         setupUIManagerDefaults();
+    }
+
+    /**
+     * Configures dialog and menu settings for the current theme
+     */
+    private void configureDialogAndMenuSettings() {
+        // Configure dialog colors
+        UIManager.put("OptionPane.background", currentTheme == LIGHT_MODE ?
+                LIGHT_DIALOG_BACKGROUND : DARK_DIALOG_BACKGROUND);
+        UIManager.put("OptionPane.foreground", currentTheme == LIGHT_MODE ?
+                LIGHT_DIALOG_FOREGROUND : DARK_DIALOG_FOREGROUND);
+        UIManager.put("OptionPane.messageForeground", currentTheme == LIGHT_MODE ?
+                LIGHT_DIALOG_FOREGROUND : DARK_DIALOG_FOREGROUND);
+
+        // Configure dialog panel colors
+        UIManager.put("Panel.background", currentTheme == LIGHT_MODE ?
+                LIGHT_DIALOG_BACKGROUND : DARK_DIALOG_BACKGROUND);
+        UIManager.put("Panel.foreground", currentTheme == LIGHT_MODE ?
+                LIGHT_DIALOG_FOREGROUND : DARK_DIALOG_FOREGROUND);
+
+        // Configure menu selection colors
+        UIManager.put("MenuItem.selectionBackground", currentTheme == LIGHT_MODE ?
+                LIGHT_MENU_HOVER_BACKGROUND : DARK_MENU_HOVER_BACKGROUND);
+        UIManager.put("MenuItem.selectionForeground", currentTheme == LIGHT_MODE ?
+                LIGHT_MENU_HOVER_FOREGROUND : DARK_MENU_HOVER_FOREGROUND);
+        UIManager.put("Menu.selectionBackground", currentTheme == LIGHT_MODE ?
+                LIGHT_MENU_HOVER_BACKGROUND : DARK_MENU_HOVER_BACKGROUND);
+        UIManager.put("Menu.selectionForeground", currentTheme == LIGHT_MODE ?
+                LIGHT_MENU_HOVER_FOREGROUND : DARK_MENU_HOVER_FOREGROUND);
+
+        // Configure dialog borders
+        Border dialogBorder = BorderFactory.createLineBorder(
+                currentTheme == LIGHT_MODE ? LIGHT_BORDER : DARK_BORDER);
+        UIManager.put("OptionPane.border", dialogBorder);
+
+        // Configure dialog button colors
+        UIManager.put("Button.background", currentTheme == LIGHT_MODE ?
+                LIGHT_BUTTON_BACKGROUND : DARK_BUTTON_BACKGROUND);
+        UIManager.put("Button.foreground", currentTheme == LIGHT_MODE ?
+                LIGHT_DIALOG_FOREGROUND : DARK_DIALOG_FOREGROUND);
+
+        // Configure text field colors in dialogs
+        UIManager.put("TextField.background", currentTheme == LIGHT_MODE ?
+                Color.WHITE : new Color(70, 73, 75));
+        UIManager.put("TextField.foreground", currentTheme == LIGHT_MODE ?
+                LIGHT_DIALOG_FOREGROUND : DARK_DIALOG_FOREGROUND);
+        UIManager.put("TextField.caretForeground", currentTheme == LIGHT_MODE ?
+                LIGHT_DIALOG_FOREGROUND : DARK_DIALOG_FOREGROUND);
+
+        // Configure combo box colors
+        UIManager.put("ComboBox.background", currentTheme == LIGHT_MODE ?
+                LIGHT_PANEL_BACKGROUND : DARK_PANEL_BACKGROUND);
+        UIManager.put("ComboBox.foreground", currentTheme == LIGHT_MODE ?
+                LIGHT_FOREGROUND : DARK_FOREGROUND);
     }
 
     /**
@@ -220,6 +289,11 @@ public class ThemeManager {
             }
         }
 
+        // Special handling for menus
+        if (component instanceof JMenuBar || component instanceof JMenu) {
+            applyMenuTheme(component);
+        }
+
         // Recursively apply theme to child components
         for (Component child : component.getComponents()) {
             if (child instanceof JComponent) {
@@ -243,6 +317,42 @@ public class ThemeManager {
     }
 
     /**
+     * Apply appropriate theme to menu components
+     */
+    private void applyMenuTheme(JComponent component) {
+        if (component instanceof JMenu) {
+            JMenu menu = (JMenu) component;
+
+            // Apply theme to the popup menu
+            JPopupMenu popupMenu = menu.getPopupMenu();
+            if (popupMenu != null) {
+                popupMenu.setBackground(currentTheme == LIGHT_MODE ?
+                        LIGHT_PANEL_BACKGROUND : DARK_PANEL_BACKGROUND);
+                popupMenu.setForeground(currentTheme == LIGHT_MODE ?
+                        LIGHT_FOREGROUND : DARK_FOREGROUND);
+                popupMenu.setBorder(BorderFactory.createLineBorder(
+                        currentTheme == LIGHT_MODE ? LIGHT_BORDER : DARK_BORDER));
+
+                // Apply theme to all menu items in the popup
+                for (Component menuItem : popupMenu.getComponents()) {
+                    if (menuItem instanceof JMenuItem) {
+                        menuItem.setBackground(currentTheme == LIGHT_MODE ?
+                                LIGHT_PANEL_BACKGROUND : DARK_PANEL_BACKGROUND);
+                        menuItem.setForeground(currentTheme == LIGHT_MODE ?
+                                LIGHT_FOREGROUND : DARK_FOREGROUND);
+                    }
+                }
+            }
+
+            // Set menu hover colors
+            menu.setBackground(currentTheme == LIGHT_MODE ?
+                    LIGHT_PANEL_BACKGROUND : DARK_PANEL_BACKGROUND);
+            menu.setForeground(currentTheme == LIGHT_MODE ?
+                    LIGHT_FOREGROUND : DARK_FOREGROUND);
+        }
+    }
+
+    /**
      * Applies light theme background to a component
      */
     private void applyLightThemeBackground(JComponent component) {
@@ -260,13 +370,16 @@ public class ThemeManager {
         } else if (component instanceof JScrollPane) {
             JScrollPane scrollPane = (JScrollPane) component;
             scrollPane.getViewport().setBackground(LIGHT_PANEL_BACKGROUND);
-            scrollPane.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
+            scrollPane.setBorder(BorderFactory.createLineBorder(LIGHT_BORDER));
         } else if (component instanceof JMenuBar || component instanceof JMenu) {
             component.setBackground(LIGHT_PANEL_BACKGROUND);
 
             // Apply to menu items
             if (component instanceof JMenu) {
                 JMenu menu = (JMenu) component;
+                JPopupMenu popup = menu.getPopupMenu();
+                popup.setBackground(LIGHT_PANEL_BACKGROUND);
+
                 for (int i = 0; i < menu.getItemCount(); i++) {
                     JMenuItem item = menu.getItem(i);
                     if (item != null) {
@@ -293,6 +406,9 @@ public class ThemeManager {
             // Apply to menu items
             if (component instanceof JMenu) {
                 JMenu menu = (JMenu) component;
+                JPopupMenu popup = menu.getPopupMenu();
+                popup.setForeground(LIGHT_FOREGROUND);
+
                 for (int i = 0; i < menu.getItemCount(); i++) {
                     JMenuItem item = menu.getItem(i);
                     if (item != null) {
@@ -323,13 +439,16 @@ public class ThemeManager {
         } else if (component instanceof JScrollPane) {
             JScrollPane scrollPane = (JScrollPane) component;
             scrollPane.getViewport().setBackground(DARK_PANEL_BACKGROUND);
-            scrollPane.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 100)));
+            scrollPane.setBorder(BorderFactory.createLineBorder(DARK_BORDER));
         } else if (component instanceof JMenuBar || component instanceof JMenu) {
             component.setBackground(DARK_PANEL_BACKGROUND);
 
             // Apply to menu items
             if (component instanceof JMenu) {
                 JMenu menu = (JMenu) component;
+                JPopupMenu popup = menu.getPopupMenu();
+                popup.setBackground(DARK_PANEL_BACKGROUND);
+
                 for (int i = 0; i < menu.getItemCount(); i++) {
                     JMenuItem item = menu.getItem(i);
                     if (item != null) {
@@ -356,6 +475,9 @@ public class ThemeManager {
             // Apply to menu items
             if (component instanceof JMenu) {
                 JMenu menu = (JMenu) component;
+                JPopupMenu popup = menu.getPopupMenu();
+                popup.setForeground(DARK_FOREGROUND);
+
                 for (int i = 0; i < menu.getItemCount(); i++) {
                     JMenuItem item = menu.getItem(i);
                     if (item != null) {
@@ -369,183 +491,83 @@ public class ThemeManager {
     }
 
     /**
-     * Applies light theme to a component
-     *
-     * @param component The component to apply the theme to
-     * @deprecated Use separate background and foreground methods instead
-     */
-    @Deprecated
-    private void applyLightTheme(JComponent component) {
-        if (!hasCustomBackgroundColor(component)) {
-            component.setBackground(LIGHT_PANEL_BACKGROUND);
-        }
-        if (!hasCustomForegroundColor(component)) {
-            component.setForeground(LIGHT_FOREGROUND);
-        }
-
-        if (component instanceof JPanel) {
-            if (!hasCustomBackgroundColor(component)) {
-                component.setBackground(LIGHT_PANEL_BACKGROUND);
-            }
-        } else if (component instanceof JTextArea || component instanceof JTextField) {
-            if (!hasCustomBackgroundColor(component)) {
-                component.setBackground(LIGHT_PANEL_BACKGROUND);
-            }
-            if (!hasCustomForegroundColor(component)) {
-                component.setForeground(LIGHT_FOREGROUND);
-            }
-            component.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
-        } else if (component instanceof JButton) {
-            if (!hasCustomBackgroundColor(component)) {
-                component.setBackground(LIGHT_BUTTON_BACKGROUND);
-            }
-            if (!hasCustomForegroundColor(component)) {
-                component.setForeground(LIGHT_FOREGROUND);
-            }
-        } else if (component instanceof JTable) {
-            JTable table = (JTable) component;
-            if (!hasCustomBackgroundColor(component)) {
-                table.setBackground(LIGHT_PANEL_BACKGROUND);
-            }
-            if (!hasCustomForegroundColor(component)) {
-                table.setForeground(LIGHT_FOREGROUND);
-            }
-            table.setGridColor(LIGHT_TABLE_GRID);
-            table.getTableHeader().setBackground(LIGHT_TABLE_HEADER);
-            table.getTableHeader().setForeground(LIGHT_FOREGROUND);
-        } else if (component instanceof JScrollPane) {
-            JScrollPane scrollPane = (JScrollPane) component;
-            scrollPane.getViewport().setBackground(LIGHT_PANEL_BACKGROUND);
-            scrollPane.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
-        } else if (component instanceof JMenuBar || component instanceof JMenu) {
-            if (!hasCustomBackgroundColor(component)) {
-                component.setBackground(LIGHT_PANEL_BACKGROUND);
-            }
-            if (!hasCustomForegroundColor(component)) {
-                component.setForeground(LIGHT_FOREGROUND);
-            }
-
-            // Apply to menu items
-            if (component instanceof JMenu) {
-                JMenu menu = (JMenu) component;
-                for (int i = 0; i < menu.getItemCount(); i++) {
-                    JMenuItem item = menu.getItem(i);
-                    if (item != null) {
-                        item.setBackground(LIGHT_PANEL_BACKGROUND);
-                        item.setForeground(LIGHT_FOREGROUND);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Applies dark theme to a component
-     *
-     * @param component The component to apply the theme to
-     * @deprecated Use separate background and foreground methods instead
-     */
-    @Deprecated
-    private void applyDarkTheme(JComponent component) {
-        if (!hasCustomBackgroundColor(component)) {
-            component.setBackground(DARK_PANEL_BACKGROUND);
-        }
-        if (!hasCustomForegroundColor(component)) {
-            component.setForeground(DARK_FOREGROUND);
-        }
-
-        if (component instanceof JPanel) {
-            if (!hasCustomBackgroundColor(component)) {
-                component.setBackground(DARK_PANEL_BACKGROUND);
-            }
-        } else if (component instanceof JTextArea || component instanceof JTextField) {
-            if (!hasCustomBackgroundColor(component)) {
-                component.setBackground(DARK_PANEL_BACKGROUND);
-            }
-            if (!hasCustomForegroundColor(component)) {
-                component.setForeground(DARK_FOREGROUND);
-            }
-            component.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 100)));
-        } else if (component instanceof JButton) {
-            if (!hasCustomBackgroundColor(component)) {
-                component.setBackground(DARK_BUTTON_BACKGROUND);
-            }
-            if (!hasCustomForegroundColor(component)) {
-                component.setForeground(DARK_FOREGROUND);
-            }
-        } else if (component instanceof JTable) {
-            JTable table = (JTable) component;
-            if (!hasCustomBackgroundColor(component)) {
-                table.setBackground(DARK_PANEL_BACKGROUND);
-            }
-            if (!hasCustomForegroundColor(component)) {
-                table.setForeground(DARK_FOREGROUND);
-            }
-            table.setGridColor(DARK_TABLE_GRID);
-            table.getTableHeader().setBackground(DARK_TABLE_HEADER);
-            table.getTableHeader().setForeground(DARK_FOREGROUND);
-        } else if (component instanceof JScrollPane) {
-            JScrollPane scrollPane = (JScrollPane) component;
-            scrollPane.getViewport().setBackground(DARK_PANEL_BACKGROUND);
-            scrollPane.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 100)));
-        } else if (component instanceof JMenuBar || component instanceof JMenu) {
-            if (!hasCustomBackgroundColor(component)) {
-                component.setBackground(DARK_PANEL_BACKGROUND);
-            }
-            if (!hasCustomForegroundColor(component)) {
-                component.setForeground(DARK_FOREGROUND);
-            }
-
-            // Apply to menu items
-            if (component instanceof JMenu) {
-                JMenu menu = (JMenu) component;
-                for (int i = 0; i < menu.getItemCount(); i++) {
-                    JMenuItem item = menu.getItem(i);
-                    if (item != null) {
-                        item.setBackground(DARK_PANEL_BACKGROUND);
-                        item.setForeground(DARK_FOREGROUND);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * Sets up UIManager defaults for the current theme
      * This affects all new Swing components created
      */
     private void setupUIManagerDefaults() {
-        UIManager.put("Panel.background", currentTheme == LIGHT_MODE ? LIGHT_PANEL_BACKGROUND : DARK_PANEL_BACKGROUND);
-        UIManager.put("Panel.foreground", currentTheme == LIGHT_MODE ? LIGHT_FOREGROUND : DARK_FOREGROUND);
+        // Basic components
+        UIManager.put("Panel.background", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_PANEL_BACKGROUND : DARK_PANEL_BACKGROUND));
+        UIManager.put("Panel.foreground", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_FOREGROUND : DARK_FOREGROUND));
 
-        UIManager.put("TextField.background", currentTheme == LIGHT_MODE ? LIGHT_PANEL_BACKGROUND : DARK_PANEL_BACKGROUND);
-        UIManager.put("TextField.foreground", currentTheme == LIGHT_MODE ? LIGHT_FOREGROUND : DARK_FOREGROUND);
+        // Text components
+        UIManager.put("TextField.background", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_PANEL_BACKGROUND : DARK_PANEL_BACKGROUND));
+        UIManager.put("TextField.foreground", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_FOREGROUND : DARK_FOREGROUND));
+        UIManager.put("TextArea.background", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_PANEL_BACKGROUND : DARK_PANEL_BACKGROUND));
+        UIManager.put("TextArea.foreground", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_FOREGROUND : DARK_FOREGROUND));
 
-        UIManager.put("TextArea.background", currentTheme == LIGHT_MODE ? LIGHT_PANEL_BACKGROUND : DARK_PANEL_BACKGROUND);
-        UIManager.put("TextArea.foreground", currentTheme == LIGHT_MODE ? LIGHT_FOREGROUND : DARK_FOREGROUND);
+        // Buttons
+        UIManager.put("Button.background", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_BUTTON_BACKGROUND : DARK_BUTTON_BACKGROUND));
+        UIManager.put("Button.foreground", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_FOREGROUND : DARK_FOREGROUND));
 
-        UIManager.put("Button.background", currentTheme == LIGHT_MODE ? LIGHT_BUTTON_BACKGROUND : DARK_BUTTON_BACKGROUND);
-        UIManager.put("Button.foreground", currentTheme == LIGHT_MODE ? LIGHT_FOREGROUND : DARK_FOREGROUND);
+        // Menus
+        UIManager.put("Menu.background", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_PANEL_BACKGROUND : DARK_PANEL_BACKGROUND));
+        UIManager.put("Menu.foreground", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_FOREGROUND : DARK_FOREGROUND));
+        UIManager.put("MenuBar.background", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_PANEL_BACKGROUND : DARK_PANEL_BACKGROUND));
+        UIManager.put("MenuBar.foreground", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_FOREGROUND : DARK_FOREGROUND));
+        UIManager.put("MenuItem.background", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_PANEL_BACKGROUND : DARK_PANEL_BACKGROUND));
+        UIManager.put("MenuItem.foreground", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_FOREGROUND : DARK_FOREGROUND));
 
-        UIManager.put("Menu.background", currentTheme == LIGHT_MODE ? LIGHT_PANEL_BACKGROUND : DARK_PANEL_BACKGROUND);
-        UIManager.put("Menu.foreground", currentTheme == LIGHT_MODE ? LIGHT_FOREGROUND : DARK_FOREGROUND);
+        // Menu selection colors
+        UIManager.put("MenuItem.selectionBackground", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_MENU_HOVER_BACKGROUND : DARK_MENU_HOVER_BACKGROUND));
+        UIManager.put("MenuItem.selectionForeground", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_MENU_HOVER_FOREGROUND : DARK_MENU_HOVER_FOREGROUND));
+        UIManager.put("Menu.selectionBackground", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_MENU_HOVER_BACKGROUND : DARK_MENU_HOVER_BACKGROUND));
+        UIManager.put("Menu.selectionForeground", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_MENU_HOVER_FOREGROUND : DARK_MENU_HOVER_FOREGROUND));
 
-        UIManager.put("MenuBar.background", currentTheme == LIGHT_MODE ? LIGHT_PANEL_BACKGROUND : DARK_PANEL_BACKGROUND);
-        UIManager.put("MenuBar.foreground", currentTheme == LIGHT_MODE ? LIGHT_FOREGROUND : DARK_FOREGROUND);
+        // Tables
+        UIManager.put("Table.background", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_PANEL_BACKGROUND : DARK_PANEL_BACKGROUND));
+        UIManager.put("Table.foreground", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_FOREGROUND : DARK_FOREGROUND));
+        UIManager.put("Table.gridColor", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_TABLE_GRID : DARK_TABLE_GRID));
+        UIManager.put("TableHeader.background", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_TABLE_HEADER : DARK_TABLE_HEADER));
+        UIManager.put("TableHeader.foreground", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_FOREGROUND : DARK_FOREGROUND));
 
-        UIManager.put("MenuItem.background", currentTheme == LIGHT_MODE ? LIGHT_PANEL_BACKGROUND : DARK_PANEL_BACKGROUND);
-        UIManager.put("MenuItem.foreground", currentTheme == LIGHT_MODE ? LIGHT_FOREGROUND : DARK_FOREGROUND);
+        // Scroll panes
+        UIManager.put("ScrollPane.background", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_PANEL_BACKGROUND : DARK_PANEL_BACKGROUND));
 
-        UIManager.put("Table.background", currentTheme == LIGHT_MODE ? LIGHT_PANEL_BACKGROUND : DARK_PANEL_BACKGROUND);
-        UIManager.put("Table.foreground", currentTheme == LIGHT_MODE ? LIGHT_FOREGROUND : DARK_FOREGROUND);
-        UIManager.put("Table.gridColor", currentTheme == LIGHT_MODE ? LIGHT_TABLE_GRID : DARK_TABLE_GRID);
+        // Labels
+        UIManager.put("Label.foreground", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_FOREGROUND : DARK_FOREGROUND));
 
-        UIManager.put("TableHeader.background", currentTheme == LIGHT_MODE ? LIGHT_TABLE_HEADER : DARK_TABLE_HEADER);
-        UIManager.put("TableHeader.foreground", currentTheme == LIGHT_MODE ? LIGHT_FOREGROUND : DARK_FOREGROUND);
-
-        UIManager.put("ScrollPane.background", currentTheme == LIGHT_MODE ? LIGHT_PANEL_BACKGROUND : DARK_PANEL_BACKGROUND);
-
-        UIManager.put("Label.foreground", currentTheme == LIGHT_MODE ? LIGHT_FOREGROUND : DARK_FOREGROUND);
+        // Option panes and dialogs
+        UIManager.put("OptionPane.background", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_DIALOG_BACKGROUND : DARK_DIALOG_BACKGROUND));
+        UIManager.put("OptionPane.foreground", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_DIALOG_FOREGROUND : DARK_DIALOG_FOREGROUND));
+        UIManager.put("OptionPane.messageForeground", new ColorUIResource(currentTheme == LIGHT_MODE ?
+                LIGHT_DIALOG_FOREGROUND : DARK_DIALOG_FOREGROUND));
     }
 
     /**
@@ -554,5 +576,6 @@ public class ThemeManager {
      */
     public void initializeTheme() {
         setupUIManagerDefaults();
+        configureDialogAndMenuSettings();
     }
 }
