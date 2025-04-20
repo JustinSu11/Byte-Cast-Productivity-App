@@ -4,7 +4,7 @@
     Developed by Byte Cast
 
     Launch Class
-    Last Updated 02/28/2025
+    Last Updated 03/31/2025
 
     This class contains the main method
     Running this code creates the app
@@ -17,13 +17,15 @@ package com.example.pickitup;
 
 
 import com.example.pickitup.ui.App;
-
+import com.example.pickitup.services.database.DatabaseSetup;
 
 public class Launch
 {
     public static void main(String[] args)
     {
        App launchApp = new App();
+       //creates tables for database
+       DatabaseSetup.createTables();
        launchApp.runApp();
     } // end main
 

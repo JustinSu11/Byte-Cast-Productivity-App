@@ -16,7 +16,7 @@ import java.util.List;
 
 public class CalendarEventDAO {
     // Method to save an event to the database
-    public void saveEventToDatabase(String title, String description, String startTime, String endTime) {
+    public static void saveEventToDatabase(String title, String description, String startTime, String endTime) {
         String sql = "INSERT INTO calendar_events (title, event_description, start_time, end_time) VALUES (?, ?, ?, ?)";
         try (Connection connection = DatabaseConnection.connect()) {
             assert connection != null;
@@ -39,20 +39,18 @@ public class CalendarEventDAO {
     }
 
     // Method to fetch events based on the date part of start_time
-    public List<String> getEvents(String date) {
+    public static List<String> getEvents(String date) {
         List<String> events = new ArrayList<>();
         String datePart = date.split(" ")[0];
-        String sql = "SELECT event_id, title, event_description, start_time FROM calendar_events WHERE DATE(start_time) = ?";
+        String sql = "SELECT id, title, event_description, start_time FROM calendar_events WHERE DATE(start_time) = ?";
 
         try (Connection connection = DatabaseConnection.connect();
-             PreparedStatement pstmt = connection.prepareStatement(sql))
-        {
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, datePart);
             ResultSet rs = pstmt.executeQuery();
 
-            while (rs.next())
-            {
-                int eventId = rs.getInt("event_id");
+            while (rs.next()) {
+                int eventId = rs.getInt("id");
                 String title = rs.getString("title");
                 String description = rs.getString("event_description");
                 String startTime = rs.getString("start_time");
@@ -66,17 +64,32 @@ public class CalendarEventDAO {
     }
 
     // Method to delete an event by its event_id
-    public boolean deleteEvent(int eventId)
-    {
-        String sql = "DELETE FROM calendar_events WHERE event_id = ?";
+    // Method to delete an event by its event_id and reset AUTOINCREMENT if empty
+    public static boolean deleteEvent(int eventId) {
+        String deleteSql = "DELETE FROM calendar_events WHERE id = ?";
+        String countSql = "SELECT COUNT(*) FROM calendar_events";
+        String resetSql = "DELETE FROM sqlite_sequence WHERE name='calendar_events'";
+
         try (Connection connection = DatabaseConnection.connect();
-             PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, eventId);
-            int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0;
+             PreparedStatement deleteStmt = connection.prepareStatement(deleteSql);
+             PreparedStatement countStmt = connection.prepareStatement(countSql);
+             PreparedStatement resetStmt = connection.prepareStatement(resetSql)) {
+
+            deleteStmt.setInt(1, eventId);
+            int rowsAffected = deleteStmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                ResultSet rs = countStmt.executeQuery();
+                if (rs.next() && rs.getInt(1) == 0) {
+                    resetStmt.executeUpdate(); // Reset auto-increment if table is empty
+                    System.out.println("Auto-increment counter reset.");
+                }
+                return true;
+            }
+
         } catch (SQLException e) {
             System.out.println("Error deleting event: " + e.getMessage());
-            return false;
         }
+        return false;
     }
 }
