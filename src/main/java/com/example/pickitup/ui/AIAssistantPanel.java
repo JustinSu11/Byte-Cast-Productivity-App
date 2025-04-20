@@ -21,18 +21,18 @@ import java.util.List;
 public class AIAssistantPanel extends JPanel {
 
     private final RagAgent ragAgent;
-    private final JTextArea chatHistoryArea;
-    private final JTextField userInputField;
-    private final JButton sendButton;
-    private final JButton clearButton;
-    private final JButton shareWithAIButton;
+    private final JTextArea conversationHistoryArea;
+    private final JTextField userMessageField;
+    private final JButton sendMessageButton;
+    private final JButton clearChatButton;
+    private final JButton shareNoteButton;
     private final JButton uploadPdfButton;
-    private JComboBox<KnowledgeBase> knowledgeBaseComboBox;
+    private JComboBox<KnowledgeBase> knowledgeBaseSelector;
     private JButton createKnowledgeBaseButton;
-    private JButton detailsButton;
-    private JFileChooser fileChooser;
+    private JButton knowledgeBaseDetailsButton;
+    private JFileChooser pdfFileChooser;
     private NoteEditor noteEditor;
-    private JLabel statusLabel;
+    private JLabel processingStatusLabel;
 
     /**
      * Constructor initializes the AI Assistant panel
@@ -46,8 +46,8 @@ public class AIAssistantPanel extends JPanel {
         setLayout(new BorderLayout());
 
         // Initialize file chooser
-        fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(new FileNameExtensionFilter("PDF Files", "pdf"));
+        pdfFileChooser = new JFileChooser();
+        pdfFileChooser.setFileFilter(new FileNameExtensionFilter("PDF Files", "pdf"));
 
         // Create a title panel
         JPanel titlePanel = new JPanel(new BorderLayout());
@@ -60,64 +60,64 @@ public class AIAssistantPanel extends JPanel {
         titlePanel.add(knowledgeBasePanel, BorderLayout.NORTH);
 
         // Create chat history display area
-        chatHistoryArea = new JTextArea();
-        chatHistoryArea.setEditable(false);
-        chatHistoryArea.setLineWrap(true);
-        chatHistoryArea.setWrapStyleWord(true);
-        chatHistoryArea.setFont(new Font("Arial", Font.PLAIN, 14));
-        JScrollPane scrollPane = new JScrollPane(chatHistoryArea);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        conversationHistoryArea = new JTextArea();
+        conversationHistoryArea.setEditable(false);
+        conversationHistoryArea.setLineWrap(true);
+        conversationHistoryArea.setWrapStyleWord(true);
+        conversationHistoryArea.setFont(new Font("Arial", Font.PLAIN, 14));
+        JScrollPane conversationScrollPane = new JScrollPane(conversationHistoryArea);
+        conversationScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         // Create user input field and send button
-        userInputField = new JTextField();
-        userInputField.setFont(new Font("Arial", Font.PLAIN, 14));
-        userInputField.setBorder(BorderFactory.createCompoundBorder(
+        userMessageField = new JTextField();
+        userMessageField.setFont(new Font("Arial", Font.PLAIN, 14));
+        userMessageField.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Color.BLUE, 1),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
         // Create buttons
-        sendButton = new JButton("Send");
-        clearButton = new JButton("Clear Chat");
-        shareWithAIButton = new JButton("Share Note with AI");
+        sendMessageButton = new JButton("Send");
+        clearChatButton = new JButton("Clear Chat");
+        shareNoteButton = new JButton("Share Note with AI");
         uploadPdfButton = new JButton("Upload PDF");
 
         // Make buttons more visible with colors and fonts
-        shareWithAIButton.setBackground(new Color(0, 150, 136));
-        shareWithAIButton.setForeground(Color.WHITE);
-        shareWithAIButton.setFont(new Font("Arial", Font.BOLD, 14));
+        shareNoteButton.setBackground(new Color(0, 150, 136));
+        shareNoteButton.setForeground(Color.WHITE);
+        shareNoteButton.setFont(new Font("Arial", Font.BOLD, 14));
 
         uploadPdfButton.setBackground(new Color(255, 87, 34));
         uploadPdfButton.setForeground(Color.WHITE);
         uploadPdfButton.setFont(new Font("Arial", Font.BOLD, 14));
 
-        sendButton.setBackground(new Color(63, 81, 181));
-        sendButton.setForeground(Color.WHITE);
+        sendMessageButton.setBackground(new Color(63, 81, 181));
+        sendMessageButton.setForeground(Color.WHITE);
 
         // Create panel for the share and upload buttons (top of the panel)
-        JPanel sharePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        sharePanel.add(shareWithAIButton);
-        sharePanel.add(uploadPdfButton);
-        titlePanel.add(sharePanel, BorderLayout.SOUTH);
+        JPanel documentActionsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        documentActionsPanel.add(shareNoteButton);
+        documentActionsPanel.add(uploadPdfButton);
+        titlePanel.add(documentActionsPanel, BorderLayout.SOUTH);
 
         // Add status label for indicating background processing
-        statusLabel = new JLabel("");
-        statusLabel.setForeground(new Color(33, 150, 243));
-        statusLabel.setFont(new Font("Arial", Font.ITALIC, 12));
+        processingStatusLabel = new JLabel("");
+        processingStatusLabel.setForeground(new Color(33, 150, 243));
+        processingStatusLabel.setFont(new Font("Arial", Font.ITALIC, 12));
 
         // Create panel for input components
         JPanel inputPanel = new JPanel(new BorderLayout());
-        inputPanel.add(userInputField, BorderLayout.CENTER);
+        inputPanel.add(userMessageField, BorderLayout.CENTER);
         
         // Create panel for buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        buttonPanel.add(statusLabel);
-        buttonPanel.add(sendButton);
-        buttonPanel.add(clearButton);
+        buttonPanel.add(processingStatusLabel);
+        buttonPanel.add(sendMessageButton);
+        buttonPanel.add(clearChatButton);
         inputPanel.add(buttonPanel, BorderLayout.EAST);
         
         // Add components to main panel
         add(titlePanel, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
+        add(conversationScrollPane, BorderLayout.CENTER);
         add(inputPanel, BorderLayout.SOUTH);
         
         // Set up event handlers
@@ -133,7 +133,7 @@ public class AIAssistantPanel extends JPanel {
         addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
             public void componentShown(java.awt.event.ComponentEvent evt) {
-                userInputField.requestFocus();
+                userMessageField.requestFocus();
                 updateChatDisplay();
             }
         });
@@ -147,9 +147,9 @@ public class AIAssistantPanel extends JPanel {
         panel.setBorder(new TitledBorder("Knowledge Base"));
 
         // Create knowledge base combo box
-        knowledgeBaseComboBox = new JComboBox<>();
+        knowledgeBaseSelector = new JComboBox<>();
         refreshKnowledgeBases();
-        knowledgeBaseComboBox.addActionListener(e -> knowledgeBaseSelected());
+        knowledgeBaseSelector.addActionListener(e -> knowledgeBaseSelected());
 
         // Create new knowledge base button
         createKnowledgeBaseButton = new JButton("+");
@@ -157,25 +157,25 @@ public class AIAssistantPanel extends JPanel {
         createKnowledgeBaseButton.addActionListener(e -> createNewKnowledgeBase());
 
         // Create a details button
-        detailsButton = new JButton("📋");
-        detailsButton.setToolTipText("Show Knowledge Base Details");
-        detailsButton.addActionListener(e -> showKnowledgeBaseDetails());
+        knowledgeBaseDetailsButton = new JButton("📋");
+        knowledgeBaseDetailsButton.setToolTipText("Show Knowledge Base Details");
+        knowledgeBaseDetailsButton.addActionListener(e -> showKnowledgeBaseDetails());
 
         // Create a clear button
-        JButton clearButton = new JButton("🗑️");
-        clearButton.setToolTipText("Clear Knowledge Base");
-        clearButton.addActionListener(e -> clearKnowledgeBase());
+        JButton clearKnowledgeBaseButton = new JButton("🗑️");
+        clearKnowledgeBaseButton.setToolTipText("Clear Knowledge Base");
+        clearKnowledgeBaseButton.addActionListener(e -> clearKnowledgeBase());
 
         // Create a panel for the buttons
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 2, 0));
-        buttonPanel.add(createKnowledgeBaseButton);
-        buttonPanel.add(detailsButton);
-        buttonPanel.add(clearButton);
+        JPanel kbActionButtonPanel = new JPanel(new GridLayout(1, 3, 2, 0));
+        kbActionButtonPanel.add(createKnowledgeBaseButton);
+        kbActionButtonPanel.add(knowledgeBaseDetailsButton);
+        kbActionButtonPanel.add(clearKnowledgeBaseButton);
 
         // Create a panel for the combo box and buttons
         JPanel comboPanel = new JPanel(new BorderLayout());
-        comboPanel.add(knowledgeBaseComboBox, BorderLayout.CENTER);
-        comboPanel.add(buttonPanel, BorderLayout.EAST);
+        comboPanel.add(knowledgeBaseSelector, BorderLayout.CENTER);
+        comboPanel.add(kbActionButtonPanel, BorderLayout.EAST);
 
         panel.add(comboPanel, BorderLayout.CENTER);
 
@@ -186,17 +186,17 @@ public class AIAssistantPanel extends JPanel {
      * Refreshes the knowledge base dropdown with current knowledge bases
      */
     private void refreshKnowledgeBases() {
-        knowledgeBaseComboBox.removeAllItems();
+        knowledgeBaseSelector.removeAllItems();
 
         List<KnowledgeBase> knowledgeBases = ragAgent.getAllKnowledgeBases();
         for (KnowledgeBase kb : knowledgeBases) {
-            knowledgeBaseComboBox.addItem(kb);
+            knowledgeBaseSelector.addItem(kb);
         }
 
         // Select active knowledge base
         KnowledgeBase activeKB = ragAgent.getActiveKnowledgeBase();
         if (activeKB != null) {
-            knowledgeBaseComboBox.setSelectedItem(activeKB);
+            knowledgeBaseSelector.setSelectedItem(activeKB);
         }
     }
 
@@ -204,7 +204,7 @@ public class AIAssistantPanel extends JPanel {
      * Handler for knowledge base selection change
      */
     private void knowledgeBaseSelected() {
-        KnowledgeBase selectedKB = (KnowledgeBase) knowledgeBaseComboBox.getSelectedItem();
+        KnowledgeBase selectedKB = (KnowledgeBase) knowledgeBaseSelector.getSelectedItem();
         if (selectedKB != null) {
             ragAgent.setActiveKnowledgeBase(selectedKB.getId());
             updateKnowledgeBaseInfo();
@@ -255,17 +255,17 @@ public class AIAssistantPanel extends JPanel {
             details.append(i + 1).append(". ").append(doc.getSource()).append("\n");
         }
 
-        JTextArea textArea = new JTextArea(details.toString());
-        textArea.setEditable(false);
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
+        JTextArea detailsTextArea = new JTextArea(details.toString());
+        detailsTextArea.setEditable(false);
+        detailsTextArea.setLineWrap(true);
+        detailsTextArea.setWrapStyleWord(true);
 
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setPreferredSize(new Dimension(400, 300));
+        JScrollPane detailsScrollPane = new JScrollPane(detailsTextArea);
+        detailsScrollPane.setPreferredSize(new Dimension(400, 300));
 
         JOptionPane.showMessageDialog(
                 this,
-                scrollPane,
+                detailsScrollPane,
                 kb.getName() + " Details",
                 JOptionPane.INFORMATION_MESSAGE
         );
@@ -303,16 +303,16 @@ public class AIAssistantPanel extends JPanel {
      */
     private void setupEventHandlers() {
         // Send button action
-        sendButton.addActionListener(e -> sendMessage());
+        sendMessageButton.addActionListener(e -> sendMessage());
         
         // Enter key in the input field also sends message
-        userInputField.addActionListener(e -> sendMessage());
+        userMessageField.addActionListener(e -> sendMessage());
         
         // Clear button action
-        clearButton.addActionListener(e -> clearChat());
+        clearChatButton.addActionListener(e -> clearChat());
 
         // Share with AI button action
-        shareWithAIButton.addActionListener(e -> addNoteAsDocument());
+        shareNoteButton.addActionListener(e -> addNoteAsDocument());
 
         // Upload PDF button action
         uploadPdfButton.addActionListener(e -> uploadPdfDocument());
@@ -322,10 +322,10 @@ public class AIAssistantPanel extends JPanel {
      * Uploads and processes a PDF document
      */
     private void uploadPdfDocument() {
-        int result = fileChooser.showOpenDialog(this);
+        int result = pdfFileChooser.showOpenDialog(this);
 
         if (result == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = fileChooser.getSelectedFile();
+            File selectedFile = pdfFileChooser.getSelectedFile();
 
             // Get the active knowledge base
             KnowledgeBase activeKB = ragAgent.getActiveKnowledgeBase();
@@ -339,18 +339,18 @@ public class AIAssistantPanel extends JPanel {
 
             // Show loading message
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            JOptionPane pane = new JOptionPane("Processing PDF document for " + activeKB.getName() + "...",
+            JOptionPane pdfProcessingPane = new JOptionPane("Processing PDF document for " + activeKB.getName() + "...",
                     JOptionPane.INFORMATION_MESSAGE,
                     JOptionPane.DEFAULT_OPTION,
                     null,
                     new Object[]{},
                     null);
-            JDialog dialog = pane.createDialog(this, "Please Wait");
-            dialog.setModal(false);
-            dialog.setVisible(true);
+            JDialog processingDialog = pdfProcessingPane.createDialog(this, "Please Wait");
+            processingDialog.setModal(false);
+            processingDialog.setVisible(true);
 
             // Process in background thread to avoid UI freeze
-            SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
+            SwingWorker<Boolean, Void> pdfWorker = new SwingWorker<Boolean, Void>() {
                 @Override
                 protected Boolean doInBackground() {
                     return ragAgent.addPdfDocument(selectedFile);
@@ -358,7 +358,7 @@ public class AIAssistantPanel extends JPanel {
 
                 @Override
                 protected void done() {
-                    dialog.setVisible(false);
+                    processingDialog.setVisible(false);
                     setCursor(Cursor.getDefaultCursor());
                     try {
                         boolean success = get();
@@ -383,7 +383,7 @@ public class AIAssistantPanel extends JPanel {
                     }
                 }
             };
-            worker.execute();
+            pdfWorker.execute();
         }
     }
     
@@ -391,22 +391,22 @@ public class AIAssistantPanel extends JPanel {
      * Sends user message to RAG agent and displays response
      */
     private void sendMessage() {
-        String userMessage = userInputField.getText().trim();
+        String userMessage = userMessageField.getText().trim();
         if (!userMessage.isEmpty()) {
             // Disable input and show processing status
-            userInputField.setEnabled(false);
-            sendButton.setEnabled(false);
-            statusLabel.setText("Processing...");
+            userMessageField.setEnabled(false);
+            sendMessageButton.setEnabled(false);
+            processingStatusLabel.setText("Processing...");
 
             // Temporarily display user message for better UX
-            String currentChat = chatHistoryArea.getText();
-            chatHistoryArea.setText(currentChat + (currentChat.isEmpty() ? "" : "\n\n") + "You: " + userMessage);
+            String currentConversation = conversationHistoryArea.getText();
+            conversationHistoryArea.setText(currentConversation + (currentConversation.isEmpty() ? "" : "\n\n") + "You: " + userMessage);
             
             // Clear input field
-            userInputField.setText("");
+            userMessageField.setText("");
             
             // Process message through RAG agent in background
-            SwingWorker<String, Void> worker = new SwingWorker<String, Void>() {
+            SwingWorker<String, Void> messageProcessingWorker = new SwingWorker<String, Void>() {
                 @Override
                 protected String doInBackground() {
                     // Process message and get AI response
@@ -425,19 +425,19 @@ public class AIAssistantPanel extends JPanel {
                     } catch (Exception e) {
                         e.printStackTrace();
                         // Handle error in AI processing
-                        chatHistoryArea.append("\n\nAI Assistant: Sorry, an error occurred while processing your request.\n");
+                        conversationHistoryArea.append("\n\nAI Assistant: Sorry, an error occurred while processing your request.\n");
                     } finally {
                         // Re-enable input
-                        userInputField.setEnabled(true);
-                        sendButton.setEnabled(true);
+                        userMessageField.setEnabled(true);
+                        sendMessageButton.setEnabled(true);
                         updateKnowledgeBaseInfo();
 
                         // Request focus back to the input field
-                        userInputField.requestFocus();
+                        userMessageField.requestFocus();
                     }
                 }
             };
-            worker.execute();
+            messageProcessingWorker.execute();
         }
     }
     
@@ -445,10 +445,10 @@ public class AIAssistantPanel extends JPanel {
      * Updates the chat display with current chat history
      */
     private void updateChatDisplay() {
-        chatHistoryArea.setText(ragAgent.getChatMemoryService().getFormattedChatHistory());
+        conversationHistoryArea.setText(ragAgent.getChatMemoryService().getFormattedChatHistory());
         
         // Scroll to the bottom of the chat
-        chatHistoryArea.setCaretPosition(chatHistoryArea.getDocument().getLength());
+        conversationHistoryArea.setCaretPosition(conversationHistoryArea.getDocument().getLength());
     }
     
     /**
@@ -478,10 +478,10 @@ public class AIAssistantPanel extends JPanel {
 
             // Show processing indicator
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            shareWithAIButton.setEnabled(false);
-            statusLabel.setText("Processing note for " + activeKB.getName() + "...");
+            shareNoteButton.setEnabled(false);
+            processingStatusLabel.setText("Processing note for " + activeKB.getName() + "...");
 
-            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+            SwingWorker<Void, Void> noteProcessingWorker = new SwingWorker<Void, Void>() {
                 @Override
                 protected Void doInBackground() {
                     DocumentData document = new DocumentData(noteContent, "Current Note");
@@ -492,7 +492,7 @@ public class AIAssistantPanel extends JPanel {
                 @Override
                 protected void done() {
                     setCursor(Cursor.getDefaultCursor());
-                    shareWithAIButton.setEnabled(true);
+                    shareNoteButton.setEnabled(true);
                     updateKnowledgeBaseInfo();
                     JOptionPane.showMessageDialog(AIAssistantPanel.this,
                             "Note added to " + activeKB.getName() + ".",
@@ -500,7 +500,7 @@ public class AIAssistantPanel extends JPanel {
                             JOptionPane.INFORMATION_MESSAGE);
                 }
             };
-            worker.execute();
+            noteProcessingWorker.execute();
         }
     }
 
@@ -513,4 +513,3 @@ public class AIAssistantPanel extends JPanel {
         return ragAgent;
     }
 }
-
