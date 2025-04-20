@@ -1,16 +1,8 @@
-/*
-    *******************************************************************************
-    MenuBar Class
-    Updated 04/10/2025
-
-
-    This class creates the menu bar and sets some menus.
-    Each menu has its own menu items.
-
-
-    Please remember to update the version date if any changes
-    are made to this file.
-    *******************************************************************************
+/**
+ * Makes the menu bar and implements the nested menus
+ *
+ * @author Michael Tajchman
+ * @date 04/12/2025
  */
 package com.example.pickitup.ui;
 

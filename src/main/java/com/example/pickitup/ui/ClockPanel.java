@@ -1,3 +1,9 @@
+/**
+ * Makes the clock panel and clock features
+ *
+ * @author Matthew Tomme
+ * @date 04/12/2025
+ */
 package com.example.pickitup.ui;
 
 import javax.swing.*;
@@ -12,15 +18,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import com.example.pickitup.services.models.TimerHandler;
 
-/**
- * ClockPanel provides time-related features including:
- * - Current time display with 12/24 hour format toggle
- * - Countdown timer with notifications
- * - Stopwatch functionality
- *
- * @version 1.1
- * @author [Your Name]
- */
+
 public class ClockPanel extends JPanel {
 
     // UI Components

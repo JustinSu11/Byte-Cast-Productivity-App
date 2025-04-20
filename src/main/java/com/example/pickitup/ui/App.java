@@ -1,17 +1,8 @@
-/*
-    *******************************************************************************
-    App Class
-    Last Updated 03/31/2025
-    Developed by CJ Quintero
-
-    This is the main class that uses all the classes as member variables.
-    Launch.java creates an instance of this class and calls runApp()
-    which adds everything to the main frame.
-
-
-    Please remember to update the version date if any changes
-    are made to this file.
-    *******************************************************************************
+/**
+ * Makes the app object and adds the other major panels
+ *
+ * @author CJ Quintero
+ * @date 04/12/2025
  */
 package com.example.pickitup.ui;
 
@@ -107,7 +98,8 @@ public class App
         registerComponentsWithThemeManager();
     } // end runApp()
 
-    private void registerComponentsWithThemeManager() {
+    private void registerComponentsWithThemeManager()
+    {
         // Register the main frame and its content pane
         themeManager.registerComponent((JComponent)appFrame.getContentPane());
 
@@ -121,11 +113,12 @@ public class App
     /**
      * Toggles the visibility of the AI Assistant panel
      */
-    private void toggleAiPanel() {
+    private void toggleAiPanel()
+    {
         aiPanelVisible = !aiPanelVisible;
         aiAssistantPanel.setVisible(aiPanelVisible);
         toggleAiPanelButton.setText(aiPanelVisible ? "Hide AI Assistant" : "Show AI Assistant");
         appFrame.revalidate();
     }
 
-} // end App class
+} // end class

@@ -1,3 +1,9 @@
+/**
+ * Makes the panel and methods for the to do list
+ *
+ * @author Matthew Tomme
+ * @date 04/12/2025
+ */
 package com.example.pickitup.ui;
 
 import com.example.pickitup.services.models.ToDoItem;
@@ -304,6 +310,7 @@ public class ToDoListPanel extends JPanel {
             }
 
             row.add(item.getStatusText());
+
             tableModel.addRow(row);
         }
     }

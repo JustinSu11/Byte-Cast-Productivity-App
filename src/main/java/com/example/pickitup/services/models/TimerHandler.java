@@ -1,3 +1,10 @@
+/**
+ * Handles timer functionality including notifications
+ * This class manages timer state and notifications separately from the UI
+ *
+ * @author Matthew Tomme
+ * @date 04/12/2025
+ */
 package com.example.pickitup.services.models;
 
 import java.util.ArrayList;
@@ -7,13 +14,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Handles timer functionality including notifications
- * This class manages timer state and notifications separately from the UI
- *
- * @version 1.0
- * @author [Your Name]
- */
+
 public class TimerHandler {
 
     // Singleton instance

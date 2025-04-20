@@ -1,18 +1,8 @@
-/*
-    *******************************************************************************
-    JournalsPane Class
-    Updated 04/02/2025
-    Developer CJ Quintero
-
-
-    This class creates the outer tabbed pane for users to make journals.
-    Each journal has its own instance of notesPane to allow multiple pages
-    inside a single journal to be made.
-
-
-    Please remember to update the version date if any changes
-    are made to this file.
-    *******************************************************************************
+/**
+ * Makes the panel and methods for the to do list
+ *
+ * @author CJ Quintero
+ * @date 04/12/2025
  */
 package com.example.pickitup.ui;
 

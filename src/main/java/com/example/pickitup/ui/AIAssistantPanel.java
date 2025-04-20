@@ -1,3 +1,9 @@
+/**
+ * Makes the AI functional in the UI
+ *
+ * @author Maaz Haque
+ * @date 04/12/2025
+ */
 package com.example.pickitup.ui;
 
 import com.example.pickitup.ai.RagAgent;
@@ -13,11 +19,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 
-/**
- * Panel for AI Assistant functionality in the UI
- * @author Maaz Haque
- * @version 1.0
- */
+
 public class AIAssistantPanel extends JPanel {
 
     private final RagAgent ragAgent;

@@ -1,3 +1,9 @@
+/**
+ * This class contains the necessary parameters for Calendar Events
+ *
+ * @author Aron Rios
+ * @date 04/12/2025
+ */
 package com.example.pickitup.services.dao;
 
 import com.example.pickitup.services.database.DatabaseConnection;
@@ -7,12 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-/***************************
- Author: Aron Rios
- Date: 3/21/2025
- Version: 1.0
- Purpose: This class contains the necessary parameters for Calendar Events
- ***********************/
 
 public class CalendarEventDAO {
     // Method to save an event to the database

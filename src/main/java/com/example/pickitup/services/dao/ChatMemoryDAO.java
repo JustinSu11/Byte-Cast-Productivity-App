@@ -1,3 +1,9 @@
+/**
+ * DAO for managing chat conversation memory in SQLite
+ *
+ * @author Maaz Haque
+ * @date 04/12/2025
+ */
 package com.example.pickitup.services.dao;
 
 import com.example.pickitup.services.database.*;
@@ -6,11 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Object for managing chat conversation memory in SQLite
- * @author Maaz Haque
- * @version 1.0
- */
+
 public class ChatMemoryDAO {
 
     /**

@@ -1,3 +1,10 @@
+/**
+ * Makes calendar panel and UI
+ *
+ * @author Aron Rios
+ * @author Afrin Alam Anney
+ * @date 04/12/2025
+ */
 package com.example.pickitup.ui;
 
 import com.example.pickitup.services.dao.CalendarEventDAO;
@@ -11,14 +18,6 @@ import java.util.List;
 import java.util.Locale;
 
 
-/**
- *  Author: Anney & Aron
- *  Date: 3/21/2025
- *  Version: 1.0
- *  Purpose: CalendarApp is a simple Swing-based calendar application.
- *  It allows users to navigate through months, view existing events, and add new events.
- * The current day is highlighted for better visibility.
- */
 public class CalendarPanel extends Component {
     private final JFrame frame;            // Main application window
     private final JPanel calendarPanel;    // Panel to display the calendar
@@ -297,4 +296,5 @@ public class CalendarPanel extends Component {
             return "00:00:00"; // Fallback in case of error
         }
     }
-}
+
+} // end class

@@ -1,9 +1,9 @@
-/*
-* @author Justin Nguyen
-* @version 1.0
-* @updated 03/24/2025
-* */
-
+/**
+ * Manages storing notes
+ *
+ * @author Justin Nguyen
+ * @date 04/12/2025
+ */
 package com.example.pickitup.services.models;
 
 import com.example.pickitup.services.dao.NotesDAO;

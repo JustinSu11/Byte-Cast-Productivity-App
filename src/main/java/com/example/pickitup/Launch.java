@@ -1,17 +1,8 @@
-/*
-    *******************************************************************************
-    Pick It Up
-    Developed by Byte Cast
-
-    Launch Class
-    Last Updated 03/31/2025
-
-    This class contains the main method
-    Running this code creates the app
-
-    Please remember to update the version date if any changes
-    are made to this file.
-    *******************************************************************************
+/**
+ * Contains the main method
+ *
+ * @author Byte Cast
+ * @date 04/12/2025
  */
 package com.example.pickitup;
 

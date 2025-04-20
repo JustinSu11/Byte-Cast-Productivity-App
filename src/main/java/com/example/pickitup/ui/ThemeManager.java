@@ -1,3 +1,9 @@
+/**
+ * Makes the methods to change the theme from light/dark
+ *
+ * @author Matthew Tomme
+ * @date 04/12/2025
+ */
 package com.example.pickitup.ui;
 
 import javax.swing.*;

@@ -1,3 +1,9 @@
+/**
+ * DAO for KnowledgeBase persistence
+ *
+ * @author Maaz Haque
+ * @date 04/12/2025
+ */
 package com.example.pickitup.services.dao;
 
 import com.example.pickitup.services.models.KnowledgeBase;
@@ -9,11 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Data Access Object for KnowledgeBase persistence
- * @author Maaz Haque
- * @version 1.0
- */
+
 public class KnowledgeBaseDAO {
     
     // Database connection URL constant

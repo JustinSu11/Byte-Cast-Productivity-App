@@ -1,3 +1,9 @@
+/**
+ * Utility class for PDF processing operations
+ *
+ * @author Maaz Haque
+ * @date 04/12/2025
+ */
 package com.example.pickitup.utils;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -6,11 +12,7 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * Utility class for PDF processing operations
- * @author Maaz Haque
- * @version 1.0
- */
+
 public class PdfUtils {
 
     /**

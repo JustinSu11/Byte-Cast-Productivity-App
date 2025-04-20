@@ -1,15 +1,16 @@
+/**
+ * Class responsible for creating and managing the large language model instance
+ *
+ * @author Maaz Haque
+ * @date 04/12/2025
+ */
 package com.example.pickitup.ai;
 import com.example.pickitup.ai.LargeLanguageModelParameters;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.output.Response;
 
-/**
- * Class responsible for creating and managing the large language model instance
- *
- * @author Maaz Haque
- * @version 1.0
- */
+
 public class LargeLanguageModel {
     // Constants for error messages
     private static final String ERROR_MODEL_INIT = "Failed to initialize language model: ";

@@ -1,8 +1,9 @@
-/*
+/**
+ * DAO for journals in database
+ *
  * @author Justin Nguyen
- * @version 1.0
- * @updated 03/24/2025
- * */
+ * @date 04/12/2025
+ */
 
 package com.example.pickitup.services.dao;
 
