@@ -11,6 +11,8 @@ package com.example.pickitup.ui;
 import javax.swing.*;
 import com.example.pickitup.services.models.Note;
 
+import java.awt.*;
+
 
 public class NoteEditor extends JTabbedPane
 {
@@ -24,15 +26,25 @@ public class NoteEditor extends JTabbedPane
     public NoteEditor(String title, int journal_id)
     {
         textArea = new JTextArea();
+        textArea.setText("Begin writing here: ");
+        textArea.setCaretPosition(textArea.getText().length());
         scrollPane = new JScrollPane(textArea);
+        makeScrollPane();
         //creates a data object for storing the note into the database
         noteItem = new Note(title, getTextInTextEditor(), journal_id);
     }
 
-    public NoteEditor(int noteID, int journalID, String title, String content) {
+    public NoteEditor(int noteID, int journalID, String title, String content, String fontType, int fontSize, int textColor, int backgroundColor) {
         textArea = new JTextArea();
+        textArea.setText(content);
+        textArea.setFont(new Font(fontType, Font.PLAIN, fontSize));
+        textArea.setForeground(new Color(textColor, true));
+        textArea.setBackground(new Color(backgroundColor, true));
+        ThemeManager.getInstance().setCustomForegroundColor(textArea, new Color(textColor, true));
+        ThemeManager.getInstance().setCustomBackgroundColor(textArea, new Color(backgroundColor, true));
         scrollPane = new JScrollPane(textArea);
-        noteItem = new Note(noteID, journalID, title, content);
+        makeScrollPane();
+        noteItem = new Note(noteID, journalID, title, content, fontType, fontSize, textColor, backgroundColor);
     }
 
     // makes the scroll pane
@@ -46,13 +58,8 @@ public class NoteEditor extends JTabbedPane
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
 
-        // write a line to the text area to guide users
-        textArea.setText("Begin writing here: ");
-
-        // set the "cursor line" to appear after the example text
-        textArea.setCaretPosition(20);
-
     } // end addScrollPane
+
 
     // get the scroll pane to add it to the main panel
     public JScrollPane getScrollPane()

@@ -466,11 +466,13 @@ public class AIAssistantPanel extends JPanel {
      *
      */
     public void addNoteAsDocument() {
-        String noteContent = noteEditor.getTextInTextEditor();
+
+        String noteContent = getTextInTextEditor();
+
         if (noteContent != null && !noteContent.trim().isEmpty()) {
             // Get the active knowledge base
-            KnowledgeBase activeKB = ragAgent.getActiveKnowledgeBase();
-            if (activeKB == null) {
+            KnowledgeBase activeKnowledgeBase = ragAgent.getActiveKnowledgeBase();
+            if (activeKnowledgeBase == null) {
                 JOptionPane.showMessageDialog(this,
                         "No active knowledge base found",
                         "Error",
@@ -481,7 +483,7 @@ public class AIAssistantPanel extends JPanel {
             // Show processing indicator
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             shareNoteButton.setEnabled(false);
-            processingStatusLabel.setText("Processing note for " + activeKB.getName() + "...");
+            processingStatusLabel.setText("Processing note for " + activeKnowledgeBase.getName() + "...");
 
             SwingWorker<Void, Void> noteProcessingWorker = new SwingWorker<Void, Void>() {
                 @Override
@@ -497,13 +499,33 @@ public class AIAssistantPanel extends JPanel {
                     shareNoteButton.setEnabled(true);
                     updateKnowledgeBaseInfo();
                     JOptionPane.showMessageDialog(AIAssistantPanel.this,
-                            "Note added to " + activeKB.getName() + ".",
+                            "Note added to " + activeKnowledgeBase.getName() + ".",
                             "Document Added",
                             JOptionPane.INFORMATION_MESSAGE);
                 }
             };
             noteProcessingWorker.execute();
         }
+    }
+
+    /**
+     * Gets the text from the current note editor
+     * @return The text in the text editor as string
+     *
+     */
+    private String getTextInTextEditor()
+    {
+        // Get the currently selected notes pane
+        NotesPane currentNotesPane = JournalsPane.getSelectedNotesPane();
+        //get the text editor object
+        JTextArea currentTextArea = currentNotesPane.getCurrentNoteEditor().getTextArea();
+        // Check if text area is not null
+        if (currentTextArea != null) {
+            // Get the text from the current text area and return it
+            return currentTextArea.getText();
+        }
+        //return nothing if tab is not found or selected to run program
+        return "";
     }
 
     /**
@@ -515,3 +537,4 @@ public class AIAssistantPanel extends JPanel {
         return ragAgent;
     }
 }
+

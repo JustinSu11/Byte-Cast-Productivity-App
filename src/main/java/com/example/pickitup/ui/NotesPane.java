@@ -38,7 +38,6 @@ public class NotesPane extends JTabbedPane
         // set the default font
         tabbedPane.setFont(DEFAULT_FONT);
 
-        noteEditor.makeScrollPane();
         // adds the scroll pane to the new tab
         tabbedPane.addTab(title, noteEditor.getScrollPane());
 
@@ -67,7 +66,6 @@ public class NotesPane extends JTabbedPane
             );
         }
         NoteEditor newNoteEditor = new NoteEditor(title, journalID);
-        newNoteEditor.makeScrollPane();
 
         // adds the scroll pane to the new tab
         tabbedPane.addTab(title, newNoteEditor.getScrollPane());
@@ -134,11 +132,6 @@ public class NotesPane extends JTabbedPane
 
     // method to change the font in the tabs
     public void setFontType(String fontStyle){
-        /*
-        Font currentFont = tabbedPane.getFont();
-        Font newFont = new Font(fontStyle, currentFont.getStyle(), currentFont.getSize());
-        tabbedPane.setFont(newFont);
-         */
         // Update the font of the NoteEditor's textArea
         int selectedTabIndex = tabbedPane.getSelectedIndex();
         if (selectedTabIndex != -1) {

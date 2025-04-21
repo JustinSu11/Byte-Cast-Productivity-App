@@ -271,24 +271,29 @@ public class MenuBar extends JMenuBar
 
             NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
             selectedNotesPane.setFontSize(number);
+            JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().setFontSize(number);
         });
         comicSans.addActionListener(e ->{
             NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
             selectedNotesPane.setFontType("Comic Sans");
+            JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().setFontType("Comic Sans");
         });
         arial.addActionListener(e ->{
             NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
             selectedNotesPane.setFontType("Arial");
+            JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().setFontType("Arial");
         });
         timesRoman.addActionListener(e ->{
             NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
             selectedNotesPane.setFontType("Times New Roman");
+            JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().setFontType("Times New Roman");
         });
         fontColor.addActionListener(e ->{
             NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
             Color selectedColor = JColorChooser.showDialog(colorFrame, "Pick a color :D", INITIAL_FONT_COLOR);
             if (selectedColor != null){
                 selectedNotesPane.setFontColor(selectedColor);
+                JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().setTextColor(selectedColor);
             }
         });
         backgroundColor.addActionListener(e ->{
@@ -296,6 +301,7 @@ public class MenuBar extends JMenuBar
             Color selectedColor = JColorChooser.showDialog(colorFrame, "Pick a color :D", INITIAL_BACKGROUND_COLOR);
             if (selectedColor != null) {
                 selectedNotesPane.setBackgroundColor(selectedColor);
+                JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().setBackgroundColor(selectedColor);
             }
         });
         fontMenu.add(fontSize);
