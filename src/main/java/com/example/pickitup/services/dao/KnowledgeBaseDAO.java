@@ -68,36 +68,36 @@ public class KnowledgeBaseDAO {
      */
     private void initializeDatabase() {
         // Declare connection and statement outside try block for scope
-        Connection conn = null;
-        Statement stmt = null;
+        Connection dbConnection = null;
+        Statement dbStatement = null;
         
         try {
             // Establish database connection
-            conn = DriverManager.getConnection(DB_URL);
+            dbConnection = DriverManager.getConnection(DB_URL);
             // Create statement for executing SQL
-            stmt = conn.createStatement();
+            dbStatement = dbConnection.createStatement();
             
             // Create knowledge_bases table if it doesn't exist
-            stmt.execute(CREATE_KB_TABLE);
+            dbStatement.execute(CREATE_KB_TABLE);
             
             // Create knowledge_base_documents table if it doesn't exist
-            stmt.execute(CREATE_KB_DOCS_TABLE);
+            dbStatement.execute(CREATE_KB_DOCS_TABLE);
             
-        } catch (SQLException e) {
+        } catch (SQLException sqlException) {
             // Log the error 
-            System.err.println("Error initializing database: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Error initializing database: " + sqlException.getMessage());
+            sqlException.printStackTrace();
         } finally {
             // Close resources in finally block to ensure they are closed
             try {
-                if (stmt != null) {
-                    stmt.close();
+                if (dbStatement != null) {
+                    dbStatement.close();
                 }
-                if (conn != null) {
-                    conn.close();
+                if (dbConnection != null) {
+                    dbConnection.close();
                 }
-            } catch (SQLException e) {
-                System.err.println("Error closing database resources: " + e.getMessage());
+            } catch (SQLException closeException) {
+                System.err.println("Error closing database resources: " + closeException.getMessage());
             }
         }
     }
@@ -115,74 +115,74 @@ public class KnowledgeBaseDAO {
         }
 
         // Declare variables at the top
-        Connection conn = null;
-        PreparedStatement pstmtKb = null;
-        PreparedStatement pstmtDelete = null;
-        PreparedStatement pstmtDocs = null;
+        Connection dbConnection = null;
+        PreparedStatement knowledgeBaseStatement = null;
+        PreparedStatement deleteDocsStatement = null;
+        PreparedStatement documentInsertStatement = null;
         
         try {
             // Establish database connection
-            conn = DriverManager.getConnection(DB_URL);
+            dbConnection = DriverManager.getConnection(DB_URL);
             
             // First save or update the knowledge base
-            pstmtKb = conn.prepareStatement(INSERT_KB);
-            pstmtKb.setString(1, knowledgeBase.getId());
-            pstmtKb.setString(2, knowledgeBase.getName());
-            pstmtKb.setString(3, knowledgeBase.getDescription());
-            pstmtKb.setString(4, knowledgeBase.getCreatedAt().toString());
-            pstmtKb.executeUpdate();
+            knowledgeBaseStatement = dbConnection.prepareStatement(INSERT_KB);
+            knowledgeBaseStatement.setString(1, knowledgeBase.getId());
+            knowledgeBaseStatement.setString(2, knowledgeBase.getName());
+            knowledgeBaseStatement.setString(3, knowledgeBase.getDescription());
+            knowledgeBaseStatement.setString(4, knowledgeBase.getCreatedAt().toString());
+            knowledgeBaseStatement.executeUpdate();
             
             // Then handle documents
             // First, remove all existing documents for this knowledge base
-            pstmtDelete = conn.prepareStatement(DELETE_KB_DOCS);
-            pstmtDelete.setString(1, knowledgeBase.getId());
-            pstmtDelete.executeUpdate();
+            deleteDocsStatement = dbConnection.prepareStatement(DELETE_KB_DOCS);
+            deleteDocsStatement.setString(1, knowledgeBase.getId());
+            deleteDocsStatement.executeUpdate();
             
             // Get the list of documents
             List<DocumentData> documents = knowledgeBase.getDocuments();
             
             // Then insert all current documents
             if (documents != null && !documents.isEmpty()) {
-                pstmtDocs = conn.prepareStatement(INSERT_KB_DOC);
+                documentInsertStatement = dbConnection.prepareStatement(INSERT_KB_DOC);
                 
-                for (DocumentData doc : documents) {
+                for (DocumentData document : documents) {
                     // Skip null documents
-                    if (doc == null) {
+                    if (document == null) {
                         continue;
                     }
                     
                     // Generate a new UUID for the document ID
-                    String docId = UUID.randomUUID().toString();
+                    String documentId = UUID.randomUUID().toString();
                     
-                    pstmtDocs.setString(1, docId);
-                    pstmtDocs.setString(2, knowledgeBase.getId());
-                    pstmtDocs.setString(3, doc.getContent());
-                    pstmtDocs.setString(4, doc.getSource());
-                    pstmtDocs.executeUpdate();
+                    documentInsertStatement.setString(1, documentId);
+                    documentInsertStatement.setString(2, knowledgeBase.getId());
+                    documentInsertStatement.setString(3, document.getContent());
+                    documentInsertStatement.setString(4, document.getSource());
+                    documentInsertStatement.executeUpdate();
                 }
             }
             
-        } catch (SQLException e) {
+        } catch (SQLException sqlException) {
             // Log the error
-            System.err.println("Error saving knowledge base: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Error saving knowledge base: " + sqlException.getMessage());
+            sqlException.printStackTrace();
         } finally {
             // Close resources in finally block to ensure they are closed
             try {
-                if (pstmtDocs != null) {
-                    pstmtDocs.close();
+                if (documentInsertStatement != null) {
+                    documentInsertStatement.close();
                 }
-                if (pstmtDelete != null) {
-                    pstmtDelete.close();
+                if (deleteDocsStatement != null) {
+                    deleteDocsStatement.close();
                 }
-                if (pstmtKb != null) {
-                    pstmtKb.close();
+                if (knowledgeBaseStatement != null) {
+                    knowledgeBaseStatement.close();
                 }
-                if (conn != null) {
-                    conn.close();
+                if (dbConnection != null) {
+                    dbConnection.close();
                 }
-            } catch (SQLException e) {
-                System.err.println("Error closing database resources: " + e.getMessage());
+            } catch (SQLException closeException) {
+                System.err.println("Error closing database resources: " + closeException.getMessage());
             }
         }
     }
@@ -197,53 +197,53 @@ public class KnowledgeBaseDAO {
         List<KnowledgeBase> knowledgeBases = new ArrayList<>();
         
         // Declare variables at the top
-        Connection conn = null;
-        Statement stmt = null;
-        ResultSet rs = null;
+        Connection dbConnection = null;
+        Statement dbStatement = null;
+        ResultSet resultSet = null;
         
         try {
             // Establish database connection
-            conn = DriverManager.getConnection(DB_URL);
+            dbConnection = DriverManager.getConnection(DB_URL);
             
             // Create statement and execute query
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery(SELECT_ALL_KB);
+            dbStatement = dbConnection.createStatement();
+            resultSet = dbStatement.executeQuery(SELECT_ALL_KB);
             
             // Process each row in the result set
-            while (rs.next()) {
+            while (resultSet.next()) {
                 // Extract knowledge base data from result set
-                String id = rs.getString("id");
-                String name = rs.getString("name");
-                String description = rs.getString("description");
+                String kbId = resultSet.getString("id");
+                String kbName = resultSet.getString("name");
+                String kbDescription = resultSet.getString("description");
                 
                 // Create a new knowledge base object
-                KnowledgeBase kb = new KnowledgeBase(id, name, description);
+                KnowledgeBase knowledgeBase = new KnowledgeBase(kbId, kbName, kbDescription);
                 
                 // Load documents for this knowledge base
-                loadDocumentsForKnowledgeBase(conn, kb);
+                loadDocumentsForKnowledgeBase(dbConnection, knowledgeBase);
                 
                 // Add the knowledge base to the result list
-                knowledgeBases.add(kb);
+                knowledgeBases.add(knowledgeBase);
             }
             
-        } catch (SQLException e) {
+        } catch (SQLException sqlException) {
             // Log the error
-            System.err.println("Error retrieving knowledge bases: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Error retrieving knowledge bases: " + sqlException.getMessage());
+            sqlException.printStackTrace();
         } finally {
             // Close resources in finally block to ensure they are closed
             try {
-                if (rs != null) {
-                    rs.close();
+                if (resultSet != null) {
+                    resultSet.close();
                 }
-                if (stmt != null) {
-                    stmt.close();
+                if (dbStatement != null) {
+                    dbStatement.close();
                 }
-                if (conn != null) {
-                    conn.close();
+                if (dbConnection != null) {
+                    dbConnection.close();
                 }
-            } catch (SQLException e) {
-                System.err.println("Error closing database resources: " + e.getMessage());
+            } catch (SQLException closeException) {
+                System.err.println("Error closing database resources: " + closeException.getMessage());
             }
         }
         
@@ -254,52 +254,52 @@ public class KnowledgeBaseDAO {
     /**
      * Loads documents for a knowledge base
      * 
-     * @param conn Database connection
+     * @param dbConnection Database connection
      * @param knowledgeBase Knowledge base to load documents for
      */
-    private void loadDocumentsForKnowledgeBase(Connection conn, KnowledgeBase knowledgeBase) {
+    private void loadDocumentsForKnowledgeBase(Connection dbConnection, KnowledgeBase knowledgeBase) {
         // Check for null input
-        if (conn == null || knowledgeBase == null) {
+        if (dbConnection == null || knowledgeBase == null) {
             System.err.println("Null connection or knowledge base in loadDocumentsForKnowledgeBase");
             return;
         }
         
         // Declare variables at the top
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
+        PreparedStatement documentQuery = null;
+        ResultSet documentResults = null;
         
         try {
             // Prepare statement to query documents for this knowledge base
-            pstmt = conn.prepareStatement(SELECT_KB_DOCS);
-            pstmt.setString(1, knowledgeBase.getId());
+            documentQuery = dbConnection.prepareStatement(SELECT_KB_DOCS);
+            documentQuery.setString(1, knowledgeBase.getId());
             
             // Execute query and process results
-            rs = pstmt.executeQuery();
-            while (rs.next()) {
+            documentResults = documentQuery.executeQuery();
+            while (documentResults.next()) {
                 // Extract document data from result set
-                String content = rs.getString("content");
-                String source = rs.getString("source");
+                String documentContent = documentResults.getString("content");
+                String documentSource = documentResults.getString("source");
                 
                 // Create a new document and add it to the knowledge base
-                DocumentData doc = new DocumentData(content, source);
-                knowledgeBase.addDocument(doc);
+                DocumentData document = new DocumentData(documentContent, documentSource);
+                knowledgeBase.addDocument(document);
             }
-        } catch (SQLException e) {
+        } catch (SQLException sqlException) {
             // Log the error
-            System.err.println("Error loading documents for knowledge base: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Error loading documents for knowledge base: " + sqlException.getMessage());
+            sqlException.printStackTrace();
         } finally {
             // Close resources in finally block to ensure they are closed
             try {
-                if (rs != null) {
-                    rs.close();
+                if (documentResults != null) {
+                    documentResults.close();
                 }
-                if (pstmt != null) {
-                    pstmt.close();
+                if (documentQuery != null) {
+                    documentQuery.close();
                 }
                 // Note: We don't close the connection here as it's managed by the calling method
-            } catch (SQLException e) {
-                System.err.println("Error closing database resources: " + e.getMessage());
+            } catch (SQLException closeException) {
+                System.err.println("Error closing database resources: " + closeException.getMessage());
             }
         }
     }
@@ -317,42 +317,42 @@ public class KnowledgeBaseDAO {
         }
         
         // Declare variables at the top
-        Connection conn = null;
-        PreparedStatement pstmtDoc = null;
-        PreparedStatement pstmtKb = null;
+        Connection dbConnection = null;
+        PreparedStatement deleteDocumentsStatement = null;
+        PreparedStatement deleteKnowledgeBaseStatement = null;
         
         try {
             // Establish database connection
-            conn = DriverManager.getConnection(DB_URL);
+            dbConnection = DriverManager.getConnection(DB_URL);
             
             // First delete associated documents
-            pstmtDoc = conn.prepareStatement(DELETE_KB_DOCS);
-            pstmtDoc.setString(1, knowledgeBaseId);
-            pstmtDoc.executeUpdate();
+            deleteDocumentsStatement = dbConnection.prepareStatement(DELETE_KB_DOCS);
+            deleteDocumentsStatement.setString(1, knowledgeBaseId);
+            deleteDocumentsStatement.executeUpdate();
             
             // Then delete the knowledge base
-            pstmtKb = conn.prepareStatement(DELETE_KB);
-            pstmtKb.setString(1, knowledgeBaseId);
-            pstmtKb.executeUpdate();
+            deleteKnowledgeBaseStatement = dbConnection.prepareStatement(DELETE_KB);
+            deleteKnowledgeBaseStatement.setString(1, knowledgeBaseId);
+            deleteKnowledgeBaseStatement.executeUpdate();
             
-        } catch (SQLException e) {
+        } catch (SQLException sqlException) {
             // Log the error
-            System.err.println("Error deleting knowledge base: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Error deleting knowledge base: " + sqlException.getMessage());
+            sqlException.printStackTrace();
         } finally {
             // Close resources in finally block to ensure they are closed
             try {
-                if (pstmtKb != null) {
-                    pstmtKb.close();
+                if (deleteKnowledgeBaseStatement != null) {
+                    deleteKnowledgeBaseStatement.close();
                 }
-                if (pstmtDoc != null) {
-                    pstmtDoc.close();
+                if (deleteDocumentsStatement != null) {
+                    deleteDocumentsStatement.close();
                 }
-                if (conn != null) {
-                    conn.close();
+                if (dbConnection != null) {
+                    dbConnection.close();
                 }
-            } catch (SQLException e) {
-                System.err.println("Error closing database resources: " + e.getMessage());
+            } catch (SQLException closeException) {
+                System.err.println("Error closing database resources: " + closeException.getMessage());
             }
         }
     }

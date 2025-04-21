@@ -20,33 +20,33 @@ import java.util.UUID;
 public class KnowledgeBaseService {
     
     // Constants for default knowledge base
-    private static final String DEFAULT_KB_NAME = "Default Knowledge Base";
-    private static final String DEFAULT_KB_DESCRIPTION = "Default knowledge base for documents";
+    private static final String DEFAULT_KNOWLEDGE_BASE_NAME = "Default Knowledge Base";
+    private static final String DEFAULT_KNOWLEDGE_BASE_DESCRIPTION = "Default knowledge base for documents";
     
     // Member variables for managing knowledge bases
-    private final KnowledgeBaseDAO knowledgeBaseDAO;
-    private final Map<String, KnowledgeBase> knowledgeBases;
-    private String activeKnowledgeBaseId;
+    private final KnowledgeBaseDAO knowledgeBaseDataAccess;
+    private final Map<String, KnowledgeBase> knowledgeBaseRepository;
+    private String currentActiveKnowledgeBaseId;
     
     /**
      * Constructor initializes the knowledge base service and loads existing knowledge bases
      */
     public KnowledgeBaseService() {
         // Initialize the DAO and data structures
-        this.knowledgeBaseDAO = new KnowledgeBaseDAO();
-        this.knowledgeBases = new HashMap<>();
+        this.knowledgeBaseDataAccess = new KnowledgeBaseDAO();
+        this.knowledgeBaseRepository = new HashMap<>();
         
         // Load existing knowledge bases from database
         loadKnowledgeBasesFromDatabase();
         
         // If no knowledge bases exist, create a default one
-        if (knowledgeBases.isEmpty()) {
-            createKnowledgeBase(DEFAULT_KB_NAME, DEFAULT_KB_DESCRIPTION);
+        if (knowledgeBaseRepository.isEmpty()) {
+            createKnowledgeBase(DEFAULT_KNOWLEDGE_BASE_NAME, DEFAULT_KNOWLEDGE_BASE_DESCRIPTION);
         }
         
         // Set active knowledge base to the first one if not set
-        if (activeKnowledgeBaseId == null && !knowledgeBases.isEmpty()) {
-            activeKnowledgeBaseId = knowledgeBases.values().iterator().next().getId();
+        if (currentActiveKnowledgeBaseId == null && !knowledgeBaseRepository.isEmpty()) {
+            currentActiveKnowledgeBaseId = knowledgeBaseRepository.values().iterator().next().getId();
         }
     }
     
@@ -55,16 +55,16 @@ public class KnowledgeBaseService {
      */
     private void loadKnowledgeBasesFromDatabase() {
         // Get all knowledge bases from the DAO
-        List<KnowledgeBase> loadedKnowledgeBases = knowledgeBaseDAO.getAllKnowledgeBases();
+        List<KnowledgeBase> persistedKnowledgeBases = knowledgeBaseDataAccess.getAllKnowledgeBases();
         
         // Add each knowledge base to the map
-        for (KnowledgeBase kb : loadedKnowledgeBases) {
+        for (KnowledgeBase knowledgeBaseItem : persistedKnowledgeBases) {
             // Skip null knowledge bases
-            if (kb == null) {
+            if (knowledgeBaseItem == null) {
                 continue;
             }
             
-            knowledgeBases.put(kb.getId(), kb);
+            knowledgeBaseRepository.put(knowledgeBaseItem.getId(), knowledgeBaseItem);
         }
     }
     
@@ -83,20 +83,20 @@ public class KnowledgeBaseService {
         }
         
         // Initialize variables at the top
-        String id = UUID.randomUUID().toString();
-        KnowledgeBase knowledgeBase = null;
+        String newKnowledgeBaseId = UUID.randomUUID().toString();
+        KnowledgeBase newKnowledgeBase = null;
         
         try {
             // Create a new knowledge base with the given parameters
-            knowledgeBase = new KnowledgeBase(id, name, description);
+            newKnowledgeBase = new KnowledgeBase(newKnowledgeBaseId, name, description);
             
             // Save to memory and database
-            knowledgeBases.put(id, knowledgeBase);
-            knowledgeBaseDAO.saveKnowledgeBase(knowledgeBase);
+            knowledgeBaseRepository.put(newKnowledgeBaseId, newKnowledgeBase);
+            knowledgeBaseDataAccess.saveKnowledgeBase(newKnowledgeBase);
             
             // If this is the first knowledge base, make it active
-            if (activeKnowledgeBaseId == null) {
-                activeKnowledgeBaseId = id;
+            if (currentActiveKnowledgeBaseId == null) {
+                currentActiveKnowledgeBaseId = newKnowledgeBaseId;
             }
         } catch (Exception e) {
             // Log the error
@@ -105,7 +105,7 @@ public class KnowledgeBaseService {
         }
         
         // Return the created knowledge base
-        return knowledgeBase;
+        return newKnowledgeBase;
     }
     
     /**
@@ -122,24 +122,24 @@ public class KnowledgeBaseService {
         }
         
         // Don't delete if it's the only knowledge base
-        if (knowledgeBases.size() <= 1) {
+        if (knowledgeBaseRepository.size() <= 1) {
             System.err.println("Cannot delete the only knowledge base");
             return false;
         }
         
         try {
             // Remove the knowledge base from the map
-            KnowledgeBase knowledgeBase = knowledgeBases.remove(knowledgeBaseId);
+            KnowledgeBase removedKnowledgeBase = knowledgeBaseRepository.remove(knowledgeBaseId);
             
             // If knowledge base was found and removed
-            if (knowledgeBase != null) {
+            if (removedKnowledgeBase != null) {
                 // Delete from database
-                knowledgeBaseDAO.deleteKnowledgeBase(knowledgeBaseId);
+                knowledgeBaseDataAccess.deleteKnowledgeBase(knowledgeBaseId);
                 
                 // If the active knowledge base was deleted, set another one as active
-                if (knowledgeBaseId.equals(activeKnowledgeBaseId)) {
+                if (knowledgeBaseId.equals(currentActiveKnowledgeBaseId)) {
                     // Get the first available knowledge base ID
-                    activeKnowledgeBaseId = knowledgeBases.keySet().iterator().next();
+                    currentActiveKnowledgeBaseId = knowledgeBaseRepository.keySet().iterator().next();
                 }
                 
                 return true;
@@ -161,7 +161,7 @@ public class KnowledgeBaseService {
      */
     public List<KnowledgeBase> getAllKnowledgeBases() {
         // Return a new list to avoid exposing the internal collection
-        return new ArrayList<>(knowledgeBases.values());
+        return new ArrayList<>(knowledgeBaseRepository.values());
     }
     
     /**
@@ -178,7 +178,7 @@ public class KnowledgeBaseService {
         }
         
         // Return the knowledge base from the map
-        return knowledgeBases.get(id);
+        return knowledgeBaseRepository.get(id);
     }
     
     /**
@@ -188,13 +188,13 @@ public class KnowledgeBaseService {
      */
     public KnowledgeBase getActiveKnowledgeBase() {
         // Check if active knowledge base ID is set
-        if (activeKnowledgeBaseId == null) {
+        if (currentActiveKnowledgeBaseId == null) {
             System.err.println("No active knowledge base ID set");
             return null;
         }
         
         // Return the active knowledge base
-        return knowledgeBases.get(activeKnowledgeBaseId);
+        return knowledgeBaseRepository.get(currentActiveKnowledgeBaseId);
     }
     
     /**
@@ -211,9 +211,9 @@ public class KnowledgeBaseService {
         }
         
         // Check if the knowledge base exists
-        if (knowledgeBases.containsKey(knowledgeBaseId)) {
+        if (knowledgeBaseRepository.containsKey(knowledgeBaseId)) {
             // Set as active
-            activeKnowledgeBaseId = knowledgeBaseId;
+            currentActiveKnowledgeBaseId = knowledgeBaseId;
             return true;
         }
         
@@ -243,15 +243,15 @@ public class KnowledgeBaseService {
         
         try {
             // Get the knowledge base
-            KnowledgeBase knowledgeBase = knowledgeBases.get(knowledgeBaseId);
+            KnowledgeBase targetKnowledgeBase = knowledgeBaseRepository.get(knowledgeBaseId);
             
             // If knowledge base was found
-            if (knowledgeBase != null) {
+            if (targetKnowledgeBase != null) {
                 // Add document to knowledge base
-                knowledgeBase.addDocument(document);
+                targetKnowledgeBase.addDocument(document);
                 
                 // Save changes to database
-                knowledgeBaseDAO.saveKnowledgeBase(knowledgeBase);
+                knowledgeBaseDataAccess.saveKnowledgeBase(targetKnowledgeBase);
                 
                 return true;
             }
@@ -273,12 +273,12 @@ public class KnowledgeBaseService {
      */
     public boolean addDocumentToActiveKnowledgeBase(DocumentData document) {
         // Validate active knowledge base ID
-        if (activeKnowledgeBaseId == null) {
+        if (currentActiveKnowledgeBaseId == null) {
             System.err.println("No active knowledge base set");
             return false;
         }
         
         // Add document to the active knowledge base
-        return addDocumentToKnowledgeBase(activeKnowledgeBaseId, document);
+        return addDocumentToKnowledgeBase(currentActiveKnowledgeBaseId, document);
     }
-} 
+}
