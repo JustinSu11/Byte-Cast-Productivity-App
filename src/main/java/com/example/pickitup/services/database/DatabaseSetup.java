@@ -20,6 +20,10 @@ public class DatabaseSetup {
                 "content TEXT NOT NULL, " +
                 "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
                 "note_order INTEGER, " +
+                "font_type TEXT NOT NULL, " +
+                "font_size INTEGER NOT NULL, " +
+                "text_color INTEGER NOT NULL, " +
+                "background_color INTEGER NOT NULL, " +
                 "FOREIGN KEY (journal_id) REFERENCES journal(journal_id) " +
                 ");";
 

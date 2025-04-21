@@ -13,6 +13,7 @@ import com.example.pickitup.ui.NoteEditor;
 import com.example.pickitup.ui.NotesPane;
 
 import javax.swing.*;
+import java.awt.*;
 import java.sql.*;
 
 public class ApplicationStateServices {
@@ -23,7 +24,7 @@ public class ApplicationStateServices {
             connection.setAutoCommit(false);
             //sql statements for saving
             String saveJournalStatement = "UPDATE journals SET title = ?, selected_note_index = ?, selected_flag = ?, journal_order = ? WHERE journal_id = ?";
-            String saveNoteStatement = "UPDATE notes SET title = ?, content = ?, note_order = ? WHERE journal_id = ? AND notes_id = ?";
+            String saveNoteStatement = "UPDATE notes SET title = ?, content = ?, note_order = ?, font_type = ?, font_size = ?, text_color = ?, background_color = ? WHERE journal_id = ? AND notes_id = ?";
             //prepare statements for execution
             PreparedStatement saveJournal = connection.prepareStatement(saveJournalStatement);
             PreparedStatement saveNote = connection.prepareStatement(saveNoteStatement);
@@ -53,12 +54,20 @@ public class ApplicationStateServices {
                     String noteContent = noteTextArea.getTextInTextEditor();
                     String noteTitle = JournalsPane.getNotesPanes().get(i).getNoteEditors().get(j).getNoteItem().getTitle();
                     int noteID = JournalsPane.getNotesPanes().get(i).getNoteEditors().get(j).getNoteItem().getNoteID();
+                    String fontType = JournalsPane.getNotesPanes().get(i).getNoteEditors().get(j).getNoteItem().getFontType();
+                    int fontSize = JournalsPane.getNotesPanes().get(i).getNoteEditors().get(j).getNoteItem().getFontSize();
+                    int textColor = JournalsPane.getNotesPanes().get(i).getNoteEditors().get(j).getNoteItem().getTextColor().getRGB();
+                    int backgroundColor = JournalsPane.getNotesPanes().get(i).getNoteEditors().get(j).getNoteItem().getBackgroundColor().getRGB();
 
                     saveNote.setString(1, noteTitle);
                     saveNote.setString(2, noteContent);
                     saveNote.setInt(3, j);
-                    saveNote.setInt(4, journalID);
-                    saveNote.setInt(5, noteID);
+                    saveNote.setString(4, fontType);
+                    saveNote.setInt(5, fontSize);
+                    saveNote.setInt(6, textColor);
+                    saveNote.setInt(7, backgroundColor);
+                    saveNote.setInt(8, journalID);
+                    saveNote.setInt(9, noteID);
                     saveNote.executeUpdate();
                     System.out.println("Saving note content");
                 }
@@ -90,7 +99,7 @@ public class ApplicationStateServices {
                 NotesPane journalPane = new NotesPane(journalID, journalTitle);
                 JournalsPane.getNotesPanes().add(journalPane);
 
-                String loadNoteStatement = "SELECT notes_id, content, title FROM notes WHERE journal_id = " + journalID + " ORDER BY note_order";
+                String loadNoteStatement = "SELECT notes_id, content, title, font_type, font_size, text_color, background_color FROM notes WHERE journal_id = " + journalID + " ORDER BY note_order";
                 Statement loadNote = connection.createStatement();
                 ResultSet noteResultSet = loadNote.executeQuery(loadNoteStatement);
 
@@ -98,10 +107,11 @@ public class ApplicationStateServices {
                     int noteID = noteResultSet.getInt("notes_id");
                     String noteContent = noteResultSet.getString("content");
                     String noteTitle = noteResultSet.getString("title");
-                    NoteEditor newNoteEditor = new NoteEditor(noteID, journalID, noteTitle, noteContent);
-
-                    newNoteEditor.makeScrollPane();
-                    newNoteEditor.getTextArea().setText(noteContent);
+                    String fontType = noteResultSet.getString("font_type");
+                    int fontSize = noteResultSet.getInt("font_size");
+                    int textColor = noteResultSet.getInt("text_color");
+                    int backgroundColor = noteResultSet.getInt("background_color");
+                    NoteEditor newNoteEditor = new NoteEditor(noteID, journalID, noteTitle, noteContent, fontType, fontSize, textColor, backgroundColor);
                     journalPane.addPageTabForLoad(newNoteEditor);
                 }
 

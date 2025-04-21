@@ -6,6 +6,7 @@
  */
 package com.example.pickitup.services.dao;
 
+import com.example.pickitup.services.models.Journal;
 import com.example.pickitup.services.models.Note;
 import com.example.pickitup.services.database.*;
 import com.example.pickitup.ui.JournalsPane;
@@ -19,7 +20,7 @@ public class NotesDAO {
     //CREATE methods
     //method to insert note into SQLite database
     public static void insertNoteAtCreation(Note note) {
-        String insertStatement = "INSERT INTO notes (title, content, journal_id) VALUES (?, ?, ?) RETURNING notes_id";
+        String insertStatement = "INSERT INTO notes (title, content, journal_id, font_type, font_size, text_color, background_color) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING notes_id";
 
         try (
                 Connection connection = DatabaseConnection.connect();
@@ -28,6 +29,10 @@ public class NotesDAO {
             preparedStatement.setString(1, note.getTitle());
             preparedStatement.setString(2, note.getContent());
             preparedStatement.setInt(3, note.getJournalID());
+            preparedStatement.setString(4, note.getFontType());
+            preparedStatement.setInt(5, note.getFontSize());
+            preparedStatement.setInt(6, note.getTextColor().getRGB());
+            preparedStatement.setInt(7, note.getBackgroundColor().getRGB());
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
@@ -42,56 +47,11 @@ public class NotesDAO {
     }
 
     //READ methods
-    //method to retrieve a note by title
-    public static void getNote(int noteID) {
-        String selectStatement = "SELECT * FROM notes WHERE noteID = " + noteID;
-
-        try (
-                Connection connection = DatabaseConnection.connect();
-                PreparedStatement preparedStatement = connection.prepareStatement(selectStatement);
-                ResultSet resultSet = preparedStatement.executeQuery()
-                ){
-            //retrieve the columns and store into variables
-            while (resultSet.next()) {
-                int note_id = resultSet.getInt("id");
-                int journal_id = resultSet.getInt("journal_id");
-                String noteTitle = resultSet.getString("title");
-                String noteContent = resultSet.getString("content");
-                Note note = new Note(note_id, journal_id, noteTitle, noteContent);
-            }
-        } catch (SQLException error) {
-            System.out.println("Error getting note: " + error.getMessage());
-        }
-    }
-//    //method to retrieve all notes belonging to a journal
-//    public static Note getNotesByJournalId(int journalId) {
-//        String retrieveStatement = "SELECT notes_id, title, content FROM notes WHERE journal_id = ?";
-//        try (
-//                Connection connection = DatabaseConnection.connect();
-//                PreparedStatement preparedStatement = connection.prepareStatement(retrieveStatement)
-//        ) {
-//            preparedStatement.setInt(1, journalId);
-//            ResultSet resultSet = preparedStatement.executeQuery();
-//            while (resultSet.next()) {
-//                int note_id = resultSet.getInt("notes_id");
-//                int journal_id = resultSet.getInt("journal_id");
-//                String content = resultSet.getString("content");
-//                String title = resultSet.getString("title");
-//                Note note = new Note(note_id, journal_id, content, title);
-//                NoteEditor newNoteEditor = new NoteEditor(note);
-//
-//                newNoteEditor.makeScrollPane();
-//                newNoteEditor.getTextArea().setText(content);
-//            }
-//        } catch (SQLException error) {
-//            System.out.println("Error getting notes: " + error.getMessage());
-//        }
-//    }
 
     //UPDATE methods
     //method to save an existing note
     public static void saveNote() {
-        String saveNoteStatement = "UPDATE notes SET title = ?, content = ? WHERE journal_id = ? AND notes_id = ?";
+        String saveNoteStatement = "UPDATE notes SET title = ?, content = ?, font_type = ?, font_size = ?, text_color = ?, background_color = ? WHERE journal_id = ? AND notes_id = ?";
 
         try (
                 Connection connection = DatabaseConnection.connect();
@@ -100,13 +60,21 @@ public class NotesDAO {
             NoteEditor noteTextArea = JournalsPane.getSelectedNotesPane().getCurrentNoteEditor();
             String noteContent = noteTextArea.getTextInTextEditor();
             String noteTitle = JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().getTitle();
+            String fontType = JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().getFontType();
+            int fontSize = JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().getFontSize();
+            int textColor = JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().getTextColor().getRGB();
+            int backgroundColor = JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().getBackgroundColor().getRGB();
             int noteID = JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().getNoteID();
             int journalID = JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().getJournalID();
 
             preparedStatement.setString(1, noteTitle);
             preparedStatement.setString(2, noteContent);
-            preparedStatement.setInt(3, journalID);
-            preparedStatement.setInt(4, noteID);
+            preparedStatement.setString(3, fontType);
+            preparedStatement.setInt(4, fontSize);
+            preparedStatement.setInt(5, textColor);
+            preparedStatement.setInt(6, backgroundColor);
+            preparedStatement.setInt(7, journalID);
+            preparedStatement.setInt(8, noteID);
             preparedStatement.executeUpdate();
             System.out.println("Saving note content");
         } catch (SQLException error) {
@@ -132,6 +100,83 @@ public class NotesDAO {
             System.out.println("Successfully renamed note");
         } catch (SQLException error) {
             System.out.println("Error saving note: " + error.getMessage());
+        }
+    }
+
+    //methods to change note font type, font size, text color, and backgroundColor
+    public static void changeFontType(String newFontType) {
+        String changeFontTypeStatement = "UPDATE notes SET font_type = ? WHERE notes_id = ? AND journal_id = ?";
+
+        try (
+                Connection connection = DatabaseConnection.connect();
+                PreparedStatement preparedStatement = connection.prepareStatement(changeFontTypeStatement)
+                ){
+            int noteID = JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().getNoteID();
+            int journalID = JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().getJournalID();
+
+            preparedStatement.setString(1, newFontType);
+            preparedStatement.setInt(2, noteID);
+            preparedStatement.setInt(3, journalID);
+            preparedStatement.executeUpdate();
+        } catch (SQLException error) {
+            System.out.println("Error saving font type: " + error.getMessage());
+        }
+    }
+
+    public static void changeFontSize(int newFontSize) {
+        String changeFontSizeStatement = "UPDATE notes SET font_size = ? WHERE notes_id = ? AND journal_id = ?";
+
+        try (
+                Connection connection = DatabaseConnection.connect();
+                PreparedStatement preparedStatement = connection.prepareStatement(changeFontSizeStatement)
+        ){
+            int noteID = JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().getNoteID();
+            int journalID = JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().getJournalID();
+
+            preparedStatement.setInt(1, newFontSize);
+            preparedStatement.setInt(2, noteID);
+            preparedStatement.setInt(3, journalID);
+            preparedStatement.executeUpdate();
+        } catch (SQLException error) {
+            System.out.println("Error saving font size: " + error.getMessage());
+        }
+    }
+
+    public static void changeTextColor(int newTextColor) {
+        String changeTextColorStatement = "UPDATE notes SET text_color = ? WHERE notes_id = ? AND journal_id = ?";
+
+        try (
+                Connection connection = DatabaseConnection.connect();
+                PreparedStatement preparedStatement = connection.prepareStatement(changeTextColorStatement)
+        ){
+            int noteID = JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().getNoteID();
+            int journalID = JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().getJournalID();
+
+            preparedStatement.setInt(1, newTextColor);
+            preparedStatement.setInt(2, noteID);
+            preparedStatement.setInt(3, journalID);
+            preparedStatement.executeUpdate();
+        } catch (SQLException error) {
+            System.out.println("Error saving text color: " + error.getMessage());
+        }
+    }
+
+    public static void changeBackgroundColor(int newBackgroundColor) {
+        String changeBackgroundColorStatement = "UPDATE notes SET background_color = ? WHERE notes_id = ? AND journal_id = ?";
+
+        try (
+                Connection connection = DatabaseConnection.connect();
+                PreparedStatement preparedStatement = connection.prepareStatement(changeBackgroundColorStatement)
+        ){
+            int noteID = JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().getNoteID();
+            int journalID = JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().getJournalID();
+
+            preparedStatement.setInt(1, newBackgroundColor);
+            preparedStatement.setInt(2, noteID);
+            preparedStatement.setInt(3, journalID);
+            preparedStatement.executeUpdate();
+        } catch (SQLException error) {
+            System.out.println("Error saving text color: " + error.getMessage());
         }
     }
 
