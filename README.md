@@ -14,3 +14,5 @@ CJ Quintero
 
 04/21/2025 CJ Quintero
 - newest up-to-date version
+- created .jar file to run the app
+- made example data in all features for database 
