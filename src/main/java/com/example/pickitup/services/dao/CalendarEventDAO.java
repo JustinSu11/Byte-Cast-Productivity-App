@@ -1,3 +1,9 @@
+/**
+ * This class contains the necessary parameters for Calendar Events
+ *
+ * @author Aron Rios
+ * @date 04/12/2025
+ */
 package com.example.pickitup.services.dao;
 
 import com.example.pickitup.services.database.DatabaseConnection;
@@ -7,12 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-/***************************
- Author: Aron Rios
- Date: 3/21/2025
- Version: 1.0
- Purpose: This class contains the necessary parameters for Calendar Events
- ***********************/
 
 public class CalendarEventDAO {
     // Method to save an event to the database
@@ -45,13 +45,11 @@ public class CalendarEventDAO {
         String sql = "SELECT id, title, event_description, start_time FROM calendar_events WHERE DATE(start_time) = ?";
 
         try (Connection connection = DatabaseConnection.connect();
-             PreparedStatement pstmt = connection.prepareStatement(sql))
-        {
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, datePart);
             ResultSet rs = pstmt.executeQuery();
 
-            while (rs.next())
-            {
+            while (rs.next()) {
                 int eventId = rs.getInt("id");
                 String title = rs.getString("title");
                 String description = rs.getString("event_description");
@@ -66,17 +64,32 @@ public class CalendarEventDAO {
     }
 
     // Method to delete an event by its event_id
-    public static boolean deleteEvent(int eventId)
-    {
-        String sql = "DELETE FROM calendar_events WHERE id = ?";
+    // Method to delete an event by its event_id and reset AUTOINCREMENT if empty
+    public static boolean deleteEvent(int eventId) {
+        String deleteSql = "DELETE FROM calendar_events WHERE id = ?";
+        String countSql = "SELECT COUNT(*) FROM calendar_events";
+        String resetSql = "DELETE FROM sqlite_sequence WHERE name='calendar_events'";
+
         try (Connection connection = DatabaseConnection.connect();
-             PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, eventId);
-            int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0;
+             PreparedStatement deleteStmt = connection.prepareStatement(deleteSql);
+             PreparedStatement countStmt = connection.prepareStatement(countSql);
+             PreparedStatement resetStmt = connection.prepareStatement(resetSql)) {
+
+            deleteStmt.setInt(1, eventId);
+            int rowsAffected = deleteStmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                ResultSet rs = countStmt.executeQuery();
+                if (rs.next() && rs.getInt(1) == 0) {
+                    resetStmt.executeUpdate(); // Reset auto-increment if table is empty
+                    System.out.println("Auto-increment counter reset.");
+                }
+                return true;
+            }
+
         } catch (SQLException e) {
             System.out.println("Error deleting event: " + e.getMessage());
-            return false;
         }
+        return false;
     }
 }

@@ -1,17 +1,8 @@
-/*
-    *******************************************************************************
-    App Class
-    Last Updated 03/31/2025
-    Developed by CJ Quintero
-
-    This is the main class that uses all the classes as member variables.
-    Launch.java creates an instance of this class and calls runApp()
-    which adds everything to the main frame.
-
-
-    Please remember to update the version date if any changes
-    are made to this file.
-    *******************************************************************************
+/**
+ * Makes the app object and adds the other major panels
+ *
+ * @author CJ Quintero
+ * @date 04/12/2025
  */
 package com.example.pickitup.ui;
 
@@ -42,7 +33,6 @@ public class App
 
         // make the objects
         appFrame = new AppFrame();
-        journalsPane = new JournalsPane();
         toDoListPanel = new ToDoListPanel();
         clockPanel = new ClockPanel();
         toggleAiPanelButton = new JButton("Hide AI Assistant");
@@ -56,6 +46,9 @@ public class App
         // make the Main App Frame
         appFrame.makeMainAppFrame();
 
+        //make the journal tabbedpane
+        journalsPane = new JournalsPane();
+
         // Create a center panel to hold the note editor and to-do list
         JPanel centerPanel = new JPanel(new GridLayout(1, 2, 10, 0));
 
@@ -64,8 +57,7 @@ public class App
 
         // make and add the tabbed pane
         // adds a single tab by default
-        journalsPane.journalConstructor();
-        centerPanel.add(journalsPane.getJournalsPane());
+        centerPanel.add(JournalsPane.getJournalsPane());
 
         //Make as assistant panel after journal tab is created
         aiAssistantPanel = new AIAssistantPanel(journalsPane);
@@ -106,7 +98,8 @@ public class App
         registerComponentsWithThemeManager();
     } // end runApp()
 
-    private void registerComponentsWithThemeManager() {
+    private void registerComponentsWithThemeManager()
+    {
         // Register the main frame and its content pane
         themeManager.registerComponent((JComponent)appFrame.getContentPane());
 
@@ -120,11 +113,12 @@ public class App
     /**
      * Toggles the visibility of the AI Assistant panel
      */
-    private void toggleAiPanel() {
+    private void toggleAiPanel()
+    {
         aiPanelVisible = !aiPanelVisible;
         aiAssistantPanel.setVisible(aiPanelVisible);
         toggleAiPanelButton.setText(aiPanelVisible ? "Hide AI Assistant" : "Show AI Assistant");
         appFrame.revalidate();
     }
 
-} // end App class
+} // end class

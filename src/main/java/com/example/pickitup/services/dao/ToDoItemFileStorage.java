@@ -1,3 +1,10 @@
+/**
+ * File based storage implementation for ToDoItems
+ * Provides methods to save and load to do items from a file
+ *
+ * @author Matthew Tomme
+ * @date 04/12/2025
+ */
 package com.example.pickitup.services.dao;
 
 import com.example.pickitup.services.models.ToDoItem;
@@ -12,13 +19,14 @@ import java.util.List;
 /**
  * File-based storage implementation for ToDoItems
  * Provides methods to save and load to-do items from a file
+ * Updated to use MM/dd/yyyy date format
  *
- * @version 1.0
+ * @version 1.1
  */
 public class ToDoItemFileStorage {
     // The file where to-do items will be stored
     private static final String STORAGE_FILE = "todoitems.dat";
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy");
 
     /**
      * Saves a list of ToDoItems to a file

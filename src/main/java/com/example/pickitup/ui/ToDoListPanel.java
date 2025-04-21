@@ -1,3 +1,9 @@
+/**
+ * Makes the panel and methods for the to do list
+ *
+ * @author Matthew Tomme
+ * @date 04/12/2025
+ */
 package com.example.pickitup.ui;
 
 import com.example.pickitup.services.models.ToDoItem;
@@ -6,19 +12,21 @@ import com.example.pickitup.services.dao.ToDoItemDAO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
 /**
  * Panel for To-Do List functionality in the UI
- * Updated to work as a popup window similar to Calendar
- * @version 1.3
+ * Updated to work as a popup window similar to Calendar with bug fixes
+ * @version 1.4
  */
 public class ToDoListPanel extends JPanel {
 
@@ -31,7 +39,7 @@ public class ToDoListPanel extends JPanel {
     private JTextField dateInput; // Simple text field for date input
     private ToDoItemDAO todoItemDAO;
     private ThemeManager themeManager;
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy"); // Changed date format
     private JFrame frame; // Main frame for the popup
 
     /**
@@ -78,6 +86,11 @@ public class ToDoListPanel extends JPanel {
         todoTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
         todoTable.setFont(new Font("Arial", Font.PLAIN, 14));
 
+        // Fix bug: Make table header cells not movable
+        JTableHeader header = todoTable.getTableHeader();
+        header.setReorderingAllowed(false);
+        header.setResizingAllowed(true); // Allow column resizing for better UX
+
         // Create scroll pane for the table
         JScrollPane tableScrollPane = new JScrollPane(todoTable);
         tableScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -90,8 +103,8 @@ public class ToDoListPanel extends JPanel {
         taskInput = new JTextField();
         taskInput.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        // Date input field
-        dateInput = new JTextField(dateFormat.format(new Date())); // Set to current date by default
+        // Date input field - set to current date by default with the new format
+        dateInput = new JTextField(dateFormat.format(new Date()));
         dateInput.setFont(new Font("Arial", Font.PLAIN, 14));
         JButton datePickerButton = new JButton("...");
         datePickerButton.addActionListener(e -> showDatePicker());
@@ -102,7 +115,7 @@ public class ToDoListPanel extends JPanel {
         taskPanel.add(taskInput, BorderLayout.CENTER);
 
         JPanel datePanel = new JPanel(new BorderLayout());
-        datePanel.add(new JLabel("Due Date (yyyy-MM-dd): "), BorderLayout.WEST);
+        datePanel.add(new JLabel("Due Date (MM/dd/yyyy): "), BorderLayout.WEST); // Updated format
         datePanel.add(dateInput, BorderLayout.CENTER);
         datePanel.add(datePickerButton, BorderLayout.EAST);
 
@@ -165,14 +178,14 @@ public class ToDoListPanel extends JPanel {
     }
 
     /**
-     * Show a simple date picker dialog
+     * Show a date picker dialog with validation for past dates
      */
     private void showDatePicker() {
         // Create a simple date picker using JOptionPane
         String currentDate = dateInput.getText();
         String newDate = (String) JOptionPane.showInputDialog(
                 this,
-                "Enter date (yyyy-MM-dd):",
+                "Enter date (MM/dd/yyyy):",
                 "Date Picker",
                 JOptionPane.PLAIN_MESSAGE,
                 null,
@@ -182,12 +195,38 @@ public class ToDoListPanel extends JPanel {
         if (newDate != null && !newDate.isEmpty()) {
             try {
                 // Validate the date format
-                Date date = dateFormat.parse(newDate);
-                dateInput.setText(dateFormat.format(date));
+                Date selectedDate = dateFormat.parse(newDate);
+
+                // Create Calendar instances for today and selected date
+                Calendar today = Calendar.getInstance();
+                today.set(Calendar.HOUR_OF_DAY, 0);
+                today.set(Calendar.MINUTE, 0);
+                today.set(Calendar.SECOND, 0);
+                today.set(Calendar.MILLISECOND, 0);
+
+                Calendar selected = Calendar.getInstance();
+                selected.setTime(selectedDate);
+                selected.set(Calendar.HOUR_OF_DAY, 0);
+                selected.set(Calendar.MINUTE, 0);
+                selected.set(Calendar.SECOND, 0);
+                selected.set(Calendar.MILLISECOND, 0);
+
+                // Check if the selected date is before today
+                if (selected.before(today)) {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Cannot select a past date. Please choose today or a future date.",
+                            "Invalid Date",
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                // Format and set the valid date
+                dateInput.setText(dateFormat.format(selectedDate));
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(
                         this,
-                        "Invalid date format. Please use yyyy-MM-dd",
+                        "Invalid date format. Please use MM/dd/yyyy format (e.g., 04/15/2025)",
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
@@ -244,6 +283,7 @@ public class ToDoListPanel extends JPanel {
 
     /**
      * Loads to-do items from the DAO and displays them in the table
+     * Includes all tasks, even those with past due dates
      */
     private void loadTodoItems() {
         // Clear the current table data
@@ -256,7 +296,19 @@ public class ToDoListPanel extends JPanel {
         for (ToDoItem item : items) {
             Vector<String> row = new Vector<>();
             row.add(item.getTask());
-            row.add(dateFormat.format(item.getDueDate()));
+
+            // Format the date
+            String formattedDate = dateFormat.format(item.getDueDate());
+
+            // Check if this is a past due date that's not completed
+            Date today = new Date();
+            if (item.getDueDate().before(today) && !item.isCompleted()) {
+                // Add a visual indicator for past due dates
+                row.add(formattedDate + " (Past Due)");
+            } else {
+                row.add(formattedDate);
+            }
+
             row.add(item.getStatusText());
 
             tableModel.addRow(row);
@@ -301,7 +353,7 @@ public class ToDoListPanel extends JPanel {
     }
 
     /**
-     * Adds a new task to the to-do list
+     * Adds a new task to the to-do list with date validation
      */
     private void addTask() {
         String task = taskInput.getText().trim();
@@ -311,6 +363,30 @@ public class ToDoListPanel extends JPanel {
             try {
                 // Parse the date
                 Date dueDate = dateFormat.parse(dateString);
+
+                // Create Calendar instances for today and selected date
+                Calendar today = Calendar.getInstance();
+                today.set(Calendar.HOUR_OF_DAY, 0);
+                today.set(Calendar.MINUTE, 0);
+                today.set(Calendar.SECOND, 0);
+                today.set(Calendar.MILLISECOND, 0);
+
+                Calendar selected = Calendar.getInstance();
+                selected.setTime(dueDate);
+                selected.set(Calendar.HOUR_OF_DAY, 0);
+                selected.set(Calendar.MINUTE, 0);
+                selected.set(Calendar.SECOND, 0);
+                selected.set(Calendar.MILLISECOND, 0);
+
+                // Check if the selected date is before today
+                if (selected.before(today)) {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Cannot add a task with a past due date. Please choose today or a future date.",
+                            "Invalid Date",
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
 
                 // Add to the DAO (which handles persistence)
                 todoItemDAO.addItem(task, dueDate);
@@ -323,7 +399,7 @@ public class ToDoListPanel extends JPanel {
                 taskInput.requestFocus();
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(this,
-                        "Invalid date format. Please use yyyy-MM-dd format.",
+                        "Invalid date format. Please use MM/dd/yyyy format (e.g., 04/15/2025).",
                         "Date Error",
                         JOptionPane.ERROR_MESSAGE);
             }

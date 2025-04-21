@@ -1,10 +1,12 @@
-package com.example.pickitup.services.models;
-
 /**
  * Model class representing a document for RAG retrieval
+ *
  * @author Maaz Haque
- * @version 1.0
+ * @date 04/12/2025
  */
+package com.example.pickitup.services.models;
+
+
 public class DocumentData {
     private String content;
     private String source;

@@ -1,3 +1,9 @@
+/**
+ * Service for managing chat memory and persistence
+ *
+ * @author Maaz Haque
+ * @date 04/12/2025
+ */
 package com.example.pickitup.services;
 
 import com.example.pickitup.services.dao.ChatMemoryDAO;
@@ -9,32 +15,28 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Service for managing chat memory and persistence
- * @author Maaz Haque
- * @version 1.0
- */
+
 public class ChatMemoryService {
     
     // Constants for roles
-    private static final String ROLE_USER = "user";
-    private static final String ROLE_ASSISTANT = "assistant";
-    private static final String DISPLAY_USER = "You";
-    private static final String DISPLAY_ASSISTANT = "Assistant";
+    private static final String USER_ROLE_IDENTIFIER = "user";
+    private static final String ASSISTANT_ROLE_IDENTIFIER = "assistant";
+    private static final String USER_DISPLAY_NAME = "You";
+    private static final String ASSISTANT_DISPLAY_NAME = "Assistant";
     
     // Constants for configuration
-    private static final int MAX_MESSAGES = 20;
-    private static final String MESSAGE_SEPARATOR = "\n\n";
+    private static final int MAXIMUM_MESSAGE_COUNT = 20;
+    private static final String MESSAGE_DISPLAY_SEPARATOR = "\n\n";
     
     // Error messages
-    private static final String ERROR_ADDING_USER_MSG = "Error adding user message to memory: ";
-    private static final String ERROR_ADDING_AI_MSG = "Error adding AI message to memory: ";
-    private static final String ERROR_LOADING_MEMORY = "Error loading chat memory: ";
-    private static final String ERROR_CLEARING_MEMORY = "Error clearing chat memory: ";
+    private static final String USER_MESSAGE_ERROR = "Error adding user message to memory: ";
+    private static final String AI_MESSAGE_ERROR = "Error adding AI message to memory: ";
+    private static final String MEMORY_LOADING_ERROR = "Error loading chat memory: ";
+    private static final String MEMORY_CLEARING_ERROR = "Error clearing chat memory: ";
     
     // Service dependencies
     private final ChatMemoryDAO chatMemoryDAO;
-    private ChatMemory chatMemory;
+    private ChatMemory activeChatMemory;
     
     /**
      * Constructor initializes the chat memory and loads existing messages
@@ -47,7 +49,7 @@ public class ChatMemoryService {
             // Load existing messages from the database
             loadMemoryFromDatabase();
         } catch (Exception e) {
-            System.err.println(ERROR_LOADING_MEMORY + e.getMessage());
+            System.err.println(MEMORY_LOADING_ERROR + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -56,8 +58,8 @@ public class ChatMemoryService {
      * Initializes a new chat memory instance
      */
     private void initializeMemory() {
-        this.chatMemory = MessageWindowChatMemory.builder()
-                .maxMessages(MAX_MESSAGES)
+        this.activeChatMemory = MessageWindowChatMemory.builder()
+                .maxMessages(MAXIMUM_MESSAGE_COUNT)
                 .build();
     }
     
@@ -66,32 +68,32 @@ public class ChatMemoryService {
      */
     private void loadMemoryFromDatabase() {
         // Get messages from database
-        List<ChatMemoryDAO.ChatMessage> messages = chatMemoryDAO.getAllMessages();
+        List<ChatMemoryDAO.ChatMessage> storedMessages = chatMemoryDAO.getAllMessages();
         
         // Skip if no messages
-        if (messages == null || messages.isEmpty()) {
+        if (storedMessages == null || storedMessages.isEmpty()) {
             return;
         }
         
         // Process each message
-        for (ChatMemoryDAO.ChatMessage message : messages) {
-            if (message == null) {
+        for (ChatMemoryDAO.ChatMessage chatMessageEntry : storedMessages) {
+            if (chatMessageEntry == null) {
                 continue;
             }
             
-            String role = message.getRole();
-            String content = message.getContent();
+            String messageRole = chatMessageEntry.getRole();
+            String messageContent = chatMessageEntry.getContent();
             
             // Skip messages with null or empty content
-            if (content == null || content.trim().isEmpty()) {
+            if (messageContent == null || messageContent.trim().isEmpty()) {
                 continue;
             }
             
             // Add to chat memory based on role
-            if (ROLE_USER.equals(role)) {
-                chatMemory.add(dev.langchain4j.data.message.UserMessage.from(content));
-            } else if (ROLE_ASSISTANT.equals(role)) {
-                chatMemory.add(dev.langchain4j.data.message.AiMessage.from(content));
+            if (USER_ROLE_IDENTIFIER.equals(messageRole)) {
+                activeChatMemory.add(dev.langchain4j.data.message.UserMessage.from(messageContent));
+            } else if (ASSISTANT_ROLE_IDENTIFIER.equals(messageRole)) {
+                activeChatMemory.add(dev.langchain4j.data.message.AiMessage.from(messageContent));
             }
         }
     }
@@ -110,12 +112,12 @@ public class ChatMemoryService {
         
         try {
             // Add to in-memory chat
-            chatMemory.add(dev.langchain4j.data.message.UserMessage.from(userMessage));
+            activeChatMemory.add(dev.langchain4j.data.message.UserMessage.from(userMessage));
             
             // Save to database
-            chatMemoryDAO.saveMessage(ROLE_USER, userMessage);
+            chatMemoryDAO.saveMessage(USER_ROLE_IDENTIFIER, userMessage);
         } catch (Exception e) {
-            System.err.println(ERROR_ADDING_USER_MSG + e.getMessage());
+            System.err.println(USER_MESSAGE_ERROR + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -134,12 +136,12 @@ public class ChatMemoryService {
         
         try {
             // Add to in-memory chat
-            chatMemory.add(dev.langchain4j.data.message.AiMessage.from(aiResponse));
+            activeChatMemory.add(dev.langchain4j.data.message.AiMessage.from(aiResponse));
             
             // Save to database
-            chatMemoryDAO.saveMessage(ROLE_ASSISTANT, aiResponse);
+            chatMemoryDAO.saveMessage(ASSISTANT_ROLE_IDENTIFIER, aiResponse);
         } catch (Exception e) {
-            System.err.println(ERROR_ADDING_AI_MSG + e.getMessage());
+            System.err.println(AI_MESSAGE_ERROR + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -150,7 +152,7 @@ public class ChatMemoryService {
      * @return The chat memory object
      */
     public ChatMemory getChatMemory() {
-        return chatMemory;
+        return activeChatMemory;
     }
     
     /**
@@ -164,7 +166,7 @@ public class ChatMemoryService {
             // Clear database
             chatMemoryDAO.clearAllMessages();
         } catch (Exception e) {
-            System.err.println(ERROR_CLEARING_MEMORY + e.getMessage());
+            System.err.println(MEMORY_CLEARING_ERROR + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -177,30 +179,30 @@ public class ChatMemoryService {
     public String getFormattedChatHistory() {
         try {
             // Get messages from database
-            List<ChatMemoryDAO.ChatMessage> messages = chatMemoryDAO.getAllMessages();
+            List<ChatMemoryDAO.ChatMessage> storedMessages = chatMemoryDAO.getAllMessages();
             
             // Return empty string if no messages
-            if (messages == null || messages.isEmpty()) {
+            if (storedMessages == null || storedMessages.isEmpty()) {
                 return "";
             }
             
             // Format the message history
-            StringBuilder history = new StringBuilder();
+            StringBuilder formattedHistory = new StringBuilder();
             
-            for (ChatMemoryDAO.ChatMessage message : messages) {
-                if (message == null) {
+            for (ChatMemoryDAO.ChatMessage chatMessageEntry : storedMessages) {
+                if (chatMessageEntry == null) {
                     continue;
                 }
                 
-                String role = ROLE_USER.equals(message.getRole()) ? DISPLAY_USER : DISPLAY_ASSISTANT;
-                String content = message.getContent();
+                String displayName = USER_ROLE_IDENTIFIER.equals(chatMessageEntry.getRole()) ? USER_DISPLAY_NAME : ASSISTANT_DISPLAY_NAME;
+                String messageContent = chatMessageEntry.getContent();
                 
-                if (content != null && !content.trim().isEmpty()) {
-                    history.append(role).append(": ").append(content).append(MESSAGE_SEPARATOR);
+                if (messageContent != null && !messageContent.trim().isEmpty()) {
+                    formattedHistory.append(displayName).append(": ").append(messageContent).append(MESSAGE_DISPLAY_SEPARATOR);
                 }
             }
             
-            return history.toString();
+            return formattedHistory.toString();
         } catch (Exception e) {
             System.err.println("Error formatting chat history: " + e.getMessage());
             e.printStackTrace();

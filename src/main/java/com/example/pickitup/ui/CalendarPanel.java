@@ -1,3 +1,10 @@
+/**
+ * Makes calendar panel and UI
+ *
+ * @author Aron Rios
+ * @author Afrin Alam Anney
+ * @date 04/12/2025
+ */
 package com.example.pickitup.ui;
 
 import com.example.pickitup.services.dao.CalendarEventDAO;
@@ -9,22 +16,19 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 
-/**
- *  Author: Anney & Aron
- *  Date: 3/21/2025
- *  Version: 1.0
- *  Purpose: CalendarApp is a simple Swing-based calendar application.
- *  It allows users to navigate through months, view existing events, and add new events.
- * The current day is highlighted for better visibility.
- */
 public class CalendarPanel extends Component {
     private final JFrame frame;            // Main application window
     private final JPanel calendarPanel;    // Panel to display the calendar
     private final JLabel monthLabel;       // Label to display current month and year
     private final Calendar calendar;       // Calendar instance to manage date operations
     private final Calendar today;          // Tracks the current date
+
+
+
 
     /**
      * Constructor initializes the calendar UI components and sets up the frame.
@@ -68,6 +72,7 @@ public class CalendarPanel extends Component {
         frame.setVisible(true);
         revalidate();
         repaint();
+
     }
 
     /**
@@ -121,6 +126,13 @@ public class CalendarPanel extends Component {
                     calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, day);
             List<String> events = CalendarEventDAO.getEvents(formattedDate);
 
+            //Border update
+            Border normalBorder = new LineBorder(Color.LIGHT_GRAY, 1);
+            Border hoverBorder = new LineBorder(new Color(30, 144, 255), 2); // Dodger Blue
+
+            // Set default border
+            dayButton.setBorder(normalBorder);
+
             if (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
                     calendar.get(Calendar.MONTH) == today.get(Calendar.MONTH) &&
                     day == today.get(Calendar.DAY_OF_MONTH)) {
@@ -131,6 +143,20 @@ public class CalendarPanel extends Component {
                 dayButton.setBackground(Color.PINK);
                 dayButton.setToolTipText("<html>" + String.join("<br>", events) + "</html>");
             }
+            // MouseListener for border
+            dayButton.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseEntered(java.awt.event.MouseEvent evt) {
+                    dayButton.setBorder(hoverBorder); // Set hover border
+                }
+
+                @Override
+                public void mouseExited(java.awt.event.MouseEvent evt) {
+                    dayButton.setBorder(normalBorder); // Reset border to normal
+                }
+            });
+
+
 
             int selectedDay = day;
             dayButton.addActionListener(e -> {
@@ -164,6 +190,8 @@ public class CalendarPanel extends Component {
             emptyLabel.setPreferredSize(new Dimension(30, 30));
             calendarPanel.add(emptyLabel);
         }
+
+
 
         calendarPanel.revalidate();
         calendarPanel.repaint();
@@ -297,4 +325,5 @@ public class CalendarPanel extends Component {
             return "00:00:00"; // Fallback in case of error
         }
     }
-}
+
+} // end class

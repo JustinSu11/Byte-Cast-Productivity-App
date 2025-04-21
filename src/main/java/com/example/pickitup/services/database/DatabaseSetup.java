@@ -1,3 +1,9 @@
+/**
+ * For setting up the database
+ *
+ * @author Justin Nguyen
+ * @date 04/12/2025
+ */
 package com.example.pickitup.services.database;
 
 import java.sql.Connection;
@@ -13,6 +19,7 @@ public class DatabaseSetup {
                 "title TEXT NOT NULL, " +
                 "content TEXT NOT NULL, " +
                 "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
+                "note_order INTEGER, " +
                 "FOREIGN KEY (journal_id) REFERENCES journal(journal_id) " +
                 ");";
 
@@ -30,16 +37,11 @@ public class DatabaseSetup {
         String journalsTable = "CREATE TABLE IF NOT EXISTS journals (" +
                 "journal_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "title TEXT NOT NULL, " +
-                "FOREIGN KEY (workspace_id) REFERENCES workspaces(workspace_id) " +
+                "selected_flag BOOLEAN NOT NULL, " +
+                "journal_order INTEGER NOT NULL, " +
+                "selected_note_index INTEGER NOT NULL " +
                 ");";
 
-        String journalNotesTable = "CREATE TABLE IF NOT EXISTS journal_notes (" +
-                "journal_id INTEGER NOT NULL, " +
-                "note_id INTEGER NOT NULL, " +
-                "PRIMARY KEY (journal_id, note_id), " +
-                "FOREIGN KEY (note_id) REFERENCES notes(notes_id), " +
-                "FOREIGN KEY (journal_id) REFERENCES journals(journals_id) " +
-                ");";
 
         String chatMemoryTable = "CREATE TABLE IF NOT EXISTS chat_messages (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -66,8 +68,6 @@ public class DatabaseSetup {
             System.out.println("Calendar events table created");
             statement.execute(journalsTable);
             System.out.println("Journal table created");
-            statement.execute(journalNotesTable);
-            System.out.println("Journal notes table created");
             statement.execute(chatMemoryTable);
             System.out.println("Chat memory table created");
             statement.execute(toDoItemsTable);

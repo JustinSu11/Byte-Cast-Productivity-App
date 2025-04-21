@@ -1,14 +1,15 @@
+/**
+ * Contains the necessary parameters for the Large Language Model Class
+ * Includes API key retrieval, model configuration and system prompts
+ *
+ * @author Maaz Haque
+ * @date 04/12/2025
+ */
 package com.example.pickitup.ai;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
-/**
- * Contains the necessary parameters for the Large Language Model Class
- * Includes API key retrieval, model configuration and system prompts
- * 
- * @author Maaz Haque
- * @version 1.0
- */
+
 public class LargeLanguageModelParameters {
     // Default API key environment variable name
     private static final String API_KEY_ENV_VAR = "OPENAI_API_KEY";
