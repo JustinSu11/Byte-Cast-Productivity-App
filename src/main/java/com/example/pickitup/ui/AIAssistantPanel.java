@@ -516,9 +516,9 @@ public class AIAssistantPanel extends JPanel {
     private String getTextInTextEditor()
     {
         // Get the currently selected notes pane
-        NotesPane currentNotesPane = journalsPane.getSelectedNotesPane();
+        NotesPane currentNotesPane = JournalsPane.getSelectedNotesPane();
         //get the text editor object
-        JTextArea currentTextArea = currentNotesPane.getCurrentTextArea();
+        JTextArea currentTextArea = currentNotesPane.getCurrentNoteEditor().getTextArea();
         // Check if text area is not null
         if (currentTextArea != null) {
             // Get the text from the current text area and return it
