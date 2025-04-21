@@ -82,23 +82,27 @@ public class ApplicationStateServices {
     //load application from the last save
     public static void loadApplicationState() {
         try (Connection connection = DatabaseConnection.connect()) {
+            //statement for loading journal
             String loadJournalStatement = "SELECT journal_id, title, selected_note_index, selected_flag FROM journals ORDER BY journal_order";
             Statement loadJournal = connection.createStatement();
             ResultSet journalResultSet = loadJournal.executeQuery(loadJournalStatement);
-
+            //make the container for holding journals
             JTabbedPane journalsOutterPane = JournalsPane.getJournalsPane();
+            //To re-select the journal that was selected before closing
             int tabToSelect = -1;
             int currentTabIndex = 0;
 
+            //create a NotesPane for each journal to hold its notes and load the notes in the same order before the application closed
             while (journalResultSet.next()) {
                 int journalID = journalResultSet.getInt("journal_id");
                 String journalTitle = journalResultSet.getString("title");
                 int selectedNoteIndex = journalResultSet.getInt("selected_note_index");
                 boolean isSelectedJournal = journalResultSet.getBoolean("selected_flag");
-
+                //create a journal (NotesPane)
                 NotesPane journalPane = new NotesPane(journalID, journalTitle);
+                //add to the journal container
                 JournalsPane.getNotesPanes().add(journalPane);
-
+                //load the notes for each journal
                 String loadNoteStatement = "SELECT notes_id, content, title, font_type, font_size, text_color, background_color FROM notes WHERE journal_id = " + journalID + " ORDER BY note_order";
                 Statement loadNote = connection.createStatement();
                 ResultSet noteResultSet = loadNote.executeQuery(loadNoteStatement);
@@ -111,7 +115,9 @@ public class ApplicationStateServices {
                     int fontSize = noteResultSet.getInt("font_size");
                     int textColor = noteResultSet.getInt("text_color");
                     int backgroundColor = noteResultSet.getInt("background_color");
+                    //create a note (NoteEditor) and set all of its items
                     NoteEditor newNoteEditor = new NoteEditor(noteID, journalID, noteTitle, noteContent, fontType, fontSize, textColor, backgroundColor);
+                    //add it to the journal (NotesPane)
                     journalPane.addPageTabForLoad(newNoteEditor);
                 }
 
@@ -126,6 +132,7 @@ public class ApplicationStateServices {
                 }
                 currentTabIndex++;
             }
+            //set the selectedindex for the selected journal
             if(tabToSelect != -1) {
                 journalsOutterPane.setSelectedIndex(tabToSelect);
             }
