@@ -436,6 +436,7 @@ public class AIAssistantPanel extends JPanel {
 
                         // Request focus back to the input field
                         userMessageField.requestFocus();
+                        processingStatusLabel.setText("");
                     }
                 }
             };
@@ -502,6 +503,7 @@ public class AIAssistantPanel extends JPanel {
                             "Note added to " + activeKnowledgeBase.getName() + ".",
                             "Document Added",
                             JOptionPane.INFORMATION_MESSAGE);
+                    processingStatusLabel.setText("");
                 }
             };
             noteProcessingWorker.execute();
