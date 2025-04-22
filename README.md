@@ -12,3 +12,7 @@ CJ Quintero
 - added more validation for changing font size. Font size must now be an integer >= 1
 - added a message box saying save successful when pressing "Save Notes" from menu bar. // Need to add a try/catch block here
 
+04/21/2025 CJ Quintero
+- newest up-to-date version
+- created .jar file to run the app
+- made example data in all features for database 
