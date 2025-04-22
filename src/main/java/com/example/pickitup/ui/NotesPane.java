@@ -2,7 +2,7 @@
  * Makes the notes pane to make pages inside of journals
  *
  * @author Michael Tajchman
- * @date 04/12/2025
+ * @date 04/23/2025
  */
 package com.example.pickitup.ui;
 

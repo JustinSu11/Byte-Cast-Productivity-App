@@ -2,7 +2,7 @@
  * Makes the panel and methods for the to do list
  *
  * @author Matthew Tomme
- * @date 04/12/2025
+ * @date 04/23/2025
  */
 package com.example.pickitup.ui;
 
@@ -23,11 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
-/**
- * Panel for To-Do List functionality in the UI
- * Updated to work as a popup window similar to Calendar with bug fixes
- * @version 1.4
- */
+
 public class ToDoListPanel extends JPanel {
 
     private JTable todoTable;

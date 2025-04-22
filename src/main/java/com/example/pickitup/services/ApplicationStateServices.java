@@ -1,9 +1,10 @@
-/*
-* Author: Justin Nguyen
-* Version 1.0
-* Purpose: Saves the application state before exiting and loads the application state
-* where it was left at before exiting
-* */
+/**
+ * Saves the app state before exiting and loads the app state
+ * where it was left at before exiting
+ *
+ * @author Justin Nguyen
+ * @date 04/23/2025
+ */
 
 package com.example.pickitup.services;
 

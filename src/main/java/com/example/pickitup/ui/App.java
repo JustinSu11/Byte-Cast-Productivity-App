@@ -2,7 +2,7 @@
  * Makes the app object and adds the other major panels
  *
  * @author CJ Quintero
- * @date 04/12/2025
+ * @date 04/23/2025
  */
 package com.example.pickitup.ui;
 
