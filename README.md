@@ -20,3 +20,5 @@ CJ Quintero
 04/22/2025
 - fixed comic sans
 - updated all file header comments
+- reloaded Maven project to make new jar file
+  
