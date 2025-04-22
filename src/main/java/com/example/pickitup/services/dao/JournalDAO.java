@@ -39,27 +39,6 @@ public class JournalDAO {
     }
 
     //READ
-    //method to retrieve all journals from database along with the notes associated with the journal
-    public static List<NotesPane> getAllJournals() {
-        List<NotesPane> journals = new ArrayList<>();
-        String selectStatement = "SELECT journal_id, title FROM journals";
-        try (
-                Connection connection = DatabaseConnection.connect();
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(selectStatement)
-                ) {
-            while (resultSet.next()) {
-                String title = resultSet.getString("title");
-//                Journal journal = new Journal(title);
-                //Load journals
-//                journal.loadNotes();
-//                journals.add(journal);
-            }
-        } catch (SQLException error) {
-            System.out.println("Error retrieving journals: " + error.getMessage());
-        }
-        return journals;
-    }
 
     //UPDATE
     //method to update journal title
