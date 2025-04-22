@@ -16,3 +16,7 @@ CJ Quintero
 - newest up-to-date version
 - created .jar file to run the app
 - made example data in all features for database 
+
+04/22/2025
+- fixed comic sans
+- updated all file header comments
