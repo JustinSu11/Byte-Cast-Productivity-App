@@ -2,7 +2,7 @@
  * This class contains the necessary parameters for Calendar Events
  *
  * @author Aron Rios
- * @date 04/12/2025
+ * @date 04/23/2025
  */
 package com.example.pickitup.services.dao;
 

@@ -2,7 +2,7 @@
  * Makes the methods to change the theme from light/dark
  *
  * @author Matthew Tomme
- * @date 04/12/2025
+ * @date 04/23/2025
  */
 package com.example.pickitup.ui;
 
@@ -17,12 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.prefs.Preferences;
 
-/**
- * ThemeManager handles the application's theme (dark/light mode)
- * It provides methods to switch themes and stores the user's preference
- *
- * @version 1.2
- */
+
 public class ThemeManager {
     // Theme constants
     public static final int LIGHT_MODE = 0;

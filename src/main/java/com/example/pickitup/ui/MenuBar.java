@@ -2,7 +2,7 @@
  * Makes the menu bar and implements the nested menus
  *
  * @author Michael Tajchman
- * @date 04/12/2025
+ * @date 04/23/2025
  */
 package com.example.pickitup.ui;
 
@@ -275,8 +275,8 @@ public class MenuBar extends JMenuBar
         });
         comicSans.addActionListener(e ->{
             NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();
-            selectedNotesPane.setFontType("Comic Sans");
-            JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().setFontType("Comic Sans");
+            selectedNotesPane.setFontType("Comic Sans MS");
+            JournalsPane.getSelectedNotesPane().getCurrentNoteEditor().getNoteItem().setFontType("Comic Sans MS");
         });
         arial.addActionListener(e ->{
             NotesPane selectedNotesPane = journalsPane.getSelectedNotesPane();

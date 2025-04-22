@@ -3,7 +3,7 @@
  * This class manages timer state and notifications separately from the UI
  *
  * @author Matthew Tomme
- * @date 04/12/2025
+ * @date 04/23/2025
  */
 package com.example.pickitup.services.models;
 
