@@ -20,6 +20,7 @@ public class NoteEditor extends JTabbedPane
     private JTextArea textArea = null;
     private JScrollPane scrollPane = null;
     private Note noteItem = null;
+    private ThemeManager themeManager = ThemeManager.getInstance();
 
 
     // constructor
@@ -40,8 +41,8 @@ public class NoteEditor extends JTabbedPane
         textArea.setFont(new Font(fontType, Font.PLAIN, fontSize));
         textArea.setForeground(new Color(textColor, true));
         textArea.setBackground(new Color(backgroundColor, true));
-        ThemeManager.getInstance().setCustomForegroundColor(textArea, new Color(textColor, true));
-        ThemeManager.getInstance().setCustomBackgroundColor(textArea, new Color(backgroundColor, true));
+        themeManager.setCustomForegroundColor(textArea, new Color(textColor, true));
+        themeManager.setCustomBackgroundColor(textArea, new Color(backgroundColor, true));
         scrollPane = new JScrollPane(textArea);
         makeScrollPane();
         noteItem = new Note(noteID, journalID, title, content, fontType, fontSize, textColor, backgroundColor);

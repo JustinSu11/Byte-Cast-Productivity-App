@@ -169,6 +169,7 @@ public class NotesPane extends JTabbedPane
                 if (view instanceof JTextArea) {
                     JTextArea textArea = (JTextArea) view;
                     textArea.setForeground(color);
+                    ThemeManager.getInstance().setCustomForegroundColor(textArea, color);
                 }
             }
         }
@@ -185,6 +186,7 @@ public class NotesPane extends JTabbedPane
                 if (view instanceof JTextArea) {
                     JTextArea textArea = (JTextArea) view;
                     textArea.setBackground(color);
+                    ThemeManager.getInstance().setCustomBackgroundColor(textArea, color);
                 }
             }
         }
