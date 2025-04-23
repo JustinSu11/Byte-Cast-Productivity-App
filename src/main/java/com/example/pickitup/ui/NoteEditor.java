@@ -41,8 +41,12 @@ public class NoteEditor extends JTabbedPane
         textArea.setFont(new Font(fontType, Font.PLAIN, fontSize));
         textArea.setForeground(new Color(textColor, true));
         textArea.setBackground(new Color(backgroundColor, true));
-        themeManager.setCustomForegroundColor(textArea, new Color(textColor, true));
-        themeManager.setCustomBackgroundColor(textArea, new Color(backgroundColor, true));
+        if(textColor != -16777216){
+            themeManager.setCustomForegroundColor(textArea, new Color(textColor, true));
+        }
+        if(backgroundColor != -1){
+            themeManager.setCustomBackgroundColor(textArea, new Color(backgroundColor, true));
+        }
         scrollPane = new JScrollPane(textArea);
         makeScrollPane();
         noteItem = new Note(noteID, journalID, title, content, fontType, fontSize, textColor, backgroundColor);
